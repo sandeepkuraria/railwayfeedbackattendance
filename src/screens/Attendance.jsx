@@ -9,21 +9,33 @@ import {
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native'; // Import the useNavigation hook
 import {Alert} from 'react-native'; // Import the Alert component
-import {RNCamera} from 'react-native-camera';
+import * as ImagePicker from 'react-native-image-picker';
 
-const Attendance = () => {
+const Attendance = ({route}) => {
   const navigation = useNavigation();
-
+  const name = route.params.name;
+  const token = route.params.token;
   const [photoCaptured, setPhotoCaptured] = useState(false);
-  const [selfieSubmitted, setSelfieSubmitted] = useState(false); // Step 1: Add state for submission
+  const [selfieSubmitted, setSelfieSubmitted] = useState(false);
+  const [selfieImage, setSelfieImage] = useState(); // Step 1: Add state for submission
 
   const handleTakeSelfie = () => {
-    setPhotoCaptured(true);
+    ImagePicker.launchCamera({mediaType: 'photo'}, response => {
+      // console.log(response.assets[0].uri);
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else {
+        setPhotoCaptured(true);
+        setSelfieImage(response.assets[0].uri);
+      }
+    });
   };
-
   const handleRetakeSelfie = () => {
     setPhotoCaptured(false);
     setSelfieSubmitted(false);
+    setSelfieImage(null);
   };
 
   const handleSubmitSelfie = () => {
@@ -42,11 +54,13 @@ const Attendance = () => {
             <Text style={styles.attendanceHeader1}>Dear</Text>
           </View>
           <View>
-            <Text style={styles.attendanceHeader2}>Attender</Text>
+            <Text style={[styles.attendanceHeader2, {color: '#167fb9'}]}>
+              {name}
+            </Text>
           </View>
         </View>
 
-        <View style={styles.cameraCard}>
+        {/* <View style={styles.cameraCard}>
           {photoCaptured ? (
             <View>
               <Image
@@ -62,22 +76,58 @@ const Attendance = () => {
               />
             </View>
           )}
-        </View>
-
-        <View>
+        </View> */}
+        <View style={styles.cameraCard}>
           {photoCaptured ? (
             <View>
-              <TouchableOpacity
-                style={styles.RetakeSelfieButton}
-                onPress={handleRetakeSelfie}>
+              <Image
+                source={{uri: selfieImage}} // Use the captured image URI
+                style={styles.capturedPhoto}
+              />
+            </View>
+          ) : (
+            <View>
+              <Image
+                source={require('../assets/images/camera.png')}
+                style={styles.cameraIcon}
+              />
+            </View>
+          )}
+        </View>
+        <View>
+          {photoCaptured ? (
+            <View
+              style={{
+                position: 'relative',
+                top: '130%',
+                // borderWidth: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '20%',
+                backgroundColor: '#EFCBB4',
+                borderRadius: 10,
+                marginHorizontal: '30%',
+                marginTop: '15%',
+              }}>
+              <TouchableOpacity onPress={handleRetakeSelfie}>
                 <Text style={styles.RetakeSelfieText}>Retake Selfi</Text>
               </TouchableOpacity>
             </View>
           ) : (
-            <View>
-              <TouchableOpacity
-                style={styles.TakeSelfieButton}
-                onPress={handleTakeSelfie}>
+            <View
+              style={{
+                position: 'relative',
+                top: '130%',
+                // borderWidth: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '20%',
+                backgroundColor: '#EFCBB4',
+                borderRadius: 10,
+                marginHorizontal: '30%',
+                marginTop: '15%',
+              }}>
+              <TouchableOpacity onPress={handleTakeSelfie}>
                 <Text style={styles.TakeSelfieText}>Take Selfi</Text>
               </TouchableOpacity>
             </View>
@@ -90,20 +140,7 @@ const Attendance = () => {
             resizeMode="contain"
           />
         </View>
-        {/* <View>
-          <TouchableOpacity style={styles.SubmitButton}>
-            <Text style={styles.SubmitButtonText}>Submit</Text>
-          </TouchableOpacity>
-        </View> */}
-        {/* <View>
-          {selfieSubmitted && (
-            <TouchableOpacity
-              style={styles.SubmitButton}
-              onPress={handleSubmitSelfie}>
-              <Text style={styles.SubmitButtonText}>Submit</Text>
-            </TouchableOpacity>
-          )}
-        </View> */}
+        {/* submit button */}
         <View>
           <View>
             <TouchableOpacity
@@ -121,7 +158,14 @@ const Attendance = () => {
             )}
           </View>
         </View>
-        <View style={{marginBottom: 100}}>
+        {/* bottombubble right */}
+        <View
+          style={{
+            marginBottom: '50%',
+            // borderWidth: 2,
+            position: 'relative',
+            top: 10,
+          }}>
           <Image
             source={require('../assets/images/circle.png')}
             style={styles.circleAfterSubmit}
@@ -136,7 +180,12 @@ const Attendance = () => {
         <View>
           <TouchableOpacity
             style={styles.BottomRowbutton}
-            onPress={() => navigation.navigate('TrainList')}>
+            onPress={() =>
+              navigation.navigate('TrainList', {
+                name: name,
+                token: token,
+              })
+            }>
             <Image
               source={require('../assets/images/home.png')}
               style={styles.icon}
@@ -145,7 +194,7 @@ const Attendance = () => {
         </View>
         <View style={styles.verticalBar}></View>
         <View>
-          <TouchableOpacity style={styles.BottomRowbutton}>
+          <TouchableOpacity style={[styles.BottomRowbutton, (height = 100)]}>
             <Image
               source={require('../assets/images/report.png')}
               style={styles.icon}
@@ -168,8 +217,8 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   attendanceHeader: {
-    marginVertical: 20,
-    marginHorizontal: 55,
+    marginVertical: '6%',
+    marginHorizontal: '15%',
   },
 
   attendanceHeader1: {
@@ -182,117 +231,135 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: 'black',
   },
-  cameraCard: {
-    marginTop: 20,
-    height: 250,
-    width: 250,
-    elevation: 10,
-    shadowColor: 'black',
-    shadowOffset: {width: 10, height: 10},
-    shadowOpacity: 0.1,
-    marginLeft: 55,
-    shadowRadius: 8,
-    padding: 15,
-    borderRadius: 20,
-    backgroundColor: '#ff8d3c',
-    alignItems: 'center',
-  },
+
   buttonBottomRowContainer: {
     flexDirection: 'row',
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
+    borderWidth: 1,
   },
   BottomRowbutton: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: '#ff8d3c',
-    padding: 10,
+    // flex: 1,
+    // flexDirection: 'row',
+    backgroundColor: '#EFCBB4',
+    paddingHorizontal: '22%',
+    paddingVertical: '5%',
     alignItems: 'center',
   },
   icon: {
     justifyContent: 'space-between',
-    marginHorizontal: 15,
-    width: 30,
-    height: 30,
-    marginHorizontal: 70,
+    flexDirection: 'row',
+    width: 32,
+    height: 32,
     marginBottom: 5,
   },
+  cameraCard: {
+    // marginBottom: '10%',
+    height: '35%',
+    width: '70%',
+    elevation: 15,
+    shadowColor: 'black',
+    shadowOffset: {width: 10, height: 15},
+    shadowOpacity: 0.8,
+    marginHorizontal: '15%',
+    shadowRadius: 8,
+    borderRadius: 20,
+    backgroundColor: '#EFCBB4',
+    alignItems: 'center',
+    position: 'absolute',
+    top: '20%',
+    // borderWidth: 2,
+  },
   cameraIcon: {
-    width: 115,
-    height: 115,
-    marginTop: 60,
+    position: 'relative',
+    // top: '60%',
+    marginVertical: '25%',
+    // backgroundColor: 'red',
+    width: 90,
+    height: 90,
+    // marginVertical: '14%',
+  },
+  capturedPhoto: {
+    position: 'relative',
+    width: 251,
+    height: '100%',
+    backgroundColor: '#EFCBB4',
+    borderRadius: 12,
   },
   verticalBar: {
-    height: 55,
+    height: '100%',
     width: 2,
     backgroundColor: 'orange',
+  },
+
+  TakeSelfieButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '30%',
+    backgroundColor: '#EFCBB4',
+    borderRadius: 10,
+    marginHorizontal: '30%',
+    marginTop: '15%',
+  },
+  RetakeSelfieButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '30%',
+    backgroundColor: '#EFCBB4',
+    borderRadius: 10,
+    marginHorizontal: '30%',
+    marginTop: '15%',
   },
   TakeSelfieText: {
     fontSize: 16,
     textAlign: 'center',
     color: 'black',
     fontWeight: 'bold',
+    marginHorizontal: '10%',
   },
-  TakeSelfieButton: {
-    height: 40,
-    borderWidth: 2,
-    borderColor: '#ff8d3c',
-    backgroundColor: '#ff8d3c',
-    paddingTop: 6,
-    borderRadius: 12,
-    marginHorizontal: 140,
-    marginTop: 60,
-  },
-  circleAfterSelfi: {
-    width: 100,
-    height: 100,
-    marginLeft: 10,
-    marginTop: -30,
-  },
-  circleAfterSubmit: {
-    width: 130,
-    height: 130,
-    marginLeft: 250,
-    marginTop: -70,
-  },
-  SubmitButton: {
-    height: 48,
-    borderWidth: 2,
-    borderColor: '#ff8d3c',
-    backgroundColor: '#ff8d3c',
-    paddingTop: 6,
-    paddingHorizontal: 20,
-    borderRadius: 12,
-    marginHorizontal: 120,
-    marginTop: 20,
-  },
-  SubmitButtonText: {
-    fontSize: 22,
+  RetakeSelfieText: {
+    fontSize: 16,
     textAlign: 'center',
     color: 'black',
     fontWeight: 'bold',
+    marginHorizontal: '10%',
   },
-  capturedPhoto: {
-    width: 250,
-    height: 250,
-    borderRadius: 20,
+  circleAfterSelfi: {
+    position: 'relative',
+    top: 100,
+    width: 100,
+    height: 100,
+    marginLeft: '3%',
+    // alignItems: 'flex-start',
+    // marginTop: -30,
   },
-
-  RetakeSelfieButton: {
-    height: 40,
-    borderWidth: 2,
-    borderColor: '#ff8d3c',
+  circleAfterSubmit: {
+    position: 'relative',
+    top: 0,
+    width: 130,
+    height: 130,
+    marginLeft: '68%',
+  },
+  SubmitButton: {
+    position: 'relative',
+    top: '200%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    // height: 48,
+    // borderWidth: 2,
+    // borderColor: '#ff8d3c',
     backgroundColor: '#ff8d3c',
-    paddingTop: 5,
+    // paddingTop: 6,
+    // paddingHorizontal: 20,
     borderRadius: 12,
-    marginHorizontal: 130,
-    marginTop: 60,
+    marginHorizontal: '32%',
+    marginTop: '1%',
+    paddingVertical: '2%',
   },
-
-  RetakeSelfieText: {
-    fontSize: 16,
+  SubmitButtonText: {
+    fontSize: 22,
     textAlign: 'center',
     color: 'black',
     fontWeight: 'bold',

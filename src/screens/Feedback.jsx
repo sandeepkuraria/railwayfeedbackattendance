@@ -20,7 +20,8 @@ import StarRating from 'react-native-star-rating';
 
 const Feedback = ({route}) => {
   const navigation = useNavigation();
-
+  const name = route.params.name;
+  const token = route.params.token;
   const [isACRedActive, setIsACRedActive] = useState(false);
   const [isACBlueActive, setIsACBlueActive] = useState(false);
   const [isACYellowActive, setIsACYellowActive] = useState(false);
@@ -173,7 +174,15 @@ const Feedback = ({route}) => {
 
       <ScrollView>
         <View>
-          <View style={styles.trainCard}>
+          <View
+            style={[
+              styles.trainCard,
+              {
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginHorizontal: '6%',
+              },
+            ]}>
             <Text style={styles.cardTextHeaders}>12121</Text>
             <Text style={styles.cardTextHeaders}>Mahakaushal</Text>
             <View style={styles.fromTo}>
@@ -616,7 +625,12 @@ const Feedback = ({route}) => {
       <View style={styles.buttonBottomRowContainer}>
         <TouchableOpacity
           style={styles.BottomRowbutton}
-          onPress={() => navigation.navigate('TrainList')}>
+          onPress={() =>
+            navigation.navigate('TrainList', {
+              name: name,
+              token: token,
+            })
+          }>
           <Image
             source={require('../assets/images/home.png')}
             style={styles.icon}
@@ -657,7 +671,7 @@ const styles = StyleSheet.create({
   },
   cardTextDate: {
     elevation: 10,
-    shadowColor: '#ff8d3c',
+    shadowColor: '#EFCBB4',
     shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.1,
     height: 25,
@@ -669,35 +683,56 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   trainCard: {
-    height: 170,
+    height: '38%',
     elevation: 20,
     shadowColor: '#ff8d3c',
     shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.1,
     shadowRadius: 8,
-    padding: 15,
-    borderBottomRadius: 10,
+    padding: '1%',
     borderBottomEndRadius: 70,
     borderBottomStartRadius: 70,
     backgroundColor: '#F8F9F9',
+    // height: 170,
+    // elevation: 20,
+    // shadowColor: '#ff8d3c',
+    // shadowOffset: {width: 0, height: 4},
+    // shadowOpacity: 0.1,
+    // shadowRadius: 8,
+    // padding: 15,
+    // borderBottomRadius: 10,
+    // borderBottomEndRadius: 70,
+    // borderBottomStartRadius: 70,
+    // backgroundColor: '#F8F9F9',
   },
   cardTextHeaders: {
     color: 'black',
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
-    textAlign: 'center',
+    // color: 'black',
+    // fontSize: 20,
+    // fontWeight: 'bold',
+    // textAlign: 'center',
   },
   fromTo: {
-    marginTop: 10,
+    marginTop: '3%',
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginHorizontal: -30,
+    justifyContent: 'space-between',
+    marginHorizontal: '10%',
+    // marginTop: 10,
+    // flexDirection: 'row',
+    // justifyContent: 'space-around',
+    // marginHorizontal: -30,
   },
   fromToText: {
     color: 'black',
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: '400',
     textAlign: 'center',
+    // color: 'black',
+    // fontSize: 20,
+    // fontWeight: '400',
+    // textAlign: 'center',
   },
   coachNamePNRNo: {
     flexDirection: 'row',
@@ -713,7 +748,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 9,
     fontSize: 20,
     // fontWeight: 'bold',
-    backgroundColor: '#ff8d3c',
+    backgroundColor: '#EFCBB4',
     textAlign: 'center',
     width: 50,
     height: 30,
@@ -725,7 +760,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 9,
     fontSize: 20,
     // fontWeight: 'bold',
-    backgroundColor: '#ff8d3c',
+    backgroundColor: '#EFCBB4',
     textAlign: 'left',
     paddingVertical: 4,
     paddingLeft: 20,
@@ -800,7 +835,7 @@ const styles = StyleSheet.create({
   BottomRowbutton: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: '#ff8d3c',
+    backgroundColor: '#EFCBB4',
     padding: 10,
     alignItems: 'center',
   },
@@ -820,7 +855,7 @@ const styles = StyleSheet.create({
   BottomRowbutton: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: '#ff8d3c',
+    backgroundColor: '#EFCBB4',
     padding: 10,
     alignItems: 'center',
   },

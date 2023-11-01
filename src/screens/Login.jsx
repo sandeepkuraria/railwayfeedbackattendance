@@ -24,13 +24,56 @@ const Login = () => {
     if (userName === '' && password === '') {
       Alert.alert('Please enter username/password');
     } else {
-      navigation.navigate('TrainList');
+      loginApi();
     }
   };
+  // ******************************* LoginAPI start ************************
+  const loginApi = async () => {
+    var myHeaders = new Headers();
+
+    myHeaders.append(
+      'Cookie',
+      'ci_session=faa818cb1e047f52249efe5702e18ed8bfa8d0f3',
+    );
+
+    var formdata = new FormData();
+    formdata.append('email', userName);
+    formdata.append('password', password);
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: formdata,
+      redirect: 'follow',
+    };
+
+    const res = await fetch(
+      'https://railway.retinodes.com/api/v1/authentication/login',
+      requestOptions,
+    );
+
+    const response = await res.json();
+
+    if (response.status === true) {
+      console.log(response.data.name);
+
+      navigation.replace('TrainList', {
+        name: response.data.name,
+        token: response.token,
+      });
+    } else {
+      Alert.alert(response.message);
+    }
+
+    //  .then(response => response.json())
+    //   .then(result => console.log(result))
+    //   .catch(error => console.log('error', error));
+  };
+  // **************************** Login API end *********************************
 
   return (
     <SafeAreaView style={styles.mainContainer}>
-      <KeyboardAvoidingView>
+      <KeyboardAvoidingView style={{flex: 2}}>
         <View style={styles.circle_top_container}>
           <Image
             source={require('../assets/images/circlefinal.png')}
@@ -41,17 +84,28 @@ const Login = () => {
 
         <View
           style={{
+            alignItems: 'center',
+            // justifyContent: 'flex-end',
             // borderWidth: 2,
-            width: '90%',
-            height: '35%',
-            marginLeft: '5%',
-            // marginRight: '10%',
+            height: '30%',
+            width: '70%',
+            marginHorizontal: '15%',
           }}>
-          <Image
-            source={require('../assets/images/train_mono.png')}
-            style={styles.logo}
-            resizeMode="cover"
-          />
+          <View
+            style={{
+              // borderWidth: 2,
+              width: '100%',
+              height: '100%',
+
+              // marginLeft: '8%',
+              // marginRight: '10%',
+            }}>
+            <Image
+              source={require('../assets/images/train_mono.png')}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+          </View>
         </View>
 
         <View style={styles.headerTextContainer}>
@@ -142,6 +196,7 @@ const styles = StyleSheet.create({
     overflow: 'visible',
   },
   logo: {
+    borderWidth: 2,
     // aspectRatio: 4 / 3,
     width: '100%',
     height: '100%',
