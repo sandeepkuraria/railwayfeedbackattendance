@@ -110,7 +110,7 @@ const Attendance = ({route}) => {
                 marginTop: '15%',
               }}>
               <TouchableOpacity onPress={handleRetakeSelfie}>
-                <Text style={styles.RetakeSelfieText}>Retake Selfi</Text>
+                <Text style={styles.RetakeSelfieText}>Retake Selfie</Text>
               </TouchableOpacity>
             </View>
           ) : (
@@ -128,7 +128,7 @@ const Attendance = ({route}) => {
                 marginTop: '15%',
               }}>
               <TouchableOpacity onPress={handleTakeSelfie}>
-                <Text style={styles.TakeSelfieText}>Take Selfi</Text>
+                <Text style={styles.TakeSelfieText}>Take Selfie</Text>
               </TouchableOpacity>
             </View>
           )}

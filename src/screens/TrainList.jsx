@@ -98,13 +98,16 @@ const TrainList = ({route}) => {
   const handleFeedback = item => {
     console.log('Feedback pressed', item);
     navigation.navigate('Feedback', {
-      date: trainData.date,
-      train_no: trainData.train_no,
-      train_name: trainData.train_name,
-      from_station: trainData.from_station,
-      to_station: trainData.to_station,
-      start_time: trainData.start_time,
-      coaches: trainData.coaches,
+      // date: trainData.date,
+      // train_no: trainData.train_no,
+      // train_name: trainData.train_name,
+      // from_station: trainData.from_station,
+      // to_station: trainData.to_station,
+      // start_time: trainData.start_time,
+      // coaches: trainData.coaches,
+      trainData: trainData,
+      name: name,
+      token: token,
     });
   };
 

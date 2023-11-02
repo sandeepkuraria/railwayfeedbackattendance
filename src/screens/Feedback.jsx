@@ -22,6 +22,7 @@ const Feedback = ({route}) => {
   const navigation = useNavigation();
   const name = route.params.name;
   const token = route.params.token;
+  const trainData = route.params.trainData;
   const [isACRedActive, setIsACRedActive] = useState(false);
   const [isACBlueActive, setIsACBlueActive] = useState(false);
   const [isACYellowActive, setIsACYellowActive] = useState(false);
@@ -154,6 +155,63 @@ const Feedback = ({route}) => {
     // Show feedback submitted message
     Alert.alert('Feedback submitted successfully!');
   };
+  console.log('TRAINDATA IN FEEDBACK---', trainData);
+  const data = trainData[0];
+  console.log(data.id);
+
+  const PostFeedbackApi = async () => {
+    var myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+
+    myHeaders.append(
+      'Cookie',
+      'ci_session=faa818cb1e047f52249efe5702e18ed8bfa8d0f3',
+    );
+
+    myHeaders.append('Authorization', `Bearer ${token}`);
+
+    var urlencoded = new URLSearchParams();
+    urlencoded.append('dutyId', '1');
+    urlencoded.append('coach', 'A1');
+    urlencoded.append('pnr', '1234567890');
+    urlencoded.append('description', 'All Good');
+    urlencoded.append('rating', '5');
+    urlencoded.append('feedback[0]', 'Good');
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: urlencoded,
+      redirect: 'follow',
+    };
+
+    fetch(
+      'https://railway.retinodes.com/api/v1/assignduty/save_feedback',
+      requestOptions,
+    );
+
+    const res = await fetch(
+      'https://railway.retinodes.com/api/v1/assignduty/save_feedback',
+      requestOptions,
+    );
+
+    const response = await res.json();
+
+    if (response.status === true) {
+      console.log(response.data.name);
+
+      navigation.replace('TrainList', {
+        name: response.data.name,
+        token: response.token,
+      });
+    } else {
+      Alert.alert(response.message);
+    }
+
+    //  .then(response => response.json())
+    //   .then(result => console.log(result))
+    //   .catch(error => console.log('error', error));
+  };
 
   return (
     <View style={styles.mainContainer}>
@@ -173,7 +231,7 @@ const Feedback = ({route}) => {
       </View>
 
       <ScrollView>
-        <View>
+        {/* <View>
           <View
             style={[
               styles.trainCard,
@@ -185,24 +243,101 @@ const Feedback = ({route}) => {
             ]}>
             <Text style={styles.cardTextHeaders}>12121</Text>
             <Text style={styles.cardTextHeaders}>Mahakaushal</Text>
-            <View style={styles.fromTo}>
-              <View>
-                <Text style={styles.fromToText}>
-                  <Text style={{fontWeight: 'bold'}}>From</Text>
-                </Text>
-                <Text style={styles.fromToText}>Jabalpur</Text>
-                <Text style={styles.fromToText}>19:10 Hrs</Text>
-              </View>
-              <View>
-                <Text style={styles.fromToText}>
-                  <Text style={{fontWeight: 'bold'}}>To</Text>
-                </Text>
-                <Text style={styles.fromToText}>Katni</Text>
-                <Text style={styles.fromToText}>22:10 Hrs</Text>
-              </View>
+          </View>
+          <View style={styles.fromTo}>
+            <View>
+              <Text style={styles.fromToText}>
+                <Text style={{fontWeight: 'bold'}}>From</Text>
+              </Text>
+              <Text style={styles.fromToText}>Jabalpur</Text>
+              <Text style={styles.fromToText}>19:10 Hrs</Text>
+            </View>
+            <View>
+              <Text style={styles.fromToText}>
+                <Text style={{fontWeight: 'bold'}}>To</Text>
+              </Text>
+              <Text style={styles.fromToText}>Katni</Text>
+              <Text style={styles.fromToText}>22:10 Hrs</Text>
             </View>
           </View>
-        </View>
+        </View> */}
+        {trainData.map((train, index) => (
+          <View key={index}>
+            <View style={styles.trainCard}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginHorizontal: '6%',
+                }}>
+                <Text style={styles.cardTextHeaders}>{train.train_no}</Text>
+                <Text style={styles.cardTextHeaders}>{train.train_name}</Text>
+              </View>
+              <View style={styles.fromTo}>
+                <View>
+                  <Text style={styles.fromToText}>
+                    <Text style={{fontWeight: 'bold'}}>From</Text>
+                  </Text>
+                  <Text style={styles.fromToText}>{train.from_station}</Text>
+                  <Text style={styles.fromToText}>{train.start_time} Hrs</Text>
+                </View>
+                <View>
+                  <Text style={styles.fromToText}>
+                    <Text style={{fontWeight: 'bold'}}>To</Text>
+                  </Text>
+                  <Text style={styles.fromToText}>{train.to_station}</Text>
+                  <Text style={styles.fromToText}>{train.reach_time} Hrs</Text>
+                </View>
+              </View>
+            </View>
+
+            {/* <View style={styles.allotedCoach}>
+              <View>
+                <Text style={styles.allotedCoachHeading}>Alloted Coaches</Text>
+              </View>
+              <View style={styles.verticalBar1}></View>
+              <View>
+                <Text style={styles.allotedCoachName}>{train.coaches}</Text>
+              </View>
+            </View> */}
+
+            {/* *******************Feedback and Attendance Container start******************* */}
+            {/* <View style={styles.buttonFAContainer}>
+              <View>
+                <TouchableOpacity
+                  onPress={() => {
+                    handleFeedback(train);
+                    handleFAPress('Feedback');
+                  }}
+                  style={[
+                    styles.buttonFA,
+                    activeFAButton === 'Feedback' && styles.activeFAButton,
+                  ]}>
+                  <Text style={styles.buttonFeedbackText}>FEEDBACK</Text>
+                </TouchableOpacity>
+              </View>
+              <View>
+                <TouchableOpacity
+                  onPress={() => {
+                    markAttendance();
+                    handleFAPress('Attendance');
+                  }}
+                  style={[
+                    styles.buttonFA,
+                    activeFAButton === 'Attendance' && styles.activeFAButton,
+                  ]}>
+                  <Text style={styles.buttonAttendanceText}>ATTENDANCE</Text>
+                </TouchableOpacity>
+              </View>
+            </View> */}
+
+            {/* *******************Feedback and Attendance Container end******************* */}
+
+            {/* <View style={styles.dashedLine}></View> */}
+
+            {/* **************bottom text container end*************************** */}
+          </View>
+        ))}
         {/* ********************************coachNamePNRNo start ***************************** */}
 
         <View style={styles.coachNamePNRNo}>
@@ -685,7 +820,7 @@ const styles = StyleSheet.create({
   trainCard: {
     height: '38%',
     elevation: 20,
-    shadowColor: '#ff8d3c',
+    shadowColor: '#EFCBB4',
     shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.1,
     shadowRadius: 8,
@@ -736,10 +871,9 @@ const styles = StyleSheet.create({
   },
   coachNamePNRNo: {
     flexDirection: 'row',
-    marginTop: 38,
-    height: 40,
+    // marginTop: 38,
+    // height: 40,
     marginLeft: 30,
-    marginBottom: 60,
   },
 
   coachNameText: {
