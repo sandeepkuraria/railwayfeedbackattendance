@@ -5,19 +5,118 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  Platform,
+  PermissionsAndroid,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native'; // Import the useNavigation hook
 import {Alert} from 'react-native'; // Import the Alert component
 import * as ImagePicker from 'react-native-image-picker';
+import ImgToBase64 from 'react-native-image-base64';
+import Geolocation from 'react-native-geolocation-service';
 
 const Attendance = ({route}) => {
   const navigation = useNavigation();
   const name = route.params.name;
   const token = route.params.token;
+
+  const trainData = route.params.trainData[0];
+
+  let step = parseInt(trainData.step);
+  step++;
+
+  console.log(
+    'This is step coming from upcoming duties(TrainList page) in attendance page :- ',
+    step,
+  );
+
   const [photoCaptured, setPhotoCaptured] = useState(false);
   const [selfieSubmitted, setSelfieSubmitted] = useState(false);
-  const [selfieImage, setSelfieImage] = useState(); // Step 1: Add state for submission
+  const [selfieImage, setSelfieImage] = useState();
+  const [latitude, setLatitude] = useState(); // Step 1: Add state for submission
+  const [longitude, setLongitude] = useState(); // Step 1: Add state for submission
+  // const [step, setStep] = useState(''); // Step 1: Add state for submission
+  const [baseimg, setBaseImg] = useState();
+
+  const getlocation = () => {
+    Geolocation.getCurrentPosition(
+      position => {
+        setLatitude(position.coords.latitude);
+        setLongitude(position.coords.longitude);
+      },
+      error => {
+        // See error code charts below.
+        console.log(error.code, error.message);
+      },
+      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+    );
+  };
+
+  console.log(latitude);
+  console.log(longitude);
+  async function requestPermissions() {
+    if (Platform.OS === 'ios') {
+      Geolocation.requestAuthorization();
+      Geolocation.setRNConfiguration({
+        skipPermissionRequests: false,
+        authorizationLevel: 'whenInUse',
+      });
+    }
+
+    if (Platform.OS === 'android') {
+      await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      getlocation();
+    }
+  }
+
+  useEffect(() => {
+    requestPermissions();
+  }, []);
+
+  console.log(trainData.id);
+
+  const saveAttendenceApi = async () => {
+    var myHeaders = new Headers();
+    myHeaders.append('Authorization', `Bearer ${token}`);
+    myHeaders.append(
+      'Cookie',
+      'ci_session=b3612beb7ae4c49d7e8341db34272b0730aba59e',
+    );
+
+    var formdata = new FormData();
+    formdata.append('dutyId', trainData.id);
+    formdata.append('lat', latitude);
+    formdata.append('long', longitude);
+    formdata.append('photo', baseimg);
+    formdata.append('step', step);
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: formdata,
+      redirect: 'follow',
+    };
+
+    const res = await fetch(
+      'https://railway.retinodes.com/api/v1/assignduty/save_attendace',
+      requestOptions,
+    );
+    const response = await res.json();
+    console.log('response', response);
+    if (response.status === true) {
+      Alert.alert(response.message);
+
+      navigation.replace('TrainList', {
+        name: name,
+        token: token,
+      });
+    } else {
+      console.log(response.message);
+      Alert.alert(response.message);
+    }
+  };
 
   const handleTakeSelfie = () => {
     ImagePicker.launchCamera({mediaType: 'photo'}, response => {
@@ -29,9 +128,15 @@ const Attendance = ({route}) => {
       } else {
         setPhotoCaptured(true);
         setSelfieImage(response.assets[0].uri);
+        const baseimg = ImgToBase64.getBase64String(
+          response.assets[0].uri,
+        ).then(async base64String => {
+          await setBaseImg(base64String);
+        });
       }
     });
   };
+
   const handleRetakeSelfie = () => {
     setPhotoCaptured(false);
     setSelfieSubmitted(false);
@@ -41,11 +146,29 @@ const Attendance = ({route}) => {
   const handleSubmitSelfie = () => {
     if (photoCaptured) {
       setSelfieSubmitted(true);
-      Alert.alert('Selfie submitted successfully!');
+      saveAttendenceApi();
+      if (trainData.step === '1' || trainData.step === '2') {
+        // Display a message indicating completion of a step
+        // Alert.alert('journey ' + step + 'is completed!');
+      } else if (step === '3') {
+        Alert.alert('Congrates! you have comleted your journey!');
+      }
     } else {
       Alert.alert('Please take a selfie first.');
     }
   };
+
+  // const handleSubmitSelfie = () => {
+  //   if (photoCaptured) {
+  //     setSelfieSubmitted(true);
+  //     saveAttendenceApi();
+  //   } else {
+  //     Alert.alert('Please take a selfie first.');
+  //   }
+  // };
+
+  console.log('in ATTENDENCE', trainData);
+
   return (
     <View style={styles.mainContainer}>
       <ScrollView>
@@ -77,6 +200,7 @@ const Attendance = ({route}) => {
             </View>
           )}
         </View> */}
+
         <View style={styles.cameraCard}>
           {photoCaptured ? (
             <View>
@@ -94,6 +218,7 @@ const Attendance = ({route}) => {
             </View>
           )}
         </View>
+
         <View>
           {photoCaptured ? (
             <View
@@ -133,6 +258,7 @@ const Attendance = ({route}) => {
             </View>
           )}
         </View>
+
         <View>
           <Image
             source={require('../assets/images/circle.png')}
@@ -140,6 +266,7 @@ const Attendance = ({route}) => {
             resizeMode="contain"
           />
         </View>
+
         {/* submit button */}
         <View>
           <View>
@@ -149,15 +276,13 @@ const Attendance = ({route}) => {
               <Text style={styles.SubmitButtonText}>Submit</Text>
             </TouchableOpacity>
           </View>
+
           {/* Display alert if selfie is submitted */}
           <View>
-            {selfieSubmitted && (
-              <Text style={styles.submitMessage}>
-                Selfie submitted successfully!
-              </Text>
-            )}
+            {selfieSubmitted && <Text style={styles.submitMessage}></Text>}
           </View>
         </View>
+
         {/* bottombubble right */}
         <View
           style={{
@@ -241,8 +366,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   BottomRowbutton: {
-    // flex: 1,
-    // flexDirection: 'row',
     backgroundColor: '#EFCBB4',
     paddingHorizontal: '22%',
     paddingVertical: '5%',
@@ -256,7 +379,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   cameraCard: {
-    // marginBottom: '10%',
     height: '35%',
     width: '70%',
     elevation: 15,
@@ -270,16 +392,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'absolute',
     top: '20%',
-    // borderWidth: 2,
   },
   cameraIcon: {
     position: 'relative',
-    // top: '60%',
     marginVertical: '25%',
-    // backgroundColor: 'red',
     width: 90,
     height: 90,
-    // marginVertical: '14%',
   },
   capturedPhoto: {
     position: 'relative',
@@ -332,8 +450,6 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     marginLeft: '3%',
-    // alignItems: 'flex-start',
-    // marginTop: -30,
   },
   circleAfterSubmit: {
     position: 'relative',
@@ -347,12 +463,7 @@ const styles = StyleSheet.create({
     top: '200%',
     justifyContent: 'center',
     alignItems: 'center',
-    // height: 48,
-    // borderWidth: 2,
-    // borderColor: '#ff8d3c',
     backgroundColor: '#ff8d3c',
-    // paddingTop: 6,
-    // paddingHorizontal: 20,
     borderRadius: 12,
     marginHorizontal: '32%',
     marginTop: '1%',
@@ -363,5 +474,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'black',
     fontWeight: 'bold',
+  },
+  selfieCard: {
+    marginVertical: 10,
+    padding: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
   },
 });

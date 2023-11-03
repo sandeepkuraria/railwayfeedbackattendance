@@ -11,18 +11,18 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {ScrollView} from 'react-native-gesture-handler';
 
 const Login = () => {
-  const [userName, setuserName] = useState('');
+  // const [userName, setuserName] = useState('');
+  const [emp_id, setemp_id] = useState('');
   const [password, setpassword] = useState('');
   const navigation = useNavigation();
 
   const handleLogin = () => {
-    console.log('UserName : ', userName);
+    console.log('emp_id : ', emp_id);
     console.log('Password : ', password);
-    if (userName === '' && password === '') {
-      Alert.alert('Please enter username/password');
+    if (emp_id === '' && password === '') {
+      Alert.alert('Please enter employee id/password');
     } else {
       loginApi();
     }
@@ -33,12 +33,12 @@ const Login = () => {
 
     myHeaders.append(
       'Cookie',
-      'ci_session=faa818cb1e047f52249efe5702e18ed8bfa8d0f3',
+      'ci_session=e2dd6dd7ec0b6ac1ff3c57f01fb27e7495b05e82',
     );
 
     var formdata = new FormData();
-    formdata.append('email', userName);
-    formdata.append('password', password);
+    formdata.append('emp_id', '1');
+    formdata.append('password', '1');
 
     var requestOptions = {
       method: 'POST',
@@ -51,7 +51,6 @@ const Login = () => {
       'https://railway.retinodes.com/api/v1/authentication/login',
       requestOptions,
     );
-
     const response = await res.json();
 
     if (response.status === true) {
@@ -119,10 +118,10 @@ const Login = () => {
             <View style={styles.input}>
               <TextInput
                 style={{paddingVertical: '1%', color: 'black'}}
-                value={userName}
-                placeholder="Username"
+                value={emp_id}
+                placeholder="Employee id"
                 placeholderTextColor="black"
-                onChangeText={text => setuserName(text)}
+                onChangeText={text => setemp_id(text)}
               />
             </View>
             <View style={styles.input}>

@@ -17,6 +17,7 @@ const TrainList = ({route}) => {
   const [activeFAButton, setActiveFAButton] = useState('');
   const [trainData, setTrainData] = useState([]);
 
+  // console.log(name, token);
   useEffect(() => {
     upcomingDutiesApi();
   }, []);
@@ -35,9 +36,10 @@ const TrainList = ({route}) => {
   const upcomingDutiesApi = async () => {
     var myHeaders = new Headers();
     myHeaders.append('Authorization', `Bearer ${token}`);
+
     myHeaders.append(
       'Cookie',
-      'ci_session=e44c2130f742804bc9d125bd187343e9dda13094',
+      'ci_session=e2dd6dd7ec0b6ac1ff3c57f01fb27e7495b05e82',
     );
 
     var requestOptions = {
@@ -58,9 +60,11 @@ const TrainList = ({route}) => {
 
     if (response.status === true) {
       console.log(
-        response.data.date,
-        response.data.train_no,
-        response.data.train_name,
+        'TrainList console data : - ',
+
+        trainData[0].date,
+        trainData[0].train_no,
+        trainData[0].train_name,
       );
 
       // {
@@ -105,9 +109,9 @@ const TrainList = ({route}) => {
       // to_station: trainData.to_station,
       // start_time: trainData.start_time,
       // coaches: trainData.coaches,
-      trainData: trainData,
       name: name,
       token: token,
+      trainData: trainData,
     });
   };
 
@@ -115,6 +119,7 @@ const TrainList = ({route}) => {
     navigation.navigate('Attendance', {
       name: name,
       token: token,
+      trainData: trainData,
     });
     console.log('Attendance pressed');
   };
@@ -172,6 +177,7 @@ const TrainList = ({route}) => {
               <View style={styles.trainCard}>
                 <View
                   style={{
+                    // paddingTop: '1%',
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                     marginHorizontal: '6%',
@@ -181,21 +187,40 @@ const TrainList = ({route}) => {
                 </View>
                 <View style={styles.fromTo}>
                   <View>
-                    <Text style={styles.fromToText}>
+                    {/* <Text style={styles.fromToText}>
                       <Text style={{fontWeight: 'bold'}}>From</Text>
-                    </Text>
+                    </Text> */}
                     <Text style={styles.fromToText}>{train.from_station}</Text>
                     <Text style={styles.fromToText}>
                       {train.start_time} Hrs
                     </Text>
                   </View>
+                  <Text
+                    style={{color: 'black', fontSize: 18, fontWeight: '500'}}>
+                    -
+                  </Text>
                   <View>
-                    <Text style={styles.fromToText}>
+                    {/* <Text style={styles.fromToText}>
                       <Text style={{fontWeight: 'bold'}}>To</Text>
-                    </Text>
+                    </Text> */}
                     <Text style={styles.fromToText}>{train.to_station}</Text>
                     <Text style={styles.fromToText}>
                       {train.reach_time} Hrs
+                    </Text>
+                  </View>
+                  <Text
+                    style={{color: 'black', fontSize: 18, fontWeight: '500'}}>
+                    -
+                  </Text>
+                  <View>
+                    {/* <Text style={styles.fromToText}>
+                      <Text style={{fontWeight: 'bold'}}>To</Text>
+                    </Text> */}
+                    <Text style={styles.fromToText}>
+                      {train.return_station}
+                    </Text>
+                    <Text style={styles.fromToText}>
+                      {train.return_time} Hrs
                     </Text>
                   </View>
                 </View>
@@ -303,6 +328,8 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   allotedCoach: {
+    justifyContent: 'center',
+    alignItems: 'center',
     flexDirection: 'row',
     marginTop: '10%',
     marginHorizontal: '10%',
@@ -325,12 +352,17 @@ const styles = StyleSheet.create({
     paddingVertical: '1%',
   },
   allotedCoachName: {
+    // borderWidth: 2,
     color: 'black',
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
-    paddingHorizontal: '5%',
+    // marginLeft: '10%',
     paddingVertical: '1%',
+    // paddingHorizontal: '10%',
+    marginRight: '10%',
+    // backgroundColor: '#EFCBB4',
+    // borderRadius: 12,
   },
   // coach buttons style start*************************************************
   coachContainer: {
@@ -368,6 +400,7 @@ const styles = StyleSheet.create({
     color: '#167fb9',
   },
   trainCard: {
+    justifyContent: 'center',
     height: '38%',
     elevation: 20,
     shadowColor: '#EFCBB4',
@@ -392,7 +425,7 @@ const styles = StyleSheet.create({
   },
   fromToText: {
     color: 'black',
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: '400',
     textAlign: 'center',
   },
@@ -429,7 +462,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   activeFAButton: {
-    backgroundColor: '#EFCBB4',
+    backgroundColor: '#ff8d3c',
   },
   buttonFeedbackText: {
     fontSize: 17,

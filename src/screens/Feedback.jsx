@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -157,7 +157,11 @@ const Feedback = ({route}) => {
   };
   console.log('TRAINDATA IN FEEDBACK---', trainData);
   const data = trainData[0];
-  console.log(data.id);
+  console.log(data.employeeId);
+
+  useEffect(() => {}, []);
+
+  //postFeedback API
 
   const PostFeedbackApi = async () => {
     var myHeaders = new Headers();
@@ -171,9 +175,9 @@ const Feedback = ({route}) => {
     myHeaders.append('Authorization', `Bearer ${token}`);
 
     var urlencoded = new URLSearchParams();
-    urlencoded.append('dutyId', '1');
-    urlencoded.append('coach', 'A1');
-    urlencoded.append('pnr', '1234567890');
+    urlencoded.append('dutyId', data.id);
+    urlencoded.append('coach', data.coaches);
+    urlencoded.append('pnr', '13333444');
     urlencoded.append('description', 'All Good');
     urlencoded.append('rating', '5');
     urlencoded.append('feedback[0]', 'Good');
@@ -213,158 +217,111 @@ const Feedback = ({route}) => {
     //   .catch(error => console.log('error', error));
   };
 
+  //currentDate function
+
+  const getFormattedCurrentDate = () => {
+    const currentDate = new Date();
+    const options = {
+      weekday: 'long',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    };
+    return currentDate.toLocaleDateString('en-US', options);
+  };
+
   return (
     <View style={styles.mainContainer}>
-      {/* header view */}
       <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Hello, Mr. Ram</Text>
+        <Text style={styles.headerText}>Hello, Mr. {name}</Text>
       </View>
 
       <View>
-        {/* ************************Date and Time************* */}
-        <View>
-          <Text style={styles.cardTextDate}>
-            {/* {formatDate(train.departureTime)} */}
-            Friday, 26/10/2023
-          </Text>
+        <Text style={styles.cardTextDate}>{getFormattedCurrentDate()}</Text>
+      </View>
+      <View style={styles.trainCard}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginHorizontal: '6%',
+          }}>
+          <Text style={styles.cardTextHeaders}>train_no</Text>
+          <Text style={styles.cardTextHeaders}>train_name</Text>
+        </View>
+        <View style={styles.fromTo}>
+          <View>
+            <Text style={styles.fromToText}>
+              <Text style={{fontWeight: 'bold'}}>From</Text>
+            </Text>
+            <Text style={styles.fromToText}>from_station</Text>
+            <Text style={styles.fromToText}>start_time Hrs</Text>
+          </View>
+          <View>
+            <Text style={styles.fromToText}>
+              <Text style={{fontWeight: 'bold'}}>To</Text>
+            </Text>
+            <Text style={styles.fromToText}>to_station</Text>
+            <Text style={styles.fromToText}>reach_time Hrs</Text>
+          </View>
         </View>
       </View>
 
-      <ScrollView>
-        {/* <View>
-          <View
-            style={[
-              styles.trainCard,
-              {
+      {/* {trainData.map((train, index) => (
+        <View key={index}>
+          <View style={styles.trainCard}>
+            <View
+              style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 marginHorizontal: '6%',
-              },
-            ]}>
-            <Text style={styles.cardTextHeaders}>12121</Text>
-            <Text style={styles.cardTextHeaders}>Mahakaushal</Text>
-          </View>
-          <View style={styles.fromTo}>
-            <View>
-              <Text style={styles.fromToText}>
-                <Text style={{fontWeight: 'bold'}}>From</Text>
-              </Text>
-              <Text style={styles.fromToText}>Jabalpur</Text>
-              <Text style={styles.fromToText}>19:10 Hrs</Text>
+              }}>
+              <Text style={styles.cardTextHeaders}>{train.train_no}</Text>
+              <Text style={styles.cardTextHeaders}>{train.train_name}</Text>
             </View>
-            <View>
-              <Text style={styles.fromToText}>
-                <Text style={{fontWeight: 'bold'}}>To</Text>
-              </Text>
-              <Text style={styles.fromToText}>Katni</Text>
-              <Text style={styles.fromToText}>22:10 Hrs</Text>
-            </View>
-          </View>
-        </View> */}
-        {trainData.map((train, index) => (
-          <View key={index}>
-            <View style={styles.trainCard}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginHorizontal: '6%',
-                }}>
-                <Text style={styles.cardTextHeaders}>{train.train_no}</Text>
-                <Text style={styles.cardTextHeaders}>{train.train_name}</Text>
+            <View style={styles.fromTo}>
+              <View>
+                <Text style={styles.fromToText}>
+                  <Text style={{fontWeight: 'bold'}}>From</Text>
+                </Text>
+                <Text style={styles.fromToText}>{train.from_station}</Text>
+                <Text style={styles.fromToText}>{train.start_time} Hrs</Text>
               </View>
-              <View style={styles.fromTo}>
-                <View>
-                  <Text style={styles.fromToText}>
-                    <Text style={{fontWeight: 'bold'}}>From</Text>
-                  </Text>
-                  <Text style={styles.fromToText}>{train.from_station}</Text>
-                  <Text style={styles.fromToText}>{train.start_time} Hrs</Text>
-                </View>
-                <View>
-                  <Text style={styles.fromToText}>
-                    <Text style={{fontWeight: 'bold'}}>To</Text>
-                  </Text>
-                  <Text style={styles.fromToText}>{train.to_station}</Text>
-                  <Text style={styles.fromToText}>{train.reach_time} Hrs</Text>
-                </View>
+              <View>
+                <Text style={styles.fromToText}>
+                  <Text style={{fontWeight: 'bold'}}>To</Text>
+                </Text>
+                <Text style={styles.fromToText}>{train.to_station}</Text>
+                <Text style={styles.fromToText}>{train.reach_time} Hrs</Text>
               </View>
             </View>
-
-            {/* <View style={styles.allotedCoach}>
-              <View>
-                <Text style={styles.allotedCoachHeading}>Alloted Coaches</Text>
-              </View>
-              <View style={styles.verticalBar1}></View>
-              <View>
-                <Text style={styles.allotedCoachName}>{train.coaches}</Text>
-              </View>
-            </View> */}
-
-            {/* *******************Feedback and Attendance Container start******************* */}
-            {/* <View style={styles.buttonFAContainer}>
-              <View>
-                <TouchableOpacity
-                  onPress={() => {
-                    handleFeedback(train);
-                    handleFAPress('Feedback');
-                  }}
-                  style={[
-                    styles.buttonFA,
-                    activeFAButton === 'Feedback' && styles.activeFAButton,
-                  ]}>
-                  <Text style={styles.buttonFeedbackText}>FEEDBACK</Text>
-                </TouchableOpacity>
-              </View>
-              <View>
-                <TouchableOpacity
-                  onPress={() => {
-                    markAttendance();
-                    handleFAPress('Attendance');
-                  }}
-                  style={[
-                    styles.buttonFA,
-                    activeFAButton === 'Attendance' && styles.activeFAButton,
-                  ]}>
-                  <Text style={styles.buttonAttendanceText}>ATTENDANCE</Text>
-                </TouchableOpacity>
-              </View>
-            </View> */}
-
-            {/* *******************Feedback and Attendance Container end******************* */}
-
-            {/* <View style={styles.dashedLine}></View> */}
-
-            {/* **************bottom text container end*************************** */}
-          </View>
-        ))}
-        {/* ********************************coachNamePNRNo start ***************************** */}
-
-        <View style={styles.coachNamePNRNo}>
-          <View>
-            <Text style={styles.coachNameText}>A1</Text>
-          </View>
-          <View style={styles.verticalBar1}></View>
-          <View>
-            <TextInput
-              style={styles.pnrNoText}
-              placeholder="PNR No"
-              placeholderTextColor="black"
-              maxLength={10} // Set the maximum length to 10
-            />
           </View>
         </View>
+      ))} */}
 
-        {/* ********************************coachNamePNRNo end ***************************** */}
-
-        {/* start rating feedback start */}
+      <View style={styles.coachNamePNRNo}>
         <View>
-          {/* main heading ratingMainContainerheading start */}
+          <Text style={styles.coachNameText}>{data.coaches}</Text>
+        </View>
+
+        <View style={styles.verticalBar1}></View>
+
+        <View>
+          <TextInput
+            style={styles.pnrNoText}
+            placeholder="PNR No"
+            placeholderTextColor="#808080"
+            maxLength={10} // Set the maximum length to 10
+          />
+        </View>
+      </View>
+
+      {/* <View style={styles.ratingWithSubmitBox}>
           <View style={styles.ratingMainContainerheading}>
             <View>
               <Text style={styles.ratingHeadingColumn}>Particular</Text>
             </View>
-            {/* 1 red_star */}
+
             <View style={styles.particularFieldStarRatingColumnFirst}>
               <View
                 style={{
@@ -388,7 +345,6 @@ const Feedback = ({route}) => {
                 style={{width: 22, height: 22, marginVertical: 8}}
               />
             </View>
-            {/* 2 blue_star */}
             <View style={styles.particularFieldStarRatingColumnFirst}>
               <Text
                 style={{
@@ -405,7 +361,6 @@ const Feedback = ({route}) => {
                 style={{width: 22, height: 22, marginVertical: 8}}
               />
             </View>
-            {/* 3 yellow_star */}
             <View style={styles.particularFieldStarRatingColumnFirst}>
               <Text
                 style={{
@@ -423,26 +378,22 @@ const Feedback = ({route}) => {
               />
             </View>
           </View>
-          {/* main heading ratingMainContainerheading end */}
-          {/* Horizontal orange bar */}
-          <View style={{borderWidth: 1, borderColor: 'orange'}} />
+
+          <View
+            style={{borderWidth: 1, borderColor: 'orange', marginTop: '9%'}}
+          />
 
           <View style={styles.ratingMainContainerdata}>
-            {/* heading column start */}
             <View>
               <Text style={styles.ratingHeadingColumn}>AC</Text>
               <Text style={styles.ratingHeadingColumn}>CLEANING</Text>
               <Text style={styles.ratingHeadingColumn}>BLANKET</Text>
               <Text style={styles.ratingHeadingColumn}>BEHAVIOUR</Text>
             </View>
-            {/* heading column end */}
-            {/* vertical orange bar */}
+
             <View style={styles.ratingVerticalBar}></View>
             <View>
               <View style={{flexDirection: 'row', marginTop: 4}}>
-                {/* star rating data column and fields start */}
-
-                {/* star rating acFieldStarRatingColumnFirst start */}
                 <View style={styles.acFieldStarRatingColumnFirst}>
                   <TouchableOpacity onPress={handleACRedPress}>
                     <Image
@@ -455,8 +406,7 @@ const Feedback = ({route}) => {
                     />
                   </TouchableOpacity>
                 </View>
-                {/* star rating acFieldStarRatingColumnFirst end */}
-                {/* star rating acFieldStarRatingColumnSecond start */}
+
                 <View style={styles.acFieldStarRatingColumnSecond}>
                   <TouchableOpacity onPress={handleACBluePress}>
                     <Image
@@ -479,8 +429,7 @@ const Feedback = ({route}) => {
                     />
                   </TouchableOpacity>
                 </View>
-                {/* star rating acFieldStarRatingColumnSecond end */}
-                {/* star rating acFieldStarRatingColumnThird start */}
+
                 <View style={styles.acFieldStarRatingColumnThird}>
                   <TouchableOpacity onPress={handleACYellowPress}>
                     <Image
@@ -513,13 +462,8 @@ const Feedback = ({route}) => {
                     />
                   </TouchableOpacity>
                 </View>
-                {/* star rating acFieldStarRatingColumnThird end */}
-                {/* star rating data column and fields end */}
               </View>
               <View style={{flexDirection: 'row', marginTop: 4}}>
-                {/* star rating data column and fields start */}
-
-                {/* star rating acFieldStarRatingColumnFirst start */}
                 <View style={styles.acFieldStarRatingColumnFirst}>
                   <TouchableOpacity onPress={handleCleaningRedPress}>
                     <Image
@@ -532,8 +476,7 @@ const Feedback = ({route}) => {
                     />
                   </TouchableOpacity>
                 </View>
-                {/* star rating acFieldStarRatingColumnFirst end */}
-                {/* star rating acFieldStarRatingColumnSecond start */}
+
                 <View style={styles.acFieldStarRatingColumnSecond}>
                   <TouchableOpacity onPress={handleCleaningBluePress}>
                     <Image
@@ -556,8 +499,7 @@ const Feedback = ({route}) => {
                     />
                   </TouchableOpacity>
                 </View>
-                {/* star rating acFieldStarRatingColumnSecond end */}
-                {/* star rating acFieldStarRatingColumnThird start */}
+
                 <View style={styles.acFieldStarRatingColumnThird}>
                   <TouchableOpacity onPress={handleCleaningYellowPress}>
                     <Image
@@ -590,13 +532,8 @@ const Feedback = ({route}) => {
                     />
                   </TouchableOpacity>
                 </View>
-                {/* star rating acFieldStarRatingColumnThird end */}
-                {/* star rating data column and fields end */}
               </View>
               <View style={{flexDirection: 'row', marginTop: 4}}>
-                {/* star rating data column and fields start */}
-
-                {/* star rating acFieldStarRatingColumnFirst start */}
                 <View style={styles.acFieldStarRatingColumnFirst}>
                   <TouchableOpacity onPress={handleBlanketRedPress}>
                     <Image
@@ -609,8 +546,7 @@ const Feedback = ({route}) => {
                     />
                   </TouchableOpacity>
                 </View>
-                {/* star rating acFieldStarRatingColumnFirst end */}
-                {/* star rating acFieldStarRatingColumnSecond start */}
+
                 <View style={styles.acFieldStarRatingColumnSecond}>
                   <TouchableOpacity onPress={handleBlanketBluePress}>
                     <Image
@@ -633,8 +569,7 @@ const Feedback = ({route}) => {
                     />
                   </TouchableOpacity>
                 </View>
-                {/* star rating acFieldStarRatingColumnSecond end */}
-                {/* star rating acFieldStarRatingColumnThird start */}
+
                 <View style={styles.acFieldStarRatingColumnThird}>
                   <TouchableOpacity onPress={handleBlanketYellowPress}>
                     <Image
@@ -667,13 +602,8 @@ const Feedback = ({route}) => {
                     />
                   </TouchableOpacity>
                 </View>
-                {/* star rating acFieldStarRatingColumnThird end */}
-                {/* star rating data column and fields end */}
               </View>
               <View style={{flexDirection: 'row', marginTop: 4}}>
-                {/* star rating data column and fields start */}
-
-                {/* star rating acFieldStarRatingColumnFirst start */}
                 <View style={styles.acFieldStarRatingColumnFirst}>
                   <TouchableOpacity onPress={handleBehaviourRedPress}>
                     <Image
@@ -686,8 +616,7 @@ const Feedback = ({route}) => {
                     />
                   </TouchableOpacity>
                 </View>
-                {/* star rating acFieldStarRatingColumnFirst end */}
-                {/* star rating acFieldStarRatingColumnSecond start */}
+
                 <View style={styles.acFieldStarRatingColumnSecond}>
                   <TouchableOpacity onPress={handleBehaviourBluePress}>
                     <Image
@@ -710,8 +639,7 @@ const Feedback = ({route}) => {
                     />
                   </TouchableOpacity>
                 </View>
-                {/* star rating acFieldStarRatingColumnSecond end */}
-                {/* star rating acFieldStarRatingColumnThird start */}
+
                 <View style={styles.acFieldStarRatingColumnThird}>
                   <TouchableOpacity onPress={handleBehaviourYellowPress}>
                     <Image
@@ -744,20 +672,16 @@ const Feedback = ({route}) => {
                     />
                   </TouchableOpacity>
                 </View>
-                {/* star rating acFieldStarRatingColumnThird end */}
-                {/* star rating data column and fields end */}
               </View>
             </View>
           </View>
-          {/* submit button */}
+
           <TouchableOpacity style={styles.SubmitButton} onPress={handleSubmit}>
             <Text style={styles.SubmitButtonText}>Submit</Text>
           </TouchableOpacity>
-        </View>
-      </ScrollView>
-      {/* ********************************buttonBottomRowContainer start ***************************** */}
+        </View> */}
 
-      <View style={styles.buttonBottomRowContainer}>
+      {/* <View style={styles.buttonBottomRowContainer}>
         <TouchableOpacity
           style={styles.BottomRowbutton}
           onPress={() =>
@@ -779,7 +703,8 @@ const Feedback = ({route}) => {
             style={styles.icon}
           />
         </TouchableOpacity>
-      </View>
+      </View> */}
+
       {/* ********************************buttonBottomRowContainer end ***************************** */}
     </View>
   );
@@ -789,13 +714,12 @@ export default Feedback;
 
 const styles = StyleSheet.create({
   mainContainer: {
-    height: '100%',
     flex: 1,
-    position: 'relative',
-    // backgroundColor: '#ff8d3c',
+    // position: 'relative',
+    backgroundColor: 'red',
   },
   headerContainer: {
-    height: 25,
+    height: '5%',
     backgroundColor: 'white',
     alignItems: 'center',
   },
@@ -809,8 +733,6 @@ const styles = StyleSheet.create({
     shadowColor: '#EFCBB4',
     shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.1,
-    height: 25,
-    marginBottom: 4,
     backgroundColor: '#F8F9F9',
     textAlign: 'center',
     color: 'black',
@@ -818,7 +740,9 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   trainCard: {
-    height: '38%',
+    position: 'relative',
+    top: '1%',
+    resizeMode: 'contain',
     elevation: 20,
     shadowColor: '#EFCBB4',
     shadowOffset: {width: 0, height: 4},
@@ -828,87 +752,58 @@ const styles = StyleSheet.create({
     borderBottomEndRadius: 70,
     borderBottomStartRadius: 70,
     backgroundColor: '#F8F9F9',
-    // height: 170,
-    // elevation: 20,
-    // shadowColor: '#ff8d3c',
-    // shadowOffset: {width: 0, height: 4},
-    // shadowOpacity: 0.1,
-    // shadowRadius: 8,
-    // padding: 15,
-    // borderBottomRadius: 10,
-    // borderBottomEndRadius: 70,
-    // borderBottomStartRadius: 70,
-    // backgroundColor: '#F8F9F9',
   },
   cardTextHeaders: {
     color: 'black',
     fontSize: 18,
     fontWeight: 'bold',
-    // color: 'black',
-    // fontSize: 20,
-    // fontWeight: 'bold',
-    // textAlign: 'center',
   },
   fromTo: {
     marginTop: '3%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginHorizontal: '10%',
-    // marginTop: 10,
-    // flexDirection: 'row',
-    // justifyContent: 'space-around',
-    // marginHorizontal: -30,
   },
   fromToText: {
     color: 'black',
     fontSize: 18,
     fontWeight: '400',
     textAlign: 'center',
-    // color: 'black',
-    // fontSize: 20,
-    // fontWeight: '400',
-    // textAlign: 'center',
   },
   coachNamePNRNo: {
     flexDirection: 'row',
-    // marginTop: 38,
-    // height: 40,
-    marginLeft: 30,
+    marginHorizontal: '10%',
+    marginTop: '7%',
+    // height: '10%',
+    backgroundColor: '#EFCBB4',
+    borderRadius: 12,
   },
-
   coachNameText: {
     color: 'black',
-    borderBottomLeftRadius: 9,
-    borderTopLeftRadius: 9,
     fontSize: 20,
-    // fontWeight: 'bold',
-    backgroundColor: '#EFCBB4',
     textAlign: 'center',
-    width: 50,
-    height: 30,
+    // width: '100%',
+    // height: 30,
+    marginHorizontal: '10%',
   },
   pnrNoText: {
-    // color: 'black',
-
-    borderBottomRightRadius: 9,
-    borderTopRightRadius: 9,
+    color: 'black',
     fontSize: 20,
-    // fontWeight: 'bold',
-    backgroundColor: '#EFCBB4',
     textAlign: 'left',
     paddingVertical: 4,
     paddingLeft: 20,
-    width: 250,
-    height: 30,
+    // paddingRight: '35%',
+    // width: '100%',
+    // height: 30,
   },
   verticalBar1: {
-    height: 30,
+    height: '100%',
     width: 2,
     backgroundColor: 'orange',
   },
   ratingVerticalBar: {
     marginHorizontal: 5,
-    height: 180,
+    height: '100%',
     width: 2,
     backgroundColor: 'orange',
   },
@@ -917,12 +812,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginHorizontal: 10,
   },
+  ratingWithSubmitBox: {
+    // position: 'absolute',
+    // top: 200,
+  },
+  // main container heading
   ratingMainContainerheading: {
+    // marginTop: -20,
     flexDirection: 'row',
     marginHorizontal: 10,
   },
   ratingHeadingColumn: {
-    fontSize: 20,
+    fontSize: 17,
     fontWeight: 'bold',
     color: 'black',
     marginVertical: 8,
@@ -950,16 +851,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 12,
     marginHorizontal: 120,
-    marginTop: 20,
-    marginBottom: 100,
+    marginTop: 10,
+    // marginBottom: 100,
   },
   SubmitButtonText: {
+    borderWidth: 2,
+
     fontSize: 18,
     textAlign: 'center',
     color: 'black',
     fontWeight: 'bold',
   },
   buttonBottomRowContainer: {
+    borderWidth: 2,
     flexDirection: 'row',
     position: 'absolute',
     bottom: 0,
