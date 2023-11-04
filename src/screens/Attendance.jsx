@@ -33,9 +33,8 @@ const Attendance = ({route}) => {
   const [photoCaptured, setPhotoCaptured] = useState(false);
   const [selfieSubmitted, setSelfieSubmitted] = useState(false);
   const [selfieImage, setSelfieImage] = useState();
-  const [latitude, setLatitude] = useState(); // Step 1: Add state for submission
-  const [longitude, setLongitude] = useState(); // Step 1: Add state for submission
-  // const [step, setStep] = useState(''); // Step 1: Add state for submission
+  const [latitude, setLatitude] = useState();
+  const [longitude, setLongitude] = useState();
   const [baseimg, setBaseImg] = useState();
 
   const getlocation = () => {
@@ -148,8 +147,6 @@ const Attendance = ({route}) => {
       setSelfieSubmitted(true);
       saveAttendenceApi();
       if (trainData.step === '1' || trainData.step === '2') {
-        // Display a message indicating completion of a step
-        // Alert.alert('journey ' + step + 'is completed!');
       } else if (step === '3') {
         Alert.alert('Congrates! you have comleted your journey!');
       }
@@ -158,15 +155,6 @@ const Attendance = ({route}) => {
     }
   };
 
-  // const handleSubmitSelfie = () => {
-  //   if (photoCaptured) {
-  //     setSelfieSubmitted(true);
-  //     saveAttendenceApi();
-  //   } else {
-  //     Alert.alert('Please take a selfie first.');
-  //   }
-  // };
-
   console.log('in ATTENDENCE', trainData);
 
   return (
@@ -174,11 +162,23 @@ const Attendance = ({route}) => {
       <ScrollView>
         <View style={styles.attendanceHeader}>
           <View>
-            <Text style={styles.attendanceHeader1}>Dear</Text>
+            <Text style={styles.attendanceHeader1}>Dear,</Text>
           </View>
           <View>
             <Text style={[styles.attendanceHeader2, {color: '#167fb9'}]}>
               {name}
+            </Text>
+            <Text style={{color: 'black'}}>
+              {step === 1 && <Text>you are at {trainData.from_station}!</Text>}
+              {step === 2 && (
+                <Text>you are going to {trainData.to_station}!</Text>
+              )}
+              {step === 3 && (
+                <Text>you have reached {trainData.return_station} Back!</Text>
+              )}
+              {step !== 1 && step !== 2 && step !== 3 && (
+                <Text>Default message goes here.</Text>
+              )}
             </Text>
           </View>
         </View>

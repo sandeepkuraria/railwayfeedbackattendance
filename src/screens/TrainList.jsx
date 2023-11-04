@@ -170,8 +170,6 @@ const TrainList = ({route}) => {
       {/* ))} */}
       <View>
         <ScrollView>
-          {/* {data && data.map(item => <Component key={item.id} {...item} />)}
-           */}
           {trainData.map((train, index) => (
             <View key={index}>
               <View style={styles.trainCard}>
@@ -327,6 +325,17 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'relative',
   },
+  headerContainer: {
+    height: '4%',
+    backgroundColor: 'white',
+    alignItems: 'center',
+  },
+
+  headerText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#167fb9',
+  },
   allotedCoach: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -388,17 +397,6 @@ const styles = StyleSheet.create({
   },
   // coach buttons style end*************************************************
 
-  headerContainer: {
-    height: '4%',
-    backgroundColor: 'white',
-    alignItems: 'center',
-  },
-
-  headerText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#167fb9',
-  },
   trainCard: {
     justifyContent: 'center',
     height: '38%',
