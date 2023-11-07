@@ -24,7 +24,7 @@ const Attendance = ({route}) => {
 
   const trainData = route.params.trainData[0];
 
-  let step = parseInt(trainData.step);
+  let step = parseInt(trainData?.step);
   step++;
 
   console.log(
@@ -76,7 +76,7 @@ const Attendance = ({route}) => {
     requestPermissions();
   }, []);
 
-  console.log(trainData.id);
+  console.log(trainData?.id);
 
   const saveAttendenceApi = async () => {
     var myHeaders = new Headers();
@@ -87,7 +87,7 @@ const Attendance = ({route}) => {
     );
 
     var formdata = new FormData();
-    formdata.append('dutyId', trainData.id);
+    formdata.append('dutyId', trainData?.id);
     formdata.append('lat', latitude);
     formdata.append('long', longitude);
     formdata.append('photo', baseimg);
@@ -160,7 +160,7 @@ const Attendance = ({route}) => {
       setIsLoading(true);
       setSelfieSubmitted(true);
       saveAttendenceApi();
-      if (trainData.step === '1' || trainData.step === '2') {
+      if (trainData?.step === '1' || trainData?.step === '2') {
       } else if (step === '3') {
         Alert.alert('Congrates! you have comleted your journey!');
       }
@@ -183,12 +183,12 @@ const Attendance = ({route}) => {
               {name}
             </Text>
             <Text style={{color: 'black'}}>
-              {step === 1 && <Text>you are at {trainData.from_station}!</Text>}
+              {step === 1 && <Text>you are at {trainData?.from_station}!</Text>}
               {step === 2 && (
-                <Text>you are going to {trainData.to_station}!</Text>
+                <Text>you are going to {trainData?.to_station}!</Text>
               )}
               {step === 3 && (
-                <Text>you have reached {trainData.return_station} Back!</Text>
+                <Text>you have reached {trainData?.return_station} Back!</Text>
               )}
               {step !== 1 && step !== 2 && step !== 3 && (
                 <Text>Default message goes here.</Text>
@@ -284,20 +284,22 @@ const Attendance = ({route}) => {
         {/* submit button */}
         <View>
           <View>
-            <TouchableOpacity
-              style={[
-                styles.SubmitButton,
-                isLoading && {backgroundColor: '#ccc'},
-              ]} // Change button style when loading
-              onPress={handleSubmitSelfie}
-              disabled={isLoading} // Disable the button when loading
-            >
-              {isLoading ? (
-                <ActivityIndicator size="small" color="#0000ff" />
-              ) : (
-                <Text style={styles.SubmitButtonText}>Submit</Text>
-              )}
-            </TouchableOpacity>
+            {trainData?.step < 4 ? (
+              <TouchableOpacity
+                style={[
+                  styles.SubmitButton,
+                  isLoading && {backgroundColor: '#ccc'},
+                ]} // Change button style when loading
+                onPress={handleSubmitSelfie}
+                disabled={isLoading} // Disable the button when loading
+              >
+                {isLoading ? (
+                  <ActivityIndicator size="small" color="#0000ff" />
+                ) : (
+                  <Text style={styles.SubmitButtonText}>Submit</Text>
+                )}
+              </TouchableOpacity>
+            ) : null}
           </View>
 
           {/* Display alert if selfie is submitted */}
@@ -307,6 +309,7 @@ const Attendance = ({route}) => {
         </View>
 
         {/* bottombubble right */}
+
         <View
           style={{
             marginBottom: '50%',
@@ -350,6 +353,7 @@ const Attendance = ({route}) => {
           </TouchableOpacity>
         </View>
       </View> */}
+
       <View style={styles.buttonBottomRowContainer}>
         <TouchableOpacity
           style={styles.BottomRowbutton}
@@ -427,14 +431,17 @@ const styles = StyleSheet.create({
   cameraCard: {
     height: '35%',
     width: '70%',
-    elevation: 15,
-    shadowColor: 'black',
-    shadowOffset: {width: 10, height: 15},
-    shadowOpacity: 0.8,
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    borderColor: '#ff8d3c',
+    // elevation: 15,
+    // shadowColor: 'black',
+    // shadowOffset: {width: 10, height: 15},
+    // shadowOpacity: 0.8,
     marginHorizontal: '15%',
     shadowRadius: 8,
     borderRadius: 20,
-    backgroundColor: '#EFCBB4',
+    // backgroundColor: '#EFCBB4',
     alignItems: 'center',
     position: 'absolute',
     top: '20%',
@@ -481,7 +488,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'black',
     fontWeight: 'bold',
-    marginHorizontal: '10%',
+    marginHorizontal: '5%',
   },
   RetakeSelfieText: {
     fontSize: 16,
@@ -516,6 +523,11 @@ const styles = StyleSheet.create({
     marginHorizontal: '32%',
     marginTop: '1%',
     paddingVertical: '2%',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
   },
   SubmitButtonText: {
     fontSize: 22,

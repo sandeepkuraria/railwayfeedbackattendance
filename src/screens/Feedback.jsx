@@ -18,6 +18,8 @@ import {Card} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native'; // Import the useNavigation hook
 import Icon from 'react-native-vector-icons/FontAwesome';
 import StarRating from 'react-native-star-rating';
+import Logout from '../components/Logout';
+import BottomHomeListButton from '../components/BottomHomeListButton';
 
 const Feedback = ({route}) => {
   const navigation = useNavigation();
@@ -58,6 +60,7 @@ const Feedback = ({route}) => {
   const [cleaningFieldValue, setCleaningFieldValue] = useState(0);
   const [blanketFieldValue, setBlanketFieldValue] = useState(0);
   const [behaviourFieldValue, setBehaviourFieldValue] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   // **************************AC start***************************************
 
@@ -155,20 +158,11 @@ const Feedback = ({route}) => {
       const coachNames = data.coaches.split(',');
       setCoachButtons(coachNames);
     }
+    console.log(
+      'data.coaches in feedback page **************************',
+      data.coaches.split(','),
+    );
   }, [data]);
-
-  // const coachButtons = [
-  //   'A1',
-  //   'A2',
-  //   'A3',
-  //   'A4',
-  //   'A5',
-  //   'A1',
-  //   'A2',
-  //   'A3',
-  //   'A4',
-  //   'A5',
-  // ];
 
   const handleCoachSelection = coach => {
     setSelectedCoach(coach);
@@ -180,9 +174,9 @@ const Feedback = ({route}) => {
     setPnrNo(numericInput);
   };
   const handleMobileInputChange = input => {
-    const numericInput = input.replace(/[^0-9]/g, '');
+    const numericInput2 = input.replace(/[^0-9]/g, '');
 
-    setMobile(numericInput);
+    setMobile(numericInput2);
   };
 
   //numeric value input in feedback end
@@ -208,7 +202,7 @@ const Feedback = ({route}) => {
       Alert.alert('Please fill in all fields');
       return;
     }
-    description === 0;
+
     console.log('PNR No:', pnrNo);
     console.log('AC Rating:', acFieldValue);
     console.log('Cleaning Rating:', cleaningFieldValue);
@@ -291,25 +285,27 @@ const Feedback = ({route}) => {
   //postFeedback API
 
   const PostFeedbackApi = async () => {
-    console.log('INSIDE API FUNCTION');
+    console.log('INSIDE PostFeedbackApi API FUNCTION');
     console.log(data.id);
     console.log(data.coaches);
     console.log(pnrNo);
     console.log(acFieldValue);
     console.log(cleaningFieldValue);
+    console.log(selectedCoach);
     var myHeaders = new Headers();
 
     myHeaders.append('Authorization', `Bearer ${token}`);
 
     var formdata = new FormData();
     formdata.append('dutyId', data.id);
-    formdata.append('coach', data.coaches);
+    formdata.append('coach', selectedCoach);
     formdata.append('pnr', pnrNo);
-    formdata.append('description', 'All Good');
-    formdata.append('feedback[AC]', 'Good');
-    formdata.append('feedback[CLEANING]', 'bad');
-    formdata.append('feedback[BLANKET]', 'average');
-    formdata.append('feedback[BEHAVIOR]', 'poor');
+    formdata.append('mobile', mobile);
+    formdata.append('description', description);
+    formdata.append('feedback[AC]', acFieldValue);
+    formdata.append('feedback[CLEANING]', cleaningFieldValue);
+    formdata.append('feedback[BLANKET]', blanketFieldValue);
+    formdata.append('feedback[BEHAVIOR]', behaviourFieldValue);
 
     var requestOptions = {
       method: 'POST',
@@ -358,9 +354,14 @@ const Feedback = ({route}) => {
   return (
     <View style={styles.mainContainer}>
       <ScrollView>
-        <KeyboardAvoidingView behavior="padding" style={{flex: 1}}>
+        <KeyboardAvoidingView style={{flex: 1}}>
           <View style={styles.headerContainer}>
-            <Text style={styles.headerText}>Hello, Mr. {name}</Text>
+            <View>
+              <Text style={styles.headerText}>{name}</Text>
+            </View>
+            <View>
+              <Logout />
+            </View>
           </View>
 
           <View style={styles.cardTextDateHeading}>
@@ -448,9 +449,46 @@ const Feedback = ({route}) => {
             </View>
           ))}
 
+          {/* <View style={styles.coachButtonsContainer}>
+            <View style={styles.coachButtons}>
+              {coachButtons.map((coach, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={[
+                    styles.button,
+                    selectedCoach === coach && styles.selectedButton,
+                  ]}
+                  onPress={() => handleCoachSelection(coach)}>
+                  <Text style={styles.buttonText}>{coach}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View> */}
+          <View style={styles.coachButtonsContainer}>
+            <View style={styles.coachButtons}>
+              {coachButtons.map((coach, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={[
+                    styles.button,
+                    (selectedCoach === coach ||
+                      (index === 0 && !selectedCoach)) &&
+                      styles.selectedButton, // Added condition for 0th index
+                  ]}
+                  onPress={() => handleCoachSelection(coach)}>
+                  <Text style={styles.buttonText}>{coach}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+
           <View style={styles.coachNamePNRNo}>
             <View>
-              <Text style={styles.coachNameText}>{selectedCoach || 'A1'}</Text>
+              <Text style={styles.coachNameText}>
+                {' '}
+                {(selectedCoach && selectedCoach) || coachButtons[0]}{' '}
+                {/* Conditionally render selectedCoach or 0th coach */}
+              </Text>
             </View>
 
             <View style={styles.verticalBar1}></View>
@@ -468,36 +506,21 @@ const Feedback = ({route}) => {
             </View>
           </View>
 
-          <View style={styles.coachButtonsContainer}>
-            {/* <Text style={styles.label}>Select Coach:</Text> */}
-            <View style={{}}>
-              <View style={styles.scrollViewContainer}>
-                <ScrollView
-                  horizontal={true}
-                  contentContainerStyle={styles.scrollViewContent}
-                  showsVerticalScrollIndicator={false}>
-                  {coachButtons.map((coach, index) => (
-                    <TouchableOpacity
-                      key={index}
-                      style={[
-                        styles.button,
-                        selectedCoach === coach && styles.selectedButton,
-                      ]}
-                      onPress={() => handleCoachSelection(coach)}>
-                      <Text style={styles.buttonText}>{coach}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </ScrollView>
-              </View>
+          <View style={styles.mobileNoContainer}>
+            <View>
+              <Text style={styles.coachNameText}>Mobile</Text>
             </View>
+            <View style={styles.verticalBar1}></View>
+
             <View style={styles.mobileNo}>
               <TextInput
-                color="black"
+                style={styles.mobileNoText}
                 placeholder="Mobile No"
                 placeholderTextColor="#808080"
-                keyboardType="numeric"
                 maxLength={10}
-                style={styles.mobileNoText}
+                keyboardType="numeric"
+                color="black"
+                value={mobile}
                 onChangeText={handleMobileInputChange}
               />
             </View>
@@ -900,7 +923,6 @@ const Feedback = ({route}) => {
 
             <View style={styles.card}>
               <TextInput
-                multiline
                 placeholder="Enter your description"
                 placeholderTextColor={'black'}
                 style={styles.input}
@@ -909,9 +931,18 @@ const Feedback = ({route}) => {
               />
             </View>
             <TouchableOpacity
-              style={styles.SubmitButton}
-              onPress={handleSubmit}>
-              <Text style={styles.SubmitButtonText}>Submit</Text>
+              style={[
+                styles.SubmitButton,
+                isLoading && {backgroundColor: '#ccc'},
+              ]}
+              onPress={handleSubmit}
+              disabled={isLoading} // Disable the button when loading
+            >
+              {isLoading ? (
+                <ActivityIndicator size="small" color="#0000ff" />
+              ) : (
+                <Text style={styles.SubmitButtonText}>Submit</Text>
+              )}
             </TouchableOpacity>
           </View>
 
@@ -943,6 +974,7 @@ const Feedback = ({route}) => {
           />
         </TouchableOpacity>
       </View>
+      {/* <BottomHomeListButton /> */}
     </View>
   );
 };
@@ -955,18 +987,21 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     flex: 0,
-    paddingTop: '1%',
+
+    flexDirection: 'row',
+    paddingVertical: '3%',
     marginBottom: '1%',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white',
     elevation: 10,
-    shadowColor: '#efcbb4',
+    shadowColor: '#EFCBB4',
     shadowOffset: {width: 5, height: 100},
-    shadowOpacity: 0.5,
+    shadowOpacity: 0.1,
+    justifyContent: 'space-around',
   },
   headerText: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#167fb9',
   },
@@ -1017,11 +1052,25 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     textAlign: 'center',
   },
+  coachButtons: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   coachNamePNRNo: {
     flex: 1,
     flexDirection: 'row',
     marginHorizontal: '10%',
-    marginTop: '10%',
+    marginTop: '5%',
+    alignItems: 'center',
+    backgroundColor: '#EFCBB4',
+    borderRadius: 12,
+  },
+  mobileNoContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    marginHorizontal: '10%',
+    marginTop: '5%',
     alignItems: 'center',
     backgroundColor: '#EFCBB4',
     borderRadius: 12,
@@ -1037,12 +1086,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'left',
     paddingVertical: 4,
-    paddingLeft: 20,
+    marginLeft: '10%',
   },
   mobileNoText: {
     color: 'black',
     fontSize: 18,
-    // paddingLeft: 20,
+    marginLeft: '10%',
+    paddingVertical: 4,
   },
   verticalBar1: {
     height: '100%',
@@ -1069,24 +1119,27 @@ const styles = StyleSheet.create({
 
   card: {
     flex: 0,
+    // justifyContent: 'center',
+    // borderColor: 'orange',
+    // paddingTop: '2%',
+    // borderWidth: 1,
     backgroundColor: '#EFCBB4',
-    padding: 16,
-    borderRadius: 8,
+    // padding: '0%',
+    borderRadius: 6,
     elevation: 4,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.2,
     shadowRadius: 2,
-    margin: 16,
+    paddingLeft: '5%',
+    margin: '5%',
   },
   input: {
+    fontSize: 18,
     color: 'black',
     flex: 0,
-    height: 100,
-    borderColor: 'orange',
-    borderWidth: 1,
-    marginBottom: 16,
-    padding: 8,
+    flexWrap: 'wrap',
+    // marginBottom: '3%',
     borderRadius: 4,
   },
   buttonContainer: {
@@ -1135,12 +1188,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#ff8d3c',
-    marginHorizontal: '35%',
+    marginHorizontal: '32%',
     borderRadius: 10,
-    paddingVertical: '1%',
+    paddingVertical: '2%',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
   },
   SubmitButtonText: {
-    fontSize: 18,
+    fontSize: 22,
     textAlign: 'center',
     color: 'black',
     fontWeight: 'bold',
@@ -1183,22 +1241,9 @@ const styles = StyleSheet.create({
     marginTop: '2%',
     flexDirection: 'row',
     flex: 1,
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  mobileNo: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: '32%',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    maxHeight: '85%',
   },
-  // label: {
-  //   fontSize: 16,
-  //   marginBottom: 10,
-  // },
   scrollViewContainer: {
     paddingHorizontal: '5%',
     borderWidth: 1,
@@ -1208,7 +1253,6 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     flexDirection: 'row',
-    // flexWrap: 'wrap',
     justifyContent: 'center',
     alignItems: 'center',
   },

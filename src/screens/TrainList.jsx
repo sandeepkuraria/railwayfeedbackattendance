@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Logout from '../components/Logout';
+import BottomHomeListButton from '../components/BottomHomeListButton';
 
 const TrainList = ({route}) => {
   const name = route.params.name;
@@ -56,11 +57,6 @@ const TrainList = ({route}) => {
   const upcomingDutiesApi = async () => {
     var myHeaders = new Headers();
     myHeaders.append('Authorization', `Bearer ${token}`);
-
-    myHeaders.append(
-      'Cookie',
-      'ci_session=e2dd6dd7ec0b6ac1ff3c57f01fb27e7495b05e82',
-    );
 
     var requestOptions = {
       method: 'GET',
@@ -158,7 +154,7 @@ const TrainList = ({route}) => {
       {/* ********Hello, Mr. userName */}
       <View style={styles.headerContainer}>
         <View>
-          <Text style={styles.headerText}>Hello, Mr.{name}</Text>
+          <Text style={styles.headerText}>{name}</Text>
         </View>
         <View>
           <Logout />
@@ -315,8 +311,9 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     flex: 0,
+
     flexDirection: 'row',
-    paddingTop: '1%',
+    paddingVertical: '3%',
     marginBottom: '1%',
     justifyContent: 'center',
     alignItems: 'center',
@@ -328,41 +325,43 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   headerText: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#167fb9',
   },
   allotedCoach: {
     flex: 0,
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignItems: 'center',
     flexDirection: 'row',
+    height: '17%',
     marginTop: '10%',
     marginHorizontal: '10%',
-    marginBottom: '3%',
+    marginBottom: '1%',
     backgroundColor: '#EFCBB4',
-    borderRadius: 12,
+    borderRadius: 8,
   },
 
   allotedCoachHeading: {
     color: 'black',
     fontSize: 18,
-    paddingHorizontal: '17%',
-    paddingVertical: '1%',
+    // paddingHorizontal: '17%',
+    // paddingVertical: '1%',
   },
   verticalBar1: {
     height: '100%',
     width: 2,
     backgroundColor: 'orange',
-    paddingVertical: '1%',
+    // paddingVertical: '1%',
   },
   allotedCoachName: {
     color: 'black',
     fontSize: 18,
     fontWeight: 'bold',
-    textAlign: 'center',
-    paddingVertical: '1%',
-    marginRight: '10%',
+    // textAlign: 'center',
+    // paddingRight: '15%',
+    // paddingVertical: '1%',
+    // marginRight: '10%',
   },
 
   trainCard: {
@@ -451,7 +450,7 @@ const styles = StyleSheet.create({
   buttonFA: {
     borderWidth: 2,
     borderColor: '#EFCBB4',
-    paddingVertical: '2%',
+    paddingVertical: '6%',
     paddingHorizontal: '1%',
     borderRadius: 50,
   },
@@ -484,14 +483,11 @@ const styles = StyleSheet.create({
 
   upComingJourney: {
     flex: 0,
-    marginTop: '9%',
-    marginBottom: '6%',
-    borderBottomWidth: 1,
-    borderRadius: 12,
-    paddingLeft: '5%',
-    borderBottomColor: '#EFCBB4',
+    marginTop: '2%',
+    //borderBottomWidth: 1,
+    paddingLeft: '2%',
+    //borderBottomColor: '#EFCBB4',
     width: '60%',
-    marginLeft: '2%',
     justifyContent: 'center',
   },
   upComingJourneyText: {
@@ -510,7 +506,7 @@ const styles = StyleSheet.create({
     shadowColor: '#EFCBB4',
     shadowOffset: {width: 5, height: 10},
     shadowOpacity: 0.1,
-    paddingVertical: '5%',
+    paddingVertical: '1%',
   },
   bottomText: {
     fontSize: 16,
@@ -561,9 +557,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     borderWidth: 1,
     borderColor: '#EFCBB4',
-    marginHorizontal: '3%',
-    borderRadius: 10,
+    marginHorizontal: '2%',
+    //borderRadius: 10,
     padding: '1%',
-    marginBottom: '6%',
+    marginBottom: '0.5%',
   },
 });

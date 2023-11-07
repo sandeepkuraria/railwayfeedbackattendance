@@ -37,8 +37,8 @@ const Login = () => {
     );
 
     var formdata = new FormData();
-    formdata.append('emp_id', '1');
-    formdata.append('password', '1');
+    formdata.append('emp_id', emp_id);
+    formdata.append('password', password);
 
     var requestOptions = {
       method: 'POST',
