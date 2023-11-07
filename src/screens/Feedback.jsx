@@ -24,9 +24,19 @@ const Feedback = ({route}) => {
   const name = route.params.name;
   const token = route.params.token;
   const trainData = route.params.trainData;
+  let trainDataFirstIndex = [];
+  trainDataFirstIndex = trainData[0];
 
+  console.log(
+    'trainDataFirstIndex in feedback___________-------',
+    trainDataFirstIndex,
+  );
   //numeric value input in feedback start
   const [pnrNo, setPnrNo] = useState('');
+  const [selectedCoach, setSelectedCoach] = useState(null);
+  const [coachButtons, setCoachButtons] = useState([]);
+  const [description, setDescription] = useState('');
+  const [mobile, setMobile] = useState('');
 
   const [isACRedActive, setIsACRedActive] = useState(false);
   const [isACBlueActive, setIsACBlueActive] = useState(false);
@@ -140,20 +150,52 @@ const Feedback = ({route}) => {
     console.log('Behaviour Value:', 3);
   };
 
+  useEffect(() => {
+    if (data && data.coaches) {
+      const coachNames = data.coaches.split(',');
+      setCoachButtons(coachNames);
+    }
+  }, [data]);
+
+  // const coachButtons = [
+  //   'A1',
+  //   'A2',
+  //   'A3',
+  //   'A4',
+  //   'A5',
+  //   'A1',
+  //   'A2',
+  //   'A3',
+  //   'A4',
+  //   'A5',
+  // ];
+
+  const handleCoachSelection = coach => {
+    setSelectedCoach(coach);
+  };
+
   const handlePnrInputChange = input => {
-    // Remove non-numeric characters from input
     const numericInput = input.replace(/[^0-9]/g, '');
 
     setPnrNo(numericInput);
+  };
+  const handleMobileInputChange = input => {
+    const numericInput = input.replace(/[^0-9]/g, '');
+
+    setMobile(numericInput);
   };
 
   //numeric value input in feedback end
 
   // **********************************************************************
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (pnrNo.length !== 10) {
       Alert.alert('Please ensure PNR number is exactly 10 digits');
+      return;
+    }
+    if (mobile.length !== 10) {
+      Alert.alert('Please ensure Mobile number is exactly 10 digits');
       return;
     }
 
@@ -166,58 +208,115 @@ const Feedback = ({route}) => {
       Alert.alert('Please fill in all fields');
       return;
     }
-
-    // Display feedback in console
+    description === 0;
     console.log('PNR No:', pnrNo);
     console.log('AC Rating:', acFieldValue);
     console.log('Cleaning Rating:', cleaningFieldValue);
     console.log('Blanket Rating:', blanketFieldValue);
     console.log('Behaviour Rating:', behaviourFieldValue);
+    console.log('description :', description);
+    console.log('mobile :', mobile);
 
-    // Show feedback submitted message
-    Alert.alert('Feedback submitted successfully!');
+    try {
+      await PostFeedbackApi(); // Call PostFeedbackApi function
+      // Alert.alert('Feedback submitted successfully!');
+    } catch (error) {
+      console.error('Error submitting feedback:', error);
+      Alert.alert('Error submitting feedback');
+    }
   };
 
-  console.log('TRAINDATA IN FEEDBACK---', trainData);
+  console.log('TRAINDATA IN FEEDBACK---', trainData[0]);
   const data = trainData[0];
-  console.log(data.employeeId);
+  console.log('data in feedback', data.coaches, data.id);
 
-  useEffect(() => {
-    // PostFeedbackApi();
-  }, []);
+  // useEffect(() => {}, []);
+
+  //postFeedback API
+
+  // const PostFeedbackApi = async () => {
+  //   console.log('INSIDE api--', data.id, data.coaches);
+  //   var myHeaders = new Headers();
+  //   myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+
+  //   myHeaders.append(
+  //     'Cookie',
+  //     'ci_session=faa818cb1e047f52249efe5702e18ed8bfa8d0f3',
+  //   );
+
+  //   myHeaders.append('Authorization', `Bearer ${token}`);
+
+  //   var urlencoded = new URLSearchParams();
+  //   urlencoded.append('dutyId', data.id);
+  //   urlencoded.append('coach', data.coaches);
+  //   urlencoded.append('pnr', pnrNo);
+  //   urlencoded.append('description', 'All Good');
+  //   // urlencoded.append('rating', '5');
+  //   urlencoded.append('feedback[AC]', acFieldValue);
+  //   urlencoded.append('feedback[CLEANING]', cleaningFieldValue);
+  //   urlencoded.append('feedback[BLANKET]', blanketFieldValue);
+  //   urlencoded.append('feedback[BEHAVIOUR]', behaviourFieldValue);
+
+  //   var requestOptions = {
+  //     method: 'POST',
+  //     headers: myHeaders,
+  //     body: urlencoded,
+  //     redirect: 'follow',
+  //   };
+
+  //   const res = await fetch(
+  //     'https://railway.retinodes.com/api/v1/assignduty/save_feedback',
+  //     requestOptions,
+  //   );
+
+  //   const response = await res.json();
+
+  //   if (response.status === true) {
+  //     console.log(response.message);
+
+  //     navigation.replace('TrainList', {
+  //       name: response.data.name,
+  //       token: response.token,
+  //     });
+  //   } else {
+  //     Alert.alert(response.message);
+  //     console.log(response);
+  //   }
+
+  //   //  .then(response => response.json())
+  //   //   .then(result => console.log(result))
+  //   //   .catch(error => console.log('error', error));
+  // };
 
   //postFeedback API
 
   const PostFeedbackApi = async () => {
+    console.log('INSIDE API FUNCTION');
+    console.log(data.id);
+    console.log(data.coaches);
+    console.log(pnrNo);
+    console.log(acFieldValue);
+    console.log(cleaningFieldValue);
     var myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
-
-    myHeaders.append(
-      'Cookie',
-      'ci_session=faa818cb1e047f52249efe5702e18ed8bfa8d0f3',
-    );
 
     myHeaders.append('Authorization', `Bearer ${token}`);
 
-    var urlencoded = new URLSearchParams();
-    urlencoded.append('dutyId', data.id);
-    urlencoded.append('coach', data.coaches);
-    urlencoded.append('pnr', '13333444');
-    urlencoded.append('description', 'All Good');
-    urlencoded.append('rating', '5');
-    urlencoded.append('feedback[0]', 'Good');
+    var formdata = new FormData();
+    formdata.append('dutyId', data.id);
+    formdata.append('coach', data.coaches);
+    formdata.append('pnr', pnrNo);
+    formdata.append('description', 'All Good');
+    formdata.append('feedback[AC]', 'Good');
+    formdata.append('feedback[CLEANING]', 'bad');
+    formdata.append('feedback[BLANKET]', 'average');
+    formdata.append('feedback[BEHAVIOR]', 'poor');
 
     var requestOptions = {
       method: 'POST',
       headers: myHeaders,
-      body: urlencoded,
+      body: formdata,
       redirect: 'follow',
     };
-
-    fetch(
-      'https://railway.retinodes.com/api/v1/assignduty/save_feedback',
-      requestOptions,
-    );
 
     const res = await fetch(
       'https://railway.retinodes.com/api/v1/assignduty/save_feedback',
@@ -227,14 +326,15 @@ const Feedback = ({route}) => {
     const response = await res.json();
 
     if (response.status === true) {
-      console.log(response.data.name);
-
+      Alert.alert(response.message);
+      console.log(response);
       navigation.replace('TrainList', {
-        name: response.data.name,
-        token: response.token,
+        name: name,
+        token: token,
       });
     } else {
       Alert.alert(response.message);
+      console.log(response);
     }
 
     //  .then(response => response.json())
@@ -267,9 +367,9 @@ const Feedback = ({route}) => {
             <Text style={styles.cardTextDate}>{getFormattedCurrentDate()}</Text>
           </View>
 
-          {trainData.map((train, index) => (
+          {[trainDataFirstIndex].map((train, index) => (
             <View key={index}>
-              <View style={styles.trainCard}>
+              {/* <View style={styles.trainCard}>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -299,13 +399,58 @@ const Feedback = ({route}) => {
                     </Text>
                   </View>
                 </View>
+              </View> */}
+              <View style={styles.trainCard}>
+                <View
+                  style={{
+                    // paddingTop: '1%',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginHorizontal: '6%',
+                  }}>
+                  <Text style={styles.cardTextHeaders}>{train.train_no}</Text>
+                  <Text style={styles.cardTextHeaders}>{train.train_name}</Text>
+                </View>
+                <View style={styles.fromTo}>
+                  <View>
+                    {/* <Text style={styles.fromToText}>
+                      <Text style={{fontWeight: 'bold'}}>From</Text>
+                    </Text> */}
+                    <Text style={styles.fromToText}>{train.from_station}</Text>
+                    <Text style={styles.fromToText}>
+                      {train.start_time} Hrs
+                    </Text>
+                  </View>
+                  <Text
+                    style={{color: 'black', fontSize: 18, fontWeight: '500'}}>
+                    -
+                  </Text>
+                  <View>
+                    <Text style={styles.fromToText}>{train.to_station}</Text>
+                    <Text style={styles.fromToText}>
+                      {train.reach_time} Hrs
+                    </Text>
+                  </View>
+                  <Text
+                    style={{color: 'black', fontSize: 18, fontWeight: '500'}}>
+                    -
+                  </Text>
+                  <View>
+                    <Text style={styles.fromToText}>
+                      {train.return_station}
+                    </Text>
+                    <Text style={styles.fromToText}>
+                      {train.return_time} Hrs
+                    </Text>
+                  </View>
+                </View>
               </View>
             </View>
           ))}
 
           <View style={styles.coachNamePNRNo}>
             <View>
-              <Text style={styles.coachNameText}>{data.coaches}</Text>
+              <Text style={styles.coachNameText}>{selectedCoach || 'A1'}</Text>
             </View>
 
             <View style={styles.verticalBar1}></View>
@@ -318,7 +463,42 @@ const Feedback = ({route}) => {
                 maxLength={10}
                 keyboardType="numeric"
                 value={pnrNo}
-                onChangeText={handlePnrInputChange} // Handle input changes
+                onChangeText={handlePnrInputChange}
+              />
+            </View>
+          </View>
+
+          <View style={styles.coachButtonsContainer}>
+            {/* <Text style={styles.label}>Select Coach:</Text> */}
+            <View style={{}}>
+              <View style={styles.scrollViewContainer}>
+                <ScrollView
+                  horizontal={true}
+                  contentContainerStyle={styles.scrollViewContent}
+                  showsVerticalScrollIndicator={false}>
+                  {coachButtons.map((coach, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      style={[
+                        styles.button,
+                        selectedCoach === coach && styles.selectedButton,
+                      ]}
+                      onPress={() => handleCoachSelection(coach)}>
+                      <Text style={styles.buttonText}>{coach}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
+            </View>
+            <View style={styles.mobileNo}>
+              <TextInput
+                color="black"
+                placeholder="Mobile No"
+                placeholderTextColor="#808080"
+                keyboardType="numeric"
+                maxLength={10}
+                style={styles.mobileNoText}
+                onChangeText={handleMobileInputChange}
               />
             </View>
           </View>
@@ -718,6 +898,16 @@ const Feedback = ({route}) => {
             </View>
             {/* Data table end */}
 
+            <View style={styles.card}>
+              <TextInput
+                multiline
+                placeholder="Enter your description"
+                placeholderTextColor={'black'}
+                style={styles.input}
+                value={description}
+                onChangeText={text => setDescription(text)}
+              />
+            </View>
             <TouchableOpacity
               style={styles.SubmitButton}
               onPress={handleSubmit}>
@@ -745,6 +935,7 @@ const Feedback = ({route}) => {
         </TouchableOpacity>
 
         <View style={styles.verticalBar}></View>
+
         <TouchableOpacity style={styles.BottomRowbutton}>
           <Image
             source={require('../assets/images/report.png')}
@@ -763,9 +954,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   headerContainer: {
-    flex: 1,
-    backgroundColor: 'white',
+    flex: 0,
+    paddingTop: '1%',
+    marginBottom: '1%',
+    justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white',
+    elevation: 10,
+    shadowColor: '#efcbb4',
+    shadowOffset: {width: 5, height: 100},
+    shadowOpacity: 0.5,
   },
   headerText: {
     fontSize: 20,
@@ -775,8 +973,7 @@ const styles = StyleSheet.create({
   trainCard: {
     flex: 2,
     justifyContent: 'center',
-    // height: '19%',
-    elevation: 20,
+    elevation: 30,
     shadowColor: '#EFCBB4',
     shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.1,
@@ -788,6 +985,7 @@ const styles = StyleSheet.create({
   },
   cardTextDateHeading: {
     flex: 1,
+    marginBottom: '1%',
     elevation: 10,
     shadowColor: '#EFCBB4',
     shadowOffset: {width: 0, height: 4},
@@ -815,7 +1013,7 @@ const styles = StyleSheet.create({
   },
   fromToText: {
     color: 'black',
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: '400',
     textAlign: 'center',
   },
@@ -841,6 +1039,11 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     paddingLeft: 20,
   },
+  mobileNoText: {
+    color: 'black',
+    fontSize: 18,
+    // paddingLeft: 20,
+  },
   verticalBar1: {
     height: '100%',
     width: 2,
@@ -863,8 +1066,34 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     marginHorizontal: '3%',
   },
+
+  card: {
+    flex: 0,
+    backgroundColor: '#EFCBB4',
+    padding: 16,
+    borderRadius: 8,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    margin: 16,
+  },
+  input: {
+    color: 'black',
+    flex: 0,
+    height: 100,
+    borderColor: 'orange',
+    borderWidth: 1,
+    marginBottom: 16,
+    padding: 8,
+    borderRadius: 4,
+  },
+  buttonContainer: {
+    alignSelf: 'flex-end',
+  },
   ratingWithSubmitBox: {
-    marginTop: '15%',
+    marginTop: '8%',
     flex: 6,
   },
   ratingMainContainerheading: {
@@ -899,7 +1128,10 @@ const styles = StyleSheet.create({
     marginLeft: 35,
   },
   SubmitButton: {
+    flex: 1,
+    // borderWidth: 1,
     marginTop: '5%',
+    marginBottom: '20%',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#ff8d3c',
@@ -914,7 +1146,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   buttonBottomRowContainer: {
-    borderWidth: 2,
+    flex: 0,
     flexDirection: 'row',
     position: 'absolute',
     bottom: 0,
@@ -925,19 +1157,17 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     backgroundColor: '#EFCBB4',
-    padding: 10,
+    padding: '3%',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   icon: {
     justifyContent: 'space-between',
-    marginHorizontal: 15,
     width: 30,
     height: 30,
-    marginHorizontal: 70,
-    marginBottom: 5,
   },
   verticalBar: {
-    height: 55,
+    height: '100%',
     width: 2,
     backgroundColor: 'orange',
   },
@@ -945,7 +1175,57 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     backgroundColor: '#EFCBB4',
-    padding: 10,
+    padding: '3%',
     alignItems: 'center',
+    justifyContent: 'center',
+  },
+  coachButtonsContainer: {
+    marginTop: '2%',
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  mobileNo: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '32%',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    maxHeight: '85%',
+  },
+  // label: {
+  //   fontSize: 16,
+  //   marginBottom: 10,
+  // },
+  scrollViewContainer: {
+    paddingHorizontal: '5%',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    maxHeight: '85%',
+  },
+  scrollViewContent: {
+    flexDirection: 'row',
+    // flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  button: {
+    padding: 5,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    margin: 5,
+    alignItems: 'center',
+  },
+  selectedButton: {
+    backgroundColor: '#ff8d3c',
+    // backgroundColor: '#EFCBB4',
+  },
+  buttonText: {
+    fontSize: 16,
+    color: 'black',
   },
 });

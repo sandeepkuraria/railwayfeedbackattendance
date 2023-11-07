@@ -9,6 +9,7 @@ import {
   FlatList,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import Logout from '../components/Logout';
 
 const TrainList = ({route}) => {
   const name = route.params.name;
@@ -16,8 +17,27 @@ const TrainList = ({route}) => {
   const navigation = useNavigation();
   const [activeFAButton, setActiveFAButton] = useState('');
   const [trainData, setTrainData] = useState([]);
+  const [trainDataFirstIndex, setTrainDataFirstIndex] = useState([]);
+  // const [trainDataUpcomingJourney, setTrainDataUpcomingJourney] = useState([]);
 
-  // console.log(name, token);
+  let trainDataUpcomingJourney = [];
+
+  trainDataUpcomingJourney = trainData.slice(1);
+
+  console.log(
+    'this is trainData in trainlist ___***********************',
+    trainData,
+  );
+  console.log(
+    'trainDataFirstIndex in trainlist___________-------',
+    trainDataFirstIndex,
+  );
+
+  console.log(
+    'trainDataUpcomingJourney in trainlist___________-------',
+    trainDataUpcomingJourney,
+  );
+
   useEffect(() => {
     upcomingDutiesApi();
   }, []);
@@ -57,32 +77,19 @@ const TrainList = ({route}) => {
     // setTrainData(response.data);
 
     setTrainData(response.data || []);
+    setTrainDataFirstIndex(response.data[0] || []);
+    // setTrainDataUpcomingJourney(response.data.slice(1) || []);
 
     if (response.status === true) {
       console.log(
         'TrainList console data : - ',
-
         trainData[0].date,
         trainData[0].train_no,
         trainData[0].train_name,
       );
-
-      // {
-      //   name: response.data.name,
-      //   date:response.data.date,
-      //   train_no:response.data.train_no,
-      //   train_name:response.data.train_name,
-      //   from_station:response.data.from_station,
-      //   to_station:response.data.to_station,
-      //   start_time:response.data.start_time,
-      //   coaches:response.data.coaches,
-      // });
     } else {
       Alert.alert(response.message);
     }
-    // .then(response => response.text())
-    // .then(result => console.log(result))
-    // .catch(error => console.log('error', error));
   };
 
   // ******************** upcoming duties API end *******************************
@@ -102,13 +109,6 @@ const TrainList = ({route}) => {
   const handleFeedback = item => {
     console.log('Feedback pressed', item);
     navigation.navigate('Feedback', {
-      // date: trainData.date,
-      // train_no: trainData.train_no,
-      // train_name: trainData.train_name,
-      // from_station: trainData.from_station,
-      // to_station: trainData.to_station,
-      // start_time: trainData.start_time,
-      // coaches: trainData.coaches,
       name: name,
       token: token,
       trainData: trainData,
@@ -157,20 +157,22 @@ const TrainList = ({route}) => {
     <View style={styles.mainContainer}>
       {/* ********Hello, Mr. userName */}
       <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Hello, Mr.{name}</Text>
-      </View>
-
-      <View>
-        {/* ************************Date and Time************* */}
         <View>
-          <Text style={styles.cardTextDate}>{getFormattedCurrentDate()}</Text>
+          <Text style={styles.headerText}>Hello, Mr.{name}</Text>
+        </View>
+        <View>
+          <Logout />
         </View>
       </View>
 
-      {/* ))} */}
+      {/* ************************Date and Time************* */}
+      <View style={styles.cardTextDateHeading}>
+        <Text style={styles.cardTextDate}>{getFormattedCurrentDate()}</Text>
+      </View>
+
       <View>
         <ScrollView>
-          {trainData.map((train, index) => (
+          {[trainDataFirstIndex].map((train, index) => (
             <View key={index}>
               <View style={styles.trainCard}>
                 <View
@@ -185,9 +187,6 @@ const TrainList = ({route}) => {
                 </View>
                 <View style={styles.fromTo}>
                   <View>
-                    {/* <Text style={styles.fromToText}>
-                      <Text style={{fontWeight: 'bold'}}>From</Text>
-                    </Text> */}
                     <Text style={styles.fromToText}>{train.from_station}</Text>
                     <Text style={styles.fromToText}>
                       {train.start_time} Hrs
@@ -198,9 +197,6 @@ const TrainList = ({route}) => {
                     -
                   </Text>
                   <View>
-                    {/* <Text style={styles.fromToText}>
-                      <Text style={{fontWeight: 'bold'}}>To</Text>
-                    </Text> */}
                     <Text style={styles.fromToText}>{train.to_station}</Text>
                     <Text style={styles.fromToText}>
                       {train.reach_time} Hrs
@@ -211,9 +207,6 @@ const TrainList = ({route}) => {
                     -
                   </Text>
                   <View>
-                    {/* <Text style={styles.fromToText}>
-                      <Text style={{fontWeight: 'bold'}}>To</Text>
-                    </Text> */}
                     <Text style={styles.fromToText}>
                       {train.return_station}
                     </Text>
@@ -236,7 +229,6 @@ const TrainList = ({route}) => {
                 </View>
               </View>
 
-              {/* *******************Feedback and Attendance Container start******************* */}
               <View style={styles.buttonFAContainer}>
                 <View>
                   <TouchableOpacity
@@ -266,15 +258,12 @@ const TrainList = ({route}) => {
                 </View>
               </View>
 
-              {/* *******************Feedback and Attendance Container end******************* */}
-
               <View style={styles.dashedLine}></View>
-
-              {/* **************bottom text container end*************************** */}
             </View>
           ))}
         </ScrollView>
       </View>
+
       {/* ********************************buttonBottomRowContainer start ***************************** */}
       <View style={styles.upComingJourney}>
         <Text style={styles.upComingJourneyText}>Up-Coming Journey</Text>
@@ -286,7 +275,7 @@ const TrainList = ({route}) => {
           <View style={styles.bottomTextContainer}>
             <ScrollView>
               <FlatList
-                data={trainData}
+                data={trainDataUpcomingJourney}
                 renderItem={renderItem}
                 keyExtractor={(item, index) => index.toString()}
               />
@@ -323,27 +312,34 @@ export default TrainList;
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    position: 'relative',
   },
   headerContainer: {
-    height: '4%',
-    backgroundColor: 'white',
+    flex: 0,
+    flexDirection: 'row',
+    paddingTop: '1%',
+    marginBottom: '1%',
+    justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white',
+    elevation: 10,
+    shadowColor: '#EFCBB4',
+    shadowOffset: {width: 5, height: 100},
+    shadowOpacity: 0.1,
+    justifyContent: 'space-around',
   },
-
   headerText: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#167fb9',
   },
   allotedCoach: {
+    flex: 0,
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
     marginTop: '10%',
     marginHorizontal: '10%',
     marginBottom: '3%',
-    height: '10%',
     backgroundColor: '#EFCBB4',
     borderRadius: 12,
   },
@@ -361,51 +357,23 @@ const styles = StyleSheet.create({
     paddingVertical: '1%',
   },
   allotedCoachName: {
-    // borderWidth: 2,
     color: 'black',
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
-    // marginLeft: '10%',
     paddingVertical: '1%',
-    // paddingHorizontal: '10%',
     marginRight: '10%',
-    // backgroundColor: '#EFCBB4',
-    // borderRadius: 12,
   },
-  // coach buttons style start*************************************************
-  coachContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginHorizontal: '12%',
-    marginTop: '5%',
-  },
-  coachButton: {
-    borderWidth: 2,
-    borderColor: '#EFCBB4',
-    backgroundColor: '#EFCBB4',
-    padding: '3%',
-  },
-  activeCoachButton: {
-    backgroundColor: '#EFCBB4',
-  },
-  coachButtonText: {
-    color: 'black',
-    fontWeight: 'bold',
-    fontSize: 16,
-    textAlign: 'center',
-  },
-  // coach buttons style end*************************************************
 
   trainCard: {
+    flex: 2,
     justifyContent: 'center',
-    height: '38%',
-    elevation: 20,
+    elevation: 30,
     shadowColor: '#EFCBB4',
-    shadowOffset: {width: 0, height: 4},
+    shadowOffset: {width: 5, height: 100},
     shadowOpacity: 0.1,
     shadowRadius: 8,
-    padding: '1%',
+    padding: '2%',
     borderBottomEndRadius: 70,
     borderBottomStartRadius: 70,
     backgroundColor: '#F8F9F9',
@@ -432,21 +400,49 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '400',
   },
-  cardTextDate: {
-    elevation: 10,
-    shadowColor: '#ff8d3c',
+  cardTextDateHeading: {
+    flex: 0,
+    marginBottom: '1%',
+    backgroundColor: '#F8F9F9',
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 20,
+    shadowColor: '#EFCBB4',
     shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.1,
-    height: 25,
-    marginBottom: 4,
-    backgroundColor: '#F8F9F9',
-    textAlign: 'center',
+    shadowRadius: 8,
+  },
+  cardTextDate: {
     color: 'black',
     fontSize: 20,
     fontWeight: '500',
   },
+  // coach buttons style start*************************************************
+  coachContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginHorizontal: '12%',
+    marginTop: '5%',
+  },
+  coachButton: {
+    borderWidth: 2,
+    borderColor: '#EFCBB4',
+    backgroundColor: '#EFCBB4',
+    padding: '3%',
+  },
+  activeCoachButton: {
+    backgroundColor: '#EFCBB4',
+  },
+  coachButtonText: {
+    color: 'black',
+    fontWeight: 'bold',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  // coach buttons style end*************************************************
 
   buttonFAContainer: {
+    flex: 0,
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: '12%',
@@ -478,8 +474,8 @@ const styles = StyleSheet.create({
   },
 
   dashedLine: {
-    marginTop: '6%',
-    marginBottom: '7%',
+    flex: 0,
+    marginTop: '10%',
     width: '100%',
     borderBottomColor: '#EFCBB4',
     borderBottomWidth: 1,
@@ -487,24 +483,18 @@ const styles = StyleSheet.create({
   },
 
   upComingJourney: {
+    flex: 0,
     marginTop: '9%',
     marginBottom: '6%',
-    borderWidth: 1,
+    borderBottomWidth: 1,
     borderRadius: 12,
     paddingLeft: '5%',
-    borderTopColor: 'white',
-    borderLeftColor: 'white',
-    borderRightColor: 'white',
     borderBottomColor: '#EFCBB4',
     width: '60%',
     marginLeft: '2%',
     justifyContent: 'center',
   },
-
   upComingJourneyText: {
-    position: 'relative',
-    top: 0,
-
     fontWeight: '500',
     color: 'black',
     fontSize: 20,
@@ -512,12 +502,15 @@ const styles = StyleSheet.create({
     marginLeft: '2%',
     paddingBottom: '3%',
   },
-
   bottomTextContainer: {
+    flex: 0,
     flexDirection: 'row',
     justifyContent: 'space-around',
+    elevation: 30,
+    shadowColor: '#EFCBB4',
+    shadowOffset: {width: 5, height: 10},
     shadowOpacity: 0.1,
-    marginBottom: 550,
+    paddingVertical: '5%',
   },
   bottomText: {
     fontSize: 16,
@@ -533,9 +526,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     marginLeft: 10,
-    // borderWidth: 2,
   },
   buttonBottomRowContainer: {
+    flex: 0,
     flexDirection: 'row',
     position: 'absolute',
     bottom: 0,
@@ -546,19 +539,20 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     backgroundColor: '#EFCBB4',
-    padding: 10,
+    padding: '3%',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   icon: {
     justifyContent: 'space-between',
-    marginHorizontal: 15,
+    // marginHorizontal: 15,
     width: 30,
     height: 30,
-    marginHorizontal: 70,
-    marginBottom: 5,
+    // marginHorizontal: '10%',
+    // marginBottom: 5,
   },
   verticalBar: {
-    height: 55,
+    height: '100%',
     width: 2,
     backgroundColor: 'orange',
   },

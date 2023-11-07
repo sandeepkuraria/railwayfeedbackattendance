@@ -74,30 +74,25 @@ const Login = () => {
     <SafeAreaView style={styles.mainContainer}>
       <KeyboardAvoidingView style={{flex: 2}}>
         <View style={styles.circle_top_container}>
-          <Image
+          {/* <Image
             source={require('../assets/images/circlefinal.png')}
             style={styles.circle_top}
             // resizeMode="contain"
-          />
+          /> */}
         </View>
 
         <View
           style={{
             alignItems: 'center',
-            // justifyContent: 'flex-end',
-            // borderWidth: 2,
+
             height: '30%',
             width: '70%',
             marginHorizontal: '15%',
           }}>
           <View
             style={{
-              // borderWidth: 2,
               width: '100%',
               height: '100%',
-
-              // marginLeft: '8%',
-              // marginRight: '10%',
             }}>
             <Image
               source={require('../assets/images/train_mono.png')}
@@ -154,19 +149,19 @@ const Login = () => {
 
         <View style={styles.bottomBubbles}>
           <View>
-            <Image
+            {/* <Image
               source={require('../assets/images/circle.png')}
               style={styles.bottomBubblesLeft}
               resizeMode="contain"
-            />
+            /> */}
           </View>
 
           <View>
-            <Image
+            {/* <Image
               source={require('../assets/images/circle.png')}
               style={styles.bottomBubblesRight}
               resizeMode="contain"
-            />
+            /> */}
           </View>
         </View>
       </KeyboardAvoidingView>

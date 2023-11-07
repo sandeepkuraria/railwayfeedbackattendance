@@ -7,6 +7,7 @@ import {
   Image,
   Platform,
   PermissionsAndroid,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native'; // Import the useNavigation hook
@@ -19,6 +20,7 @@ const Attendance = ({route}) => {
   const navigation = useNavigation();
   const name = route.params.name;
   const token = route.params.token;
+  const [isLoading, setIsLoading] = useState(false);
 
   const trainData = route.params.trainData[0];
 
@@ -106,19 +108,30 @@ const Attendance = ({route}) => {
     console.log('response', response);
     if (response.status === true) {
       Alert.alert(response.message);
-
+      setIsLoading(false);
       navigation.replace('TrainList', {
         name: name,
         token: token,
       });
     } else {
+      setIsLoading(false);
       console.log(response.message);
       Alert.alert(response.message);
     }
   };
 
+  const options = {
+    title: 'Select a photo',
+    takePhotoButtonTitle: 'Take a photo',
+    chooseFromLibraryButtonTitle: 'Choose from gallery',
+    base64: true,
+    quality: 1,
+    maxWidth: 500,
+    maxHeight: 500,
+  };
+
   const handleTakeSelfie = () => {
-    ImagePicker.launchCamera({mediaType: 'photo'}, response => {
+    ImagePicker.launchCamera(options, response => {
       // console.log(response.assets[0].uri);
       if (response.didCancel) {
         console.log('User cancelled image picker');
@@ -144,6 +157,7 @@ const Attendance = ({route}) => {
 
   const handleSubmitSelfie = () => {
     if (photoCaptured) {
+      setIsLoading(true);
       setSelfieSubmitted(true);
       saveAttendenceApi();
       if (trainData.step === '1' || trainData.step === '2') {
@@ -271,9 +285,18 @@ const Attendance = ({route}) => {
         <View>
           <View>
             <TouchableOpacity
-              style={styles.SubmitButton}
-              onPress={handleSubmitSelfie}>
-              <Text style={styles.SubmitButtonText}>Submit</Text>
+              style={[
+                styles.SubmitButton,
+                isLoading && {backgroundColor: '#ccc'},
+              ]} // Change button style when loading
+              onPress={handleSubmitSelfie}
+              disabled={isLoading} // Disable the button when loading
+            >
+              {isLoading ? (
+                <ActivityIndicator size="small" color="#0000ff" />
+              ) : (
+                <Text style={styles.SubmitButtonText}>Submit</Text>
+              )}
             </TouchableOpacity>
           </View>
 
@@ -301,7 +324,7 @@ const Attendance = ({route}) => {
 
       {/* ********************************buttonBottomRowContainer start ***************************** */}
 
-      <View style={styles.buttonBottomRowContainer}>
+      {/* <View style={styles.buttonBottomRowContainer}>
         <View>
           <TouchableOpacity
             style={styles.BottomRowbutton}
@@ -326,6 +349,29 @@ const Attendance = ({route}) => {
             />
           </TouchableOpacity>
         </View>
+      </View> */}
+      <View style={styles.buttonBottomRowContainer}>
+        <TouchableOpacity
+          style={styles.BottomRowbutton}
+          onPress={() =>
+            navigation.navigate('TrainList', {
+              name: name,
+              token: token,
+            })
+          }>
+          <Image
+            source={require('../assets/images/home.png')}
+            style={styles.icon}
+          />
+        </TouchableOpacity>
+
+        <View style={styles.verticalBar}></View>
+        <TouchableOpacity style={styles.BottomRowbutton}>
+          <Image
+            source={require('../assets/images/report.png')}
+            style={styles.icon}
+          />
+        </TouchableOpacity>
       </View>
 
       {/* ********************************buttonBottomRowContainer end ***************************** */}
@@ -358,25 +404,25 @@ const styles = StyleSheet.create({
   },
 
   buttonBottomRowContainer: {
+    flex: 0,
     flexDirection: 'row',
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    borderWidth: 1,
   },
   BottomRowbutton: {
+    flex: 1,
+    flexDirection: 'row',
     backgroundColor: '#EFCBB4',
-    paddingHorizontal: '22%',
-    paddingVertical: '5%',
+    padding: '3%',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   icon: {
     justifyContent: 'space-between',
-    flexDirection: 'row',
-    width: 32,
-    height: 32,
-    marginBottom: 5,
+    width: 30,
+    height: 30,
   },
   cameraCard: {
     height: '35%',
@@ -450,6 +496,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     marginLeft: '3%',
+    opacity: 0,
   },
   circleAfterSubmit: {
     position: 'relative',
@@ -457,6 +504,7 @@ const styles = StyleSheet.create({
     width: 130,
     height: 130,
     marginLeft: '68%',
+    opacity: 0,
   },
   SubmitButton: {
     position: 'relative',
