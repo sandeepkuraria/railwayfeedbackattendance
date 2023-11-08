@@ -3,6 +3,7 @@ import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 const Logout = () => {
   const navigation = useNavigation();
@@ -23,10 +24,13 @@ const Logout = () => {
     <View>
       <View>
         <TouchableOpacity onPress={handleLogout}>
-          <Image
+          <View>
+            <Icon name="logout" size={25} color="black" />
+          </View>
+          {/* <Image
             source={require('../assets/images/power-switch.png')}
             style={styles.logoutButton}
-          />
+          /> */}
         </TouchableOpacity>
       </View>
     </View>

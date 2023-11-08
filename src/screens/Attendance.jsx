@@ -15,6 +15,7 @@ import {Alert} from 'react-native'; // Import the Alert component
 import * as ImagePicker from 'react-native-image-picker';
 import ImgToBase64 from 'react-native-image-base64';
 import Geolocation from 'react-native-geolocation-service';
+import HeaderText from '../components/HeaderText';
 
 const Attendance = ({route}) => {
   const navigation = useNavigation();
@@ -173,22 +174,34 @@ const Attendance = ({route}) => {
 
   return (
     <View style={styles.mainContainer}>
+      <HeaderText name={name} />
       <ScrollView>
         <View style={styles.attendanceHeader}>
-          <View>
+          {/* <View>
             <Text style={styles.attendanceHeader1}>Dear,</Text>
-          </View>
+          </View> */}
           <View>
-            <Text style={[styles.attendanceHeader2, {color: '#167fb9'}]}>
+            {/* <Text style={[styles.attendanceHeader2, {color: '#167fb9'}]}>
               {name}
-            </Text>
-            <Text style={{color: 'black'}}>
-              {step === 1 && <Text>you are at {trainData?.from_station}!</Text>}
+            </Text> */}
+            <Text style={{color: 'black', fontSize: 20}}>
+              {step === 1 && (
+                <Text>
+                  Please provide attendance for {'\n'}
+                  {trainData?.from_station}
+                </Text>
+              )}
               {step === 2 && (
-                <Text>you are going to {trainData?.to_station}!</Text>
+                <Text>
+                  Please provide attendance for {'\n'}
+                  {trainData?.to_station}
+                </Text>
               )}
               {step === 3 && (
-                <Text>you have reached {trainData?.return_station} Back!</Text>
+                <Text>
+                  Please provide attendance for {'\n'}
+                  {trainData?.return_station}
+                </Text>
               )}
               {step !== 1 && step !== 2 && step !== 3 && (
                 <Text>Default message goes here.</Text>
@@ -246,7 +259,7 @@ const Attendance = ({route}) => {
                 backgroundColor: '#EFCBB4',
                 borderRadius: 10,
                 marginHorizontal: '30%',
-                marginTop: '15%',
+                marginTop: '10%',
               }}>
               <TouchableOpacity onPress={handleRetakeSelfie}>
                 <Text style={styles.RetakeSelfieText}>Retake Selfie</Text>
@@ -264,7 +277,7 @@ const Attendance = ({route}) => {
                 backgroundColor: '#EFCBB4',
                 borderRadius: 10,
                 marginHorizontal: '30%',
-                marginTop: '15%',
+                marginTop: '10%',
               }}>
               <TouchableOpacity onPress={handleTakeSelfie}>
                 <Text style={styles.TakeSelfieText}>Take Selfie</Text>
@@ -515,7 +528,7 @@ const styles = StyleSheet.create({
   },
   SubmitButton: {
     position: 'relative',
-    top: '200%',
+    top: '120%',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#ff8d3c',

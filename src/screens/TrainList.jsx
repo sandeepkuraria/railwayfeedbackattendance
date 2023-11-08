@@ -11,6 +11,7 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import Logout from '../components/Logout';
 import BottomHomeListButton from '../components/BottomHomeListButton';
+import Header from '../components/Header';
 
 const TrainList = ({route}) => {
   const name = route.params.name;
@@ -25,19 +26,19 @@ const TrainList = ({route}) => {
 
   trainDataUpcomingJourney = trainData.slice(1);
 
-  console.log(
-    'this is trainData in trainlist ___***********************',
-    trainData,
-  );
-  console.log(
-    'trainDataFirstIndex in trainlist___________-------',
-    trainDataFirstIndex,
-  );
+  // console.log(
+  //   'this is trainData in trainlist ___***********************',
+  //   trainData,
+  // );
+  // console.log(
+  //   'trainDataFirstIndex in trainlist___________-------',
+  //   trainDataFirstIndex,
+  // );
 
-  console.log(
-    'trainDataUpcomingJourney in trainlist___________-------',
-    trainDataUpcomingJourney,
-  );
+  // console.log(
+  //   'trainDataUpcomingJourney in trainlist___________-------',
+  //   trainDataUpcomingJourney,
+  // );
 
   useEffect(() => {
     upcomingDutiesApi();
@@ -89,16 +90,16 @@ const TrainList = ({route}) => {
   };
 
   // ******************** upcoming duties API end *******************************
-  const getFormattedCurrentDate = () => {
-    const currentDate = new Date();
-    const options = {
-      weekday: 'long',
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    };
-    return currentDate.toLocaleDateString('en-US', options);
-  };
+  // const getFormattedCurrentDate = () => {
+  //   const currentDate = new Date();
+  //   const options = {
+  //     weekday: 'long',
+  //     day: '2-digit',
+  //     month: '2-digit',
+  //     year: 'numeric',
+  //   };
+  //   return currentDate.toLocaleDateString('en-US', options);
+  // };
 
   //for upcoming trainlist data to be shown as list end
 
@@ -124,35 +125,11 @@ const TrainList = ({route}) => {
     setActiveFAButton(button);
   };
 
-  //*************RAILWAY API************** */
-  // const fetchTrain = async () => {
-  //   const url = 'https://irctc1.p.rapidapi.com/api/v1/searchTrain?query=190';
-  //   const options = {
-  //     method: 'GET',
-  //     headers: {
-  //       'X-RapidAPI-Key': '3c1ab7d50amshde485bf4334ce79p11debajsn5a0be495413d',
-  //       'X-RapidAPI-Host': 'irctc1.p.rapidapi.com',
-  //     },
-  //   };
-
-  //   try {
-  //     const response = await fetch(url, options);
-  //     const result = await response.json();
-  //     console.log(result.data);
-  //     setTrainData(result.data);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
-  //*********************************** */
-
-  console.log(trainData, '-----traindata');
+  // console.log(trainData, '-----traindata');
 
   return (
     <View style={styles.mainContainer}>
-      {/* ********Hello, Mr. userName */}
-      <View style={styles.headerContainer}>
+      {/* <View style={styles.headerContainer}>
         <View>
           <Text style={styles.headerText}>{name}</Text>
         </View>
@@ -161,7 +138,6 @@ const TrainList = ({route}) => {
         </View>
       </View>
 
-      {/* ************************Date and Time************* */}
       <View style={styles.cardTextDateHeading}>
         <Text style={styles.cardTextDate}>{getFormattedCurrentDate()}</Text>
       </View>
@@ -258,12 +234,65 @@ const TrainList = ({route}) => {
             </View>
           ))}
         </ScrollView>
+      </View> */}
+
+      <Header name={name} token={token} />
+
+      <View>
+        <ScrollView>
+          {[trainDataFirstIndex].map((train, index) => (
+            <View key={index}>
+              <View style={styles.allotedCoach}>
+                <View>
+                  <Text style={styles.allotedCoachHeading}>
+                    Alloted Coaches
+                  </Text>
+                </View>
+                <View style={styles.verticalBar1}></View>
+                <View>
+                  <Text style={styles.allotedCoachName}>{train.coaches}</Text>
+                </View>
+              </View>
+
+              <View style={styles.buttonFAContainer}>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      handleFeedback(train);
+                      handleFAPress('Feedback');
+                    }}
+                    style={[
+                      styles.buttonFA,
+                      activeFAButton === 'Feedback' && styles.activeFAButton,
+                    ]}>
+                    <Text style={styles.buttonFeedbackText}>FEEDBACK</Text>
+                  </TouchableOpacity>
+                </View>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      markAttendance();
+                      handleFAPress('Attendance');
+                    }}
+                    style={[
+                      styles.buttonFA,
+                      activeFAButton === 'Attendance' && styles.activeFAButton,
+                    ]}>
+                    <Text style={styles.buttonAttendanceText}>ATTENDANCE</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              <View style={styles.dashedLine}></View>
+            </View>
+          ))}
+        </ScrollView>
       </View>
 
       {/* ********************************buttonBottomRowContainer start ***************************** */}
-      <View style={styles.upComingJourney}>
+      {/* <View style={styles.upComingJourney}>
         <Text style={styles.upComingJourneyText}>Up-Coming Journey</Text>
-      </View>
+      </View> */}
       {/* upcoming train List */}
       <View>
         <View>
@@ -282,7 +311,7 @@ const TrainList = ({route}) => {
         </View>
       </View>
 
-      <View style={styles.buttonBottomRowContainer}>
+      {/* <View style={styles.buttonBottomRowContainer}>
         <TouchableOpacity style={styles.BottomRowbutton}>
           <Image
             source={require('../assets/images/home.png')}
@@ -296,8 +325,8 @@ const TrainList = ({route}) => {
             style={styles.icon}
           />
         </TouchableOpacity>
-      </View>
-
+      </View> */}
+      <BottomHomeListButton name={name} token={token} />
       {/* ********************************buttonBottomRowContainer end ***************************** */}
     </View>
   );
@@ -309,9 +338,9 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
   },
+
   headerContainer: {
     flex: 0,
-
     flexDirection: 'row',
     paddingVertical: '3%',
     marginBottom: '1%',

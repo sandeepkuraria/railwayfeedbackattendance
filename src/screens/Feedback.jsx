@@ -16,11 +16,14 @@ import LinearGradient from 'react-native-linear-gradient';
 import {RadioButton} from 'react-native-paper';
 import {Card} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native'; // Import the useNavigation hook
-import Icon from 'react-native-vector-icons/FontAwesome';
+// import Icon from 'react-native-vector-icons/Octicons';
 import StarRating from 'react-native-star-rating';
 import Logout from '../components/Logout';
 import BottomHomeListButton from '../components/BottomHomeListButton';
+import Header from '../components/Header';
 
+// import Icon from 'react-native-vector-icons/dist/FontAwesome5';
+import Icon from 'react-native-vector-icons/Feather';
 const Feedback = ({route}) => {
   const navigation = useNavigation();
   const name = route.params.name;
@@ -224,66 +227,6 @@ const Feedback = ({route}) => {
   const data = trainData[0];
   console.log('data in feedback', data.coaches, data.id);
 
-  // useEffect(() => {}, []);
-
-  //postFeedback API
-
-  // const PostFeedbackApi = async () => {
-  //   console.log('INSIDE api--', data.id, data.coaches);
-  //   var myHeaders = new Headers();
-  //   myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
-
-  //   myHeaders.append(
-  //     'Cookie',
-  //     'ci_session=faa818cb1e047f52249efe5702e18ed8bfa8d0f3',
-  //   );
-
-  //   myHeaders.append('Authorization', `Bearer ${token}`);
-
-  //   var urlencoded = new URLSearchParams();
-  //   urlencoded.append('dutyId', data.id);
-  //   urlencoded.append('coach', data.coaches);
-  //   urlencoded.append('pnr', pnrNo);
-  //   urlencoded.append('description', 'All Good');
-  //   // urlencoded.append('rating', '5');
-  //   urlencoded.append('feedback[AC]', acFieldValue);
-  //   urlencoded.append('feedback[CLEANING]', cleaningFieldValue);
-  //   urlencoded.append('feedback[BLANKET]', blanketFieldValue);
-  //   urlencoded.append('feedback[BEHAVIOUR]', behaviourFieldValue);
-
-  //   var requestOptions = {
-  //     method: 'POST',
-  //     headers: myHeaders,
-  //     body: urlencoded,
-  //     redirect: 'follow',
-  //   };
-
-  //   const res = await fetch(
-  //     'https://railway.retinodes.com/api/v1/assignduty/save_feedback',
-  //     requestOptions,
-  //   );
-
-  //   const response = await res.json();
-
-  //   if (response.status === true) {
-  //     console.log(response.message);
-
-  //     navigation.replace('TrainList', {
-  //       name: response.data.name,
-  //       token: response.token,
-  //     });
-  //   } else {
-  //     Alert.alert(response.message);
-  //     console.log(response);
-  //   }
-
-  //   //  .then(response => response.json())
-  //   //   .then(result => console.log(result))
-  //   //   .catch(error => console.log('error', error));
-  // };
-
-  //postFeedback API
-
   const PostFeedbackApi = async () => {
     console.log('INSIDE PostFeedbackApi API FUNCTION');
     console.log(data.id);
@@ -355,115 +298,8 @@ const Feedback = ({route}) => {
     <View style={styles.mainContainer}>
       <ScrollView>
         <KeyboardAvoidingView style={{flex: 1}}>
-          <View style={styles.headerContainer}>
-            <View>
-              <Text style={styles.headerText}>{name}</Text>
-            </View>
-            <View>
-              <Logout />
-            </View>
-          </View>
+          <Header name={name} token={token} />
 
-          <View style={styles.cardTextDateHeading}>
-            <Text style={styles.cardTextDate}>{getFormattedCurrentDate()}</Text>
-          </View>
-
-          {[trainDataFirstIndex].map((train, index) => (
-            <View key={index}>
-              {/* <View style={styles.trainCard}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginHorizontal: '6%',
-                  }}>
-                  <Text style={styles.cardTextHeaders}>{train.train_no}</Text>
-                  <Text style={styles.cardTextHeaders}>{train.train_name}</Text>
-                </View>
-                <View style={styles.fromTo}>
-                  <View>
-                    <Text style={styles.fromToText}>
-                      <Text style={{fontWeight: 'bold'}}>From</Text>
-                    </Text>
-                    <Text style={styles.fromToText}>{train.from_station}</Text>
-                    <Text style={styles.fromToText}>
-                      {train.start_time} Hrs
-                    </Text>
-                  </View>
-                  <View>
-                    <Text style={styles.fromToText}>
-                      <Text style={{fontWeight: 'bold'}}>To</Text>
-                    </Text>
-                    <Text style={styles.fromToText}>{train.to_station}</Text>
-                    <Text style={styles.fromToText}>
-                      {train.reach_time} Hrs
-                    </Text>
-                  </View>
-                </View>
-              </View> */}
-              <View style={styles.trainCard}>
-                <View
-                  style={{
-                    // paddingTop: '1%',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginHorizontal: '6%',
-                  }}>
-                  <Text style={styles.cardTextHeaders}>{train.train_no}</Text>
-                  <Text style={styles.cardTextHeaders}>{train.train_name}</Text>
-                </View>
-                <View style={styles.fromTo}>
-                  <View>
-                    {/* <Text style={styles.fromToText}>
-                      <Text style={{fontWeight: 'bold'}}>From</Text>
-                    </Text> */}
-                    <Text style={styles.fromToText}>{train.from_station}</Text>
-                    <Text style={styles.fromToText}>
-                      {train.start_time} Hrs
-                    </Text>
-                  </View>
-                  <Text
-                    style={{color: 'black', fontSize: 18, fontWeight: '500'}}>
-                    -
-                  </Text>
-                  <View>
-                    <Text style={styles.fromToText}>{train.to_station}</Text>
-                    <Text style={styles.fromToText}>
-                      {train.reach_time} Hrs
-                    </Text>
-                  </View>
-                  <Text
-                    style={{color: 'black', fontSize: 18, fontWeight: '500'}}>
-                    -
-                  </Text>
-                  <View>
-                    <Text style={styles.fromToText}>
-                      {train.return_station}
-                    </Text>
-                    <Text style={styles.fromToText}>
-                      {train.return_time} Hrs
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            </View>
-          ))}
-
-          {/* <View style={styles.coachButtonsContainer}>
-            <View style={styles.coachButtons}>
-              {coachButtons.map((coach, index) => (
-                <TouchableOpacity
-                  key={index}
-                  style={[
-                    styles.button,
-                    selectedCoach === coach && styles.selectedButton,
-                  ]}
-                  onPress={() => handleCoachSelection(coach)}>
-                  <Text style={styles.buttonText}>{coach}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View> */}
           <View style={styles.coachButtonsContainer}>
             <View style={styles.coachButtons}>
               {coachButtons.map((coach, index) => (
@@ -484,19 +320,15 @@ const Feedback = ({route}) => {
 
           <View style={styles.coachNamePNRNo}>
             <View>
-              <Text style={styles.coachNameText}>
-                {' '}
-                {(selectedCoach && selectedCoach) || coachButtons[0]}{' '}
-                {/* Conditionally render selectedCoach or 0th coach */}
+              <Text style={styles.coachNameText1}>
+                {(selectedCoach && selectedCoach) || coachButtons[0]}
               </Text>
             </View>
 
-            <View style={styles.verticalBar1}></View>
-
-            <View>
+            <View style={styles.pnrNo}>
               <TextInput
                 style={styles.pnrNoText}
-                placeholder="PNR No"
+                placeholder="PNR NO"
                 placeholderTextColor="#808080"
                 maxLength={10}
                 keyboardType="numeric"
@@ -507,15 +339,14 @@ const Feedback = ({route}) => {
           </View>
 
           <View style={styles.mobileNoContainer}>
-            <View>
-              <Text style={styles.coachNameText}>Mobile</Text>
+            <View style={styles.mobileIconView}>
+              <Icon name="phone" size={24} color="black" />
             </View>
-            <View style={styles.verticalBar1}></View>
 
             <View style={styles.mobileNo}>
               <TextInput
                 style={styles.mobileNoText}
-                placeholder="Mobile No"
+                placeholder="XXXXXXXXXX"
                 placeholderTextColor="#808080"
                 maxLength={10}
                 keyboardType="numeric"
@@ -528,11 +359,12 @@ const Feedback = ({route}) => {
 
           <View style={styles.ratingWithSubmitBox}>
             {/* *********Heading row start */}
+            {/* <View style={{borderWidth: 1, borderColor: '#EFCBB4'}} /> */}
             <View style={styles.ratingMainContainerheading}>
               <View>
                 <Text style={styles.ratingHeadingColumn}>Particular</Text>
               </View>
-              <View style={styles.ratingVerticalBarHeading}></View>
+              {/* <View style={styles.ratingVerticalBarHeading}></View> */}
 
               <View style={styles.particularFieldStarRatingColumnFirst}>
                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -591,12 +423,330 @@ const Feedback = ({route}) => {
                 </View>
               </View>
             </View>
+            <View style={styles.acRow}>
+              <View>
+                <Text style={styles.acHeading}>AC</Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginVertical: '2%',
+                }}>
+                <View style={styles.acFieldStarRatingColumnFirst}>
+                  <TouchableOpacity onPress={handleACRedPress}>
+                    <Image
+                      source={
+                        isACRedActive
+                          ? require('../assets/images/red_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={{width: 22, height: 22}}
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                <View style={styles.acFieldStarRatingColumnSecond}>
+                  <TouchableOpacity onPress={handleACBluePress}>
+                    <Image
+                      source={
+                        isACBlueActive
+                          ? require('../assets/images/blue_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={{width: 22, height: 22}}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleACBluePress}>
+                    <Image
+                      source={
+                        isACBlueActive
+                          ? require('../assets/images/blue_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={{width: 22, height: 22}}
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                <View style={styles.acFieldStarRatingColumnThird}>
+                  <TouchableOpacity onPress={handleACYellowPress}>
+                    <Image
+                      source={
+                        isACYellowActive
+                          ? require('../assets/images/yellow_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={{width: 22, height: 22}}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleACYellowPress}>
+                    <Image
+                      source={
+                        isACYellowActive
+                          ? require('../assets/images/yellow_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={{width: 22, height: 22}}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleACYellowPress}>
+                    <Image
+                      source={
+                        isACYellowActive
+                          ? require('../assets/images/yellow_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={{width: 22, height: 22}}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+            <View style={styles.cleaningRow}>
+              <View>
+                <Text style={styles.cleaningHeading}>CLEANING</Text>
+              </View>
+              {/* <View style={styles.ratingVerticalBarHeading}></View> */}
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginVertical: '2%',
+                }}>
+                <View style={styles.acFieldStarRatingColumnFirst}>
+                  <TouchableOpacity onPress={handleCleaningRedPress}>
+                    <Image
+                      source={
+                        isCleaningRedActive
+                          ? require('../assets/images/red_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={{width: 22, height: 22}}
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                <View style={styles.acFieldStarRatingColumnSecond}>
+                  <TouchableOpacity onPress={handleCleaningBluePress}>
+                    <Image
+                      source={
+                        isCleaningBlueActive
+                          ? require('../assets/images/blue_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={{width: 22, height: 22}}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleCleaningBluePress}>
+                    <Image
+                      source={
+                        isCleaningBlueActive
+                          ? require('../assets/images/blue_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={{width: 22, height: 22}}
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                <View style={styles.acFieldStarRatingColumnThird}>
+                  <TouchableOpacity onPress={handleCleaningYellowPress}>
+                    <Image
+                      source={
+                        isCleaningYellowActive
+                          ? require('../assets/images/yellow_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={{width: 22, height: 22}}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleCleaningYellowPress}>
+                    <Image
+                      source={
+                        isCleaningYellowActive
+                          ? require('../assets/images/yellow_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={{width: 22, height: 22}}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleCleaningYellowPress}>
+                    <Image
+                      source={
+                        isCleaningYellowActive
+                          ? require('../assets/images/yellow_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={{width: 22, height: 22}}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+            <View style={styles.blanketRow}>
+              <View>
+                <Text style={styles.blanketHeading}>BLANKET</Text>
+              </View>
+              {/* <View style={styles.ratingVerticalBarHeading}></View> */}
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginVertical: '2%',
+                }}>
+                <View style={styles.acFieldStarRatingColumnFirst}>
+                  <TouchableOpacity onPress={handleBlanketRedPress}>
+                    <Image
+                      source={
+                        isBlanketRedActive
+                          ? require('../assets/images/red_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={{width: 22, height: 22}}
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                <View style={styles.acFieldStarRatingColumnSecond}>
+                  <TouchableOpacity onPress={handleBlanketBluePress}>
+                    <Image
+                      source={
+                        isBlanketBlueActive
+                          ? require('../assets/images/blue_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={{width: 22, height: 22}}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleBlanketBluePress}>
+                    <Image
+                      source={
+                        isBlanketBlueActive
+                          ? require('../assets/images/blue_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={{width: 22, height: 22}}
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                <View style={styles.acFieldStarRatingColumnThird}>
+                  <TouchableOpacity onPress={handleBlanketYellowPress}>
+                    <Image
+                      source={
+                        isBlanketYellowActive
+                          ? require('../assets/images/yellow_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={{width: 22, height: 22}}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleBlanketYellowPress}>
+                    <Image
+                      source={
+                        isBlanketYellowActive
+                          ? require('../assets/images/yellow_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={{width: 22, height: 22}}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleBlanketYellowPress}>
+                    <Image
+                      source={
+                        isBlanketYellowActive
+                          ? require('../assets/images/yellow_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={{width: 22, height: 22}}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+            <View style={styles.behaviourRow}>
+              <View>
+                <Text style={styles.behaviourHeading}>BEHAVIOUR</Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginVertical: '2%',
+                }}>
+                <View style={styles.acFieldStarRatingColumnFirst}>
+                  <TouchableOpacity onPress={handleBehaviourRedPress}>
+                    <Image
+                      source={
+                        isBehaviourRedActive
+                          ? require('../assets/images/red_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={{width: 22, height: 22}}
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                <View style={styles.acFieldStarRatingColumnSecond}>
+                  <TouchableOpacity onPress={handleBehaviourBluePress}>
+                    <Image
+                      source={
+                        isBehaviourBlueActive
+                          ? require('../assets/images/blue_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={{width: 22, height: 22}}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleBehaviourBluePress}>
+                    <Image
+                      source={
+                        isBehaviourBlueActive
+                          ? require('../assets/images/blue_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={{width: 22, height: 22}}
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                <View style={styles.acFieldStarRatingColumnThird}>
+                  <TouchableOpacity onPress={handleBehaviourYellowPress}>
+                    <Image
+                      source={
+                        isBehaviourYellowActive
+                          ? require('../assets/images/yellow_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={{width: 22, height: 22}}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleBehaviourYellowPress}>
+                    <Image
+                      source={
+                        isBehaviourYellowActive
+                          ? require('../assets/images/yellow_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={{width: 22, height: 22}}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleBehaviourYellowPress}>
+                    <Image
+                      source={
+                        isBehaviourYellowActive
+                          ? require('../assets/images/yellow_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={{width: 22, height: 22}}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
             {/* *********Heading row end */}
             {/* Horizontal orange line in ratings table start */}
-            <View style={{borderWidth: 1, borderColor: 'orange'}} />
+            {/* <View style={{borderWidth: 1, borderColor: 'orange'}} /> */}
             {/* Horizontal orange line in ratings table end */}
             {/* Data table start */}
-            <View style={styles.ratingMainContainerdata}>
+            {/* <View style={styles.ratingMainContainerdata}>
               <View>
                 <Text style={styles.ratingHeadingColumnData}>AC</Text>
                 <Text style={styles.ratingHeadingColumnData}>CLEANING</Text>
@@ -605,18 +755,16 @@ const Feedback = ({route}) => {
               </View>
 
               <View style={styles.ratingVerticalBarData}></View>
-              {/* Star rating box start */}
               <View
                 style={{
                   flex: 1,
                   // borderWidth: 2,
                   alignItems: 'flex-start',
                 }}>
-                {/*first 5 star row for AC start  */}
                 <View
                   style={{
                     flexDirection: 'row',
-                    marginVertical: '4%',
+                    marginVertical: '2%',
                   }}>
                   <View style={styles.acFieldStarRatingColumnFirst}>
                     <TouchableOpacity onPress={handleACRedPress}>
@@ -687,12 +835,11 @@ const Feedback = ({route}) => {
                     </TouchableOpacity>
                   </View>
                 </View>
-                {/*first 5 star row for AC end  */}
-                {/*second 5 star row for CLEANING start  */}
+           
                 <View
                   style={{
                     flexDirection: 'row',
-                    marginVertical: '4%',
+                    marginVertical: '2%',
                   }}>
                   <View style={styles.acFieldStarRatingColumnFirst}>
                     <TouchableOpacity onPress={handleCleaningRedPress}>
@@ -763,12 +910,11 @@ const Feedback = ({route}) => {
                     </TouchableOpacity>
                   </View>
                 </View>
-                {/*second 5 star row for CLEANING end  */}
-                {/*third 5 star row for BLANKET start  */}
+             
                 <View
                   style={{
                     flexDirection: 'row',
-                    marginVertical: '4%',
+                    marginVertical: '2%',
                   }}>
                   <View style={styles.acFieldStarRatingColumnFirst}>
                     <TouchableOpacity onPress={handleBlanketRedPress}>
@@ -839,12 +985,11 @@ const Feedback = ({route}) => {
                     </TouchableOpacity>
                   </View>
                 </View>
-                {/*third 5 star row for BLANKET end  */}
-                {/*fourth 5 star row for BEHAVIOUR start  */}
+      
                 <View
                   style={{
                     flexDirection: 'row',
-                    marginVertical: '4%',
+                    marginVertical: '2%',
                   }}>
                   <View style={styles.acFieldStarRatingColumnFirst}>
                     <TouchableOpacity onPress={handleBehaviourRedPress}>
@@ -915,15 +1060,17 @@ const Feedback = ({route}) => {
                     </TouchableOpacity>
                   </View>
                 </View>
-                {/*fourth 5 star row for BEHAVIOUR start  */}
+          
               </View>
-              {/* Star rating box end */}
-            </View>
+      
+            </View> */}
             {/* Data table end */}
-
+            {/* <View style={{borderWidth: 1, borderColor: 'orange'}} /> */}
             <View style={styles.card}>
               <TextInput
-                placeholder="Enter your description"
+                multiline={true}
+                numberOfLines={3}
+                placeholder="Enter your Feedback"
                 placeholderTextColor={'black'}
                 style={styles.input}
                 value={description}
@@ -950,31 +1097,7 @@ const Feedback = ({route}) => {
         </KeyboardAvoidingView>
       </ScrollView>
 
-      <View style={styles.buttonBottomRowContainer}>
-        <TouchableOpacity
-          style={styles.BottomRowbutton}
-          onPress={() =>
-            navigation.navigate('TrainList', {
-              name: name,
-              token: token,
-            })
-          }>
-          <Image
-            source={require('../assets/images/home.png')}
-            style={styles.icon}
-          />
-        </TouchableOpacity>
-
-        <View style={styles.verticalBar}></View>
-
-        <TouchableOpacity style={styles.BottomRowbutton}>
-          <Image
-            source={require('../assets/images/report.png')}
-            style={styles.icon}
-          />
-        </TouchableOpacity>
-      </View>
-      {/* <BottomHomeListButton /> */}
+      <BottomHomeListButton name={name} token={token} />
     </View>
   );
 };
@@ -1057,47 +1180,97 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  coachNamePNRNo: {
-    flex: 1,
-    flexDirection: 'row',
-    marginHorizontal: '10%',
-    marginTop: '5%',
-    alignItems: 'center',
-    backgroundColor: '#EFCBB4',
-    borderRadius: 12,
-  },
-  mobileNoContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    marginHorizontal: '10%',
-    marginTop: '5%',
-    alignItems: 'center',
-    backgroundColor: '#EFCBB4',
-    borderRadius: 12,
-  },
+
   coachNameText: {
     color: 'black',
     fontSize: 20,
     textAlign: 'center',
-    marginHorizontal: '10%',
+    marginHorizontal: '9%',
+  },
+  coachNamePNRNo: {
+    flex: 1,
+    flexDirection: 'row',
+    marginHorizontal: '26%',
+    marginTop: '1%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  coachNameText1: {
+    color: 'black',
+    fontSize: 20,
+    textAlign: 'center',
+    paddingHorizontal: '15%',
+    paddingVertical: '3%',
+    backgroundColor: '#EFCBB4',
+    borderBottomLeftRadius: 8,
+    borderTopLeftRadius: 8,
+    borderRightWidth: 2,
+    borderRightColor: 'orange',
+  },
+  pnrNo: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderRightWidth: 1,
+    borderColor: '#EFCBB4',
+    paddingHorizontal: '15%',
+    width: '100%',
+    borderBottomRightRadius: 8,
+    borderTopRightRadius: 8,
   },
   pnrNoText: {
     color: 'black',
-    fontSize: 20,
-    textAlign: 'left',
-    paddingVertical: 4,
-    marginLeft: '10%',
-  },
-  mobileNoText: {
-    color: 'black',
     fontSize: 18,
-    marginLeft: '10%',
     paddingVertical: 4,
+    marginHorizontal: '8%',
+    width: '100%',
   },
   verticalBar1: {
     height: '100%',
     width: 2,
     backgroundColor: 'orange',
+  },
+
+  mobileNoContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    marginHorizontal: '26%',
+    marginTop: '1%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  mobileIconView: {
+    color: 'black',
+    // fontSize: 20,
+    textAlign: 'center',
+    paddingHorizontal: '15%',
+    paddingVertical: '3.5%',
+    backgroundColor: '#EFCBB4',
+    borderBottomLeftRadius: 8,
+    borderTopLeftRadius: 8,
+    borderRightWidth: 2,
+    borderRightColor: 'orange',
+  },
+  mobileNo: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderRightWidth: 1,
+    borderColor: '#EFCBB4',
+    paddingHorizontal: '6%',
+    borderBottomRightRadius: 8,
+    borderTopRightRadius: 8,
+    paddingVertical: '3%',
+  },
+  mobileNoText: {
+    color: 'black',
+    fontSize: 18,
+    paddingVertical: 0,
+    marginHorizontal: '8%',
   },
   ratingVerticalBarHeading: {
     borderLeftWidth: 2,
@@ -1119,22 +1292,12 @@ const styles = StyleSheet.create({
 
   card: {
     flex: 0,
-    // justifyContent: 'center',
-    // borderColor: 'orange',
-    // paddingTop: '2%',
-    // borderWidth: 1,
-    backgroundColor: '#EFCBB4',
-    // padding: '0%',
     borderRadius: 6,
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
     shadowRadius: 2,
-    paddingLeft: '5%',
-    margin: '5%',
+    margin: '1%',
   },
   input: {
+    borderWidth: 1,
     fontSize: 18,
     color: 'black',
     flex: 0,
@@ -1150,21 +1313,108 @@ const styles = StyleSheet.create({
     flex: 6,
   },
   ratingMainContainerheading: {
+    borderTopWidth: 2,
+    borderTopColor: '#EFCBB4',
+    width: '100%',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    marginHorizontal: '3%',
+    // marginHorizontal: '3%',
+  },
+  behaviourRow: {
+    borderBottomWidth: 2,
+    borderBottomColor: '#EFCBB4',
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    // marginHorizontal: '3%',
+  },
+  blanketRow: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    // marginHorizontal: '3%',
+  },
+  cleaningRow: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    // marginHorizontal: '3%',
+  },
+  acRow: {
+    borderTopWidth: 2,
+    borderTopColor: '#EFCBB4',
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    // marginHorizontal: '3%',
   },
   ratingHeadingColumn: {
     fontSize: 17,
     fontWeight: 'bold',
     color: 'black',
-    marginVertical: '9%',
+    paddingVertical: '3%',
+    // marginVertical: '9%',
+    borderRightWidth: 2,
+    borderRightColor: '#EFCBB4',
+    textAlign: 'center',
+    paddingHorizontal: '7%',
   },
+  acHeading: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: 'black',
+    paddingVertical: '3%',
+    borderRightWidth: 2,
+    borderRightColor: '#EFCBB4',
+    textAlign: 'center',
+    padding: '14.4%',
+  },
+  cleaningHeading: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: 'black',
+    paddingVertical: '3%',
+    borderRightWidth: 2,
+    borderRightColor: '#EFCBB4',
+    textAlign: 'center',
+    padding: '6.6%',
+  },
+  blanketHeading: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: 'black',
+    paddingVertical: '3%',
+    borderRightWidth: 2,
+    borderRightColor: '#EFCBB4',
+    textAlign: 'center',
+    padding: '7.6%',
+  },
+  behaviourHeading: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: 'black',
+    paddingVertical: '3%',
+    borderRightWidth: 2,
+    borderRightColor: '#EFCBB4',
+    textAlign: 'center',
+    padding: '5.1%',
+  },
+  // acHeading: {
+  //   fontSize: 17,
+  //   fontWeight: 'bold',
+  //   color: 'black',
+  //   paddingVertical: '3%',
+  //   // marginVertical: '9%',
+  //   borderRightWidth: 2,
+  //   borderRightColor: '#EFCBB4',
+  //   textAlign: 'center',
+  //   paddingHorizontal: '7%',
+  // },
   ratingHeadingColumnData: {
     fontSize: 17,
     fontWeight: '500',
     color: 'black',
-    marginVertical: '9%',
+    marginVertical: '5%',
   },
   acFieldStarRatingColumnFirst: {
     marginLeft: '8%',
@@ -1182,8 +1432,7 @@ const styles = StyleSheet.create({
   },
   SubmitButton: {
     flex: 1,
-    // borderWidth: 1,
-    marginTop: '5%',
+    marginTop: '1%',
     marginBottom: '20%',
     justifyContent: 'center',
     alignItems: 'center',
@@ -1259,14 +1508,15 @@ const styles = StyleSheet.create({
   button: {
     padding: 5,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#ff8d3c',
     borderRadius: 5,
     margin: 5,
     alignItems: 'center',
   },
   selectedButton: {
+    borderWidth: 1,
+    borderColor: '#ccc',
     backgroundColor: '#ff8d3c',
-    // backgroundColor: '#EFCBB4',
   },
   buttonText: {
     fontSize: 16,

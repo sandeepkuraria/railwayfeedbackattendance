@@ -60,6 +60,10 @@ const Login = () => {
         name: response.data.name,
         token: response.token,
       });
+      navigation.replace('Header', {
+        name: response.data.name,
+        token: response.token,
+      });
     } else {
       Alert.alert(response.message);
     }

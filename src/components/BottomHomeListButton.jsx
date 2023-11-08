@@ -1,11 +1,12 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native'; // Import the useNavigation hook
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
-const BottomHomeListButton = ({route}) => {
+const BottomHomeListButton = ({name, token}) => {
   const navigation = useNavigation();
-  const name = route.params.name;
-  const token = route.params.token;
+
   console.log('name in BottomHomeListButton Component.......', name);
   return (
     <View style={styles.buttonBottomRowContainer}>
@@ -17,17 +18,22 @@ const BottomHomeListButton = ({route}) => {
             token: token,
           })
         }>
-        <Image
+        <SimpleLineIcons name="home" size={25} color="black" />
+        {/* <Image
           source={require('../assets/images/home.png')}
           style={styles.icon}
-        />
+        /> */}
       </TouchableOpacity>
+
       <View style={styles.verticalBar}></View>
+
       <TouchableOpacity style={styles.BottomRowbutton}>
-        <Image
+        <AntDesign name="database" size={25} color="black" />
+
+        {/* <Image
           source={require('../assets/images/report.png')}
           style={styles.icon}
-        />
+        /> */}
       </TouchableOpacity>
     </View>
   );
