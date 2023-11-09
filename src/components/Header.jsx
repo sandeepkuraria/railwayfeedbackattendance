@@ -1,20 +1,17 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React, {useState, useEffect} from 'react';
-
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Logout from './Logout';
 import CurrentDate from './CurrentDate';
 import {ScrollView} from 'react-native-gesture-handler';
 import HeaderText from './HeaderText';
 
-const Header = ({name, token}) => {
+const Header = ({name, token, pic}) => {
   const [trainDataFirstIndex, setTrainDataFirstIndex] = useState([]);
   const [trainData, setTrainData] = useState([]);
 
   useEffect(() => {
     upcomingDutiesApi();
   }, []);
-
+  console.log(name, pic);
   // ******************** upcoming duties API end *******************************
   const upcomingDutiesApi = async () => {
     var myHeaders = new Headers();
@@ -40,7 +37,7 @@ const Header = ({name, token}) => {
 
     if (response.status === true) {
       console.log(
-        'TrainList console data : - ',
+        'Header console data : - ',
         trainData[0].date,
         trainData[0].train_no,
         trainData[0].train_name,
@@ -66,10 +63,13 @@ const Header = ({name, token}) => {
   return (
     <View>
       {/* name and logout button inside */}
+
       <View>
-        <HeaderText name={name} />
+        <HeaderText name={name} pic={pic} />
       </View>
+
       {/* ************************Date and Time************* */}
+
       <View style={styles.cardTextDateHeading}>
         <CurrentDate />
       </View>

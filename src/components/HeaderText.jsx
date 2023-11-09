@@ -5,20 +5,22 @@ import {blue} from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 import {Image} from 'react-native-svg';
 import {Avatar} from 'react-native-paper';
 
-const HeaderText = ({name}) => {
+const HeaderText = ({name, pic}) => {
   return (
     <View style={styles.headerContainer}>
       <View>
         <Avatar.Image
           size={65}
-          source={require('../assets/images/krhitik.png')}
+          source={pic ? {uri: pic} : require('../assets/images/krhitik.png')}
         />
       </View>
 
       <View>
         <Text style={styles.headerText}>{name}</Text>
       </View>
+
       {/* Logout Button */}
+
       <View style={styles.logout}>
         <Logout />
       </View>

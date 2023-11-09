@@ -9,6 +9,7 @@ import {
   ScrollView,
   Image,
   Button,
+  ActivityIndicator,
   KeyboardAvoidingView,
 } from 'react-native';
 import {Rating} from 'react-native-ratings';
@@ -24,9 +25,11 @@ import Header from '../components/Header';
 
 // import Icon from 'react-native-vector-icons/dist/FontAwesome5';
 import Icon from 'react-native-vector-icons/Feather';
+import Table from '../components/Table';
 const Feedback = ({route}) => {
   const navigation = useNavigation();
   const name = route.params.name;
+  const pic = route.params.pic;
   const token = route.params.token;
   const trainData = route.params.trainData;
   let trainDataFirstIndex = [];
@@ -187,6 +190,18 @@ const Feedback = ({route}) => {
   // **********************************************************************
 
   const handleSubmit = async () => {
+    if (
+      pnrNo.length !== 10 ||
+      mobile.length !== 10 ||
+      acFieldValue === 0 ||
+      cleaningFieldValue === 0 ||
+      blanketFieldValue === 0 ||
+      behaviourFieldValue === 0
+    ) {
+      setIsLoading(false);
+    } else {
+      setIsLoading(true);
+    }
     if (pnrNo.length !== 10) {
       Alert.alert('Please ensure PNR number is exactly 10 digits');
       return;
@@ -216,6 +231,7 @@ const Feedback = ({route}) => {
 
     try {
       await PostFeedbackApi(); // Call PostFeedbackApi function
+
       // Alert.alert('Feedback submitted successfully!');
     } catch (error) {
       console.error('Error submitting feedback:', error);
@@ -266,12 +282,17 @@ const Feedback = ({route}) => {
 
     if (response.status === true) {
       Alert.alert(response.message);
+      setIsLoading(false);
+
       console.log(response);
       navigation.replace('TrainList', {
         name: name,
         token: token,
+        pic: pic,
       });
     } else {
+      setIsLoading(false);
+
       Alert.alert(response.message);
       console.log(response);
     }
@@ -281,24 +302,11 @@ const Feedback = ({route}) => {
     //   .catch(error => console.log('error', error));
   };
 
-  //currentDate function
-
-  const getFormattedCurrentDate = () => {
-    const currentDate = new Date();
-    const options = {
-      weekday: 'long',
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    };
-    return currentDate.toLocaleDateString('en-US', options);
-  };
-
   return (
     <View style={styles.mainContainer}>
       <ScrollView>
         <KeyboardAvoidingView style={{flex: 1}}>
-          <Header name={name} token={token} />
+          <Header name={name} token={token} pic={pic} />
 
           <View style={styles.coachButtonsContainer}>
             <View style={styles.coachButtons}>
@@ -358,81 +366,61 @@ const Feedback = ({route}) => {
           </View>
 
           <View style={styles.ratingWithSubmitBox}>
-            {/* *********Heading row start */}
-            {/* <View style={{borderWidth: 1, borderColor: '#EFCBB4'}} /> */}
-            <View style={styles.ratingMainContainerheading}>
-              <View>
-                <Text style={styles.ratingHeadingColumn}>Particular</Text>
-              </View>
-              {/* <View style={styles.ratingVerticalBarHeading}></View> */}
-
-              <View style={styles.particularFieldStarRatingColumnFirst}>
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            {/* Table form start */}
+            <View style={styles.table}>
+              <View style={styles.headingRow}>
+                <View style={styles.headingColumnParticular}>
+                  <Text style={styles.headingText}>Particular</Text>
+                </View>
+                <View style={styles.headingColumn2}>
                   <Text
                     style={{
-                      paddingLeft: '2%',
-                      textAlign: 'center',
                       fontSize: 20,
                       fontWeight: 'bold',
                       color: 'black',
                     }}>
                     1
                   </Text>
-                </View>
-                <View style={{marginVertical: '25%'}}>
                   <Image
                     source={require('../assets/images/red_star.png')}
                     style={{width: 22, height: 22}}
                   />
                 </View>
-              </View>
-              <View style={styles.particularFieldStarRatingColumnFirst}>
-                <Text
-                  style={{
-                    paddingLeft: '12%',
-                    fontSize: 20,
-                    fontWeight: 'bold',
-                    color: 'black',
-                    paddingTop: '2.5%',
-                  }}>
-                  2
-                </Text>
-                <View style={{marginVertical: '12%'}}>
+                <View style={styles.headingColumn3}>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                      color: 'black',
+                    }}>
+                    2
+                  </Text>
                   <Image
                     source={require('../assets/images/blue_star.png')}
                     style={{width: 22, height: 22}}
                   />
                 </View>
-              </View>
-              <View style={styles.particularFieldStarRatingColumnFirst}>
-                <Text
-                  style={{
-                    paddingLeft: '12%',
-                    fontSize: 20,
-                    fontWeight: 'bold',
-                    color: 'black',
-                    paddingTop: '2.5%',
-                  }}>
-                  3
-                </Text>
-                <View style={{marginVertical: '12%'}}>
+                <View style={styles.headingColumn4}>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                      color: 'black',
+                    }}>
+                    3
+                  </Text>
                   <Image
                     source={require('../assets/images/yellow_star.png')}
                     style={{width: 22, height: 22}}
                   />
                 </View>
               </View>
-            </View>
-            <View style={styles.acRow}>
-              <View>
-                <Text style={styles.acHeading}>AC</Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  marginVertical: '2%',
-                }}>
-                <View style={styles.acFieldStarRatingColumnFirst}>
+
+              <View style={styles.acRow1}>
+                <View style={styles.headingColumn1}>
+                  <Text style={styles.headingTextdata}>AC</Text>
+                </View>
+                <View style={styles.acRow1cell1}>
                   <TouchableOpacity onPress={handleACRedPress}>
                     <Image
                       source={
@@ -440,12 +428,11 @@ const Feedback = ({route}) => {
                           ? require('../assets/images/red_star.png')
                           : require('../assets/images/star.png')
                       }
-                      style={{width: 22, height: 22}}
+                      style={styles.redStarSize}
                     />
                   </TouchableOpacity>
                 </View>
-
-                <View style={styles.acFieldStarRatingColumnSecond}>
+                <View style={styles.acRow1cell2}>
                   <TouchableOpacity onPress={handleACBluePress}>
                     <Image
                       source={
@@ -467,8 +454,7 @@ const Feedback = ({route}) => {
                     />
                   </TouchableOpacity>
                 </View>
-
-                <View style={styles.acFieldStarRatingColumnThird}>
+                <View style={styles.acRow1cell3}>
                   <TouchableOpacity onPress={handleACYellowPress}>
                     <Image
                       source={
@@ -501,18 +487,12 @@ const Feedback = ({route}) => {
                   </TouchableOpacity>
                 </View>
               </View>
-            </View>
-            <View style={styles.cleaningRow}>
-              <View>
-                <Text style={styles.cleaningHeading}>CLEANING</Text>
-              </View>
-              {/* <View style={styles.ratingVerticalBarHeading}></View> */}
-              <View
-                style={{
-                  flexDirection: 'row',
-                  marginVertical: '2%',
-                }}>
-                <View style={styles.acFieldStarRatingColumnFirst}>
+
+              <View style={styles.cleaningRow2}>
+                <View style={styles.headingColumn1}>
+                  <Text style={styles.headingTextdata}>CLEANING</Text>
+                </View>
+                <View style={styles.cleaningRow2cell1}>
                   <TouchableOpacity onPress={handleCleaningRedPress}>
                     <Image
                       source={
@@ -520,12 +500,11 @@ const Feedback = ({route}) => {
                           ? require('../assets/images/red_star.png')
                           : require('../assets/images/star.png')
                       }
-                      style={{width: 22, height: 22}}
+                      style={styles.redStarSize}
                     />
                   </TouchableOpacity>
                 </View>
-
-                <View style={styles.acFieldStarRatingColumnSecond}>
+                <View style={styles.cleaningRow2cell2}>
                   <TouchableOpacity onPress={handleCleaningBluePress}>
                     <Image
                       source={
@@ -547,8 +526,7 @@ const Feedback = ({route}) => {
                     />
                   </TouchableOpacity>
                 </View>
-
-                <View style={styles.acFieldStarRatingColumnThird}>
+                <View style={styles.cleaningRow2cell3}>
                   <TouchableOpacity onPress={handleCleaningYellowPress}>
                     <Image
                       source={
@@ -581,18 +559,12 @@ const Feedback = ({route}) => {
                   </TouchableOpacity>
                 </View>
               </View>
-            </View>
-            <View style={styles.blanketRow}>
-              <View>
-                <Text style={styles.blanketHeading}>BLANKET</Text>
-              </View>
-              {/* <View style={styles.ratingVerticalBarHeading}></View> */}
-              <View
-                style={{
-                  flexDirection: 'row',
-                  marginVertical: '2%',
-                }}>
-                <View style={styles.acFieldStarRatingColumnFirst}>
+
+              <View style={styles.blanketRow3}>
+                <View style={styles.headingColumn1}>
+                  <Text style={styles.headingTextdata}>BLANKET</Text>
+                </View>
+                <View style={styles.blanketRow3Cell1}>
                   <TouchableOpacity onPress={handleBlanketRedPress}>
                     <Image
                       source={
@@ -600,12 +572,11 @@ const Feedback = ({route}) => {
                           ? require('../assets/images/red_star.png')
                           : require('../assets/images/star.png')
                       }
-                      style={{width: 22, height: 22}}
+                      style={styles.redStarSize}
                     />
                   </TouchableOpacity>
                 </View>
-
-                <View style={styles.acFieldStarRatingColumnSecond}>
+                <View style={styles.blanketRow3Cell2}>
                   <TouchableOpacity onPress={handleBlanketBluePress}>
                     <Image
                       source={
@@ -627,8 +598,7 @@ const Feedback = ({route}) => {
                     />
                   </TouchableOpacity>
                 </View>
-
-                <View style={styles.acFieldStarRatingColumnThird}>
+                <View style={styles.blanketRow3Cell3}>
                   <TouchableOpacity onPress={handleBlanketYellowPress}>
                     <Image
                       source={
@@ -661,17 +631,12 @@ const Feedback = ({route}) => {
                   </TouchableOpacity>
                 </View>
               </View>
-            </View>
-            <View style={styles.behaviourRow}>
-              <View>
-                <Text style={styles.behaviourHeading}>BEHAVIOUR</Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  marginVertical: '2%',
-                }}>
-                <View style={styles.acFieldStarRatingColumnFirst}>
+
+              <View style={styles.behaviourRow4}>
+                <View style={styles.headingColumn1}>
+                  <Text style={styles.headingTextdata}>BEHAVIOUR</Text>
+                </View>
+                <View style={styles.headingRow4Cell1}>
                   <TouchableOpacity onPress={handleBehaviourRedPress}>
                     <Image
                       source={
@@ -679,12 +644,11 @@ const Feedback = ({route}) => {
                           ? require('../assets/images/red_star.png')
                           : require('../assets/images/star.png')
                       }
-                      style={{width: 22, height: 22}}
+                      style={styles.redStarSize}
                     />
                   </TouchableOpacity>
                 </View>
-
-                <View style={styles.acFieldStarRatingColumnSecond}>
+                <View style={styles.headingRow4Cell2}>
                   <TouchableOpacity onPress={handleBehaviourBluePress}>
                     <Image
                       source={
@@ -706,8 +670,7 @@ const Feedback = ({route}) => {
                     />
                   </TouchableOpacity>
                 </View>
-
-                <View style={styles.acFieldStarRatingColumnThird}>
+                <View style={styles.headingRow4Cell3}>
                   <TouchableOpacity onPress={handleBehaviourYellowPress}>
                     <Image
                       source={
@@ -741,331 +704,8 @@ const Feedback = ({route}) => {
                 </View>
               </View>
             </View>
-            {/* *********Heading row end */}
-            {/* Horizontal orange line in ratings table start */}
-            {/* <View style={{borderWidth: 1, borderColor: 'orange'}} /> */}
-            {/* Horizontal orange line in ratings table end */}
-            {/* Data table start */}
-            {/* <View style={styles.ratingMainContainerdata}>
-              <View>
-                <Text style={styles.ratingHeadingColumnData}>AC</Text>
-                <Text style={styles.ratingHeadingColumnData}>CLEANING</Text>
-                <Text style={styles.ratingHeadingColumnData}>BLANKET</Text>
-                <Text style={styles.ratingHeadingColumnData}>BEHAVIOUR</Text>
-              </View>
+            {/* Table form end */}
 
-              <View style={styles.ratingVerticalBarData}></View>
-              <View
-                style={{
-                  flex: 1,
-                  // borderWidth: 2,
-                  alignItems: 'flex-start',
-                }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    marginVertical: '2%',
-                  }}>
-                  <View style={styles.acFieldStarRatingColumnFirst}>
-                    <TouchableOpacity onPress={handleACRedPress}>
-                      <Image
-                        source={
-                          isACRedActive
-                            ? require('../assets/images/red_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={{width: 22, height: 22}}
-                      />
-                    </TouchableOpacity>
-                  </View>
-
-                  <View style={styles.acFieldStarRatingColumnSecond}>
-                    <TouchableOpacity onPress={handleACBluePress}>
-                      <Image
-                        source={
-                          isACBlueActive
-                            ? require('../assets/images/blue_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={{width: 22, height: 22}}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleACBluePress}>
-                      <Image
-                        source={
-                          isACBlueActive
-                            ? require('../assets/images/blue_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={{width: 22, height: 22}}
-                      />
-                    </TouchableOpacity>
-                  </View>
-
-                  <View style={styles.acFieldStarRatingColumnThird}>
-                    <TouchableOpacity onPress={handleACYellowPress}>
-                      <Image
-                        source={
-                          isACYellowActive
-                            ? require('../assets/images/yellow_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={{width: 22, height: 22}}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleACYellowPress}>
-                      <Image
-                        source={
-                          isACYellowActive
-                            ? require('../assets/images/yellow_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={{width: 22, height: 22}}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleACYellowPress}>
-                      <Image
-                        source={
-                          isACYellowActive
-                            ? require('../assets/images/yellow_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={{width: 22, height: 22}}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-           
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    marginVertical: '2%',
-                  }}>
-                  <View style={styles.acFieldStarRatingColumnFirst}>
-                    <TouchableOpacity onPress={handleCleaningRedPress}>
-                      <Image
-                        source={
-                          isCleaningRedActive
-                            ? require('../assets/images/red_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={{width: 22, height: 22}}
-                      />
-                    </TouchableOpacity>
-                  </View>
-
-                  <View style={styles.acFieldStarRatingColumnSecond}>
-                    <TouchableOpacity onPress={handleCleaningBluePress}>
-                      <Image
-                        source={
-                          isCleaningBlueActive
-                            ? require('../assets/images/blue_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={{width: 22, height: 22}}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleCleaningBluePress}>
-                      <Image
-                        source={
-                          isCleaningBlueActive
-                            ? require('../assets/images/blue_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={{width: 22, height: 22}}
-                      />
-                    </TouchableOpacity>
-                  </View>
-
-                  <View style={styles.acFieldStarRatingColumnThird}>
-                    <TouchableOpacity onPress={handleCleaningYellowPress}>
-                      <Image
-                        source={
-                          isCleaningYellowActive
-                            ? require('../assets/images/yellow_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={{width: 22, height: 22}}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleCleaningYellowPress}>
-                      <Image
-                        source={
-                          isCleaningYellowActive
-                            ? require('../assets/images/yellow_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={{width: 22, height: 22}}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleCleaningYellowPress}>
-                      <Image
-                        source={
-                          isCleaningYellowActive
-                            ? require('../assets/images/yellow_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={{width: 22, height: 22}}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-             
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    marginVertical: '2%',
-                  }}>
-                  <View style={styles.acFieldStarRatingColumnFirst}>
-                    <TouchableOpacity onPress={handleBlanketRedPress}>
-                      <Image
-                        source={
-                          isBlanketRedActive
-                            ? require('../assets/images/red_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={{width: 22, height: 22}}
-                      />
-                    </TouchableOpacity>
-                  </View>
-
-                  <View style={styles.acFieldStarRatingColumnSecond}>
-                    <TouchableOpacity onPress={handleBlanketBluePress}>
-                      <Image
-                        source={
-                          isBlanketBlueActive
-                            ? require('../assets/images/blue_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={{width: 22, height: 22}}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleBlanketBluePress}>
-                      <Image
-                        source={
-                          isBlanketBlueActive
-                            ? require('../assets/images/blue_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={{width: 22, height: 22}}
-                      />
-                    </TouchableOpacity>
-                  </View>
-
-                  <View style={styles.acFieldStarRatingColumnThird}>
-                    <TouchableOpacity onPress={handleBlanketYellowPress}>
-                      <Image
-                        source={
-                          isBlanketYellowActive
-                            ? require('../assets/images/yellow_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={{width: 22, height: 22}}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleBlanketYellowPress}>
-                      <Image
-                        source={
-                          isBlanketYellowActive
-                            ? require('../assets/images/yellow_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={{width: 22, height: 22}}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleBlanketYellowPress}>
-                      <Image
-                        source={
-                          isBlanketYellowActive
-                            ? require('../assets/images/yellow_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={{width: 22, height: 22}}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-      
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    marginVertical: '2%',
-                  }}>
-                  <View style={styles.acFieldStarRatingColumnFirst}>
-                    <TouchableOpacity onPress={handleBehaviourRedPress}>
-                      <Image
-                        source={
-                          isBehaviourRedActive
-                            ? require('../assets/images/red_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={{width: 22, height: 22}}
-                      />
-                    </TouchableOpacity>
-                  </View>
-
-                  <View style={styles.acFieldStarRatingColumnSecond}>
-                    <TouchableOpacity onPress={handleBehaviourBluePress}>
-                      <Image
-                        source={
-                          isBehaviourBlueActive
-                            ? require('../assets/images/blue_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={{width: 22, height: 22}}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleBehaviourBluePress}>
-                      <Image
-                        source={
-                          isBehaviourBlueActive
-                            ? require('../assets/images/blue_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={{width: 22, height: 22}}
-                      />
-                    </TouchableOpacity>
-                  </View>
-
-                  <View style={styles.acFieldStarRatingColumnThird}>
-                    <TouchableOpacity onPress={handleBehaviourYellowPress}>
-                      <Image
-                        source={
-                          isBehaviourYellowActive
-                            ? require('../assets/images/yellow_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={{width: 22, height: 22}}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleBehaviourYellowPress}>
-                      <Image
-                        source={
-                          isBehaviourYellowActive
-                            ? require('../assets/images/yellow_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={{width: 22, height: 22}}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleBehaviourYellowPress}>
-                      <Image
-                        source={
-                          isBehaviourYellowActive
-                            ? require('../assets/images/yellow_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={{width: 22, height: 22}}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-          
-              </View>
-      
-            </View> */}
-            {/* Data table end */}
-            {/* <View style={{borderWidth: 1, borderColor: 'orange'}} /> */}
             <View style={styles.card}>
               <TextInput
                 multiline={true}
@@ -1093,11 +733,12 @@ const Feedback = ({route}) => {
             </TouchableOpacity>
           </View>
 
+          {/* <Table /> */}
           {/* ********************************buttonBottomRowContainer end ***************************** */}
         </KeyboardAvoidingView>
       </ScrollView>
 
-      <BottomHomeListButton name={name} token={token} />
+      <BottomHomeListButton name={name} token={token} pic={pic} />
     </View>
   );
 };
@@ -1272,32 +913,16 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     marginHorizontal: '8%',
   },
-  ratingVerticalBarHeading: {
-    borderLeftWidth: 2,
-    borderColor: 'orange',
-    marginLeft: '11%',
-  },
-  ratingVerticalBarData: {
-    borderLeftWidth: 2,
-    borderColor: 'orange',
-    marginLeft: '6%',
-  },
-
-  ratingMainContainerdata: {
-    flexDirection: 'row',
-
-    justifyContent: 'flex-start',
-    marginHorizontal: '3%',
-  },
 
   card: {
     flex: 0,
     borderRadius: 6,
     shadowRadius: 2,
-    margin: '1%',
+    margin: '0%',
   },
   input: {
     borderWidth: 1,
+    borderColor: '#EFCBB4',
     fontSize: 18,
     color: 'black',
     flex: 0,
@@ -1305,16 +930,26 @@ const styles = StyleSheet.create({
     // marginBottom: '3%',
     borderRadius: 4,
   },
-  buttonContainer: {
-    alignSelf: 'flex-end',
-  },
+
   ratingWithSubmitBox: {
     marginTop: '8%',
     flex: 6,
   },
-  ratingMainContainerheading: {
+
+  acRow: {
     borderTopWidth: 2,
     borderTopColor: '#EFCBB4',
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+  },
+  cleaningRow: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    // marginHorizontal: '3%',
+  },
+  blanketRow: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'flex-start',
@@ -1327,108 +962,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     // marginHorizontal: '3%',
-  },
-  blanketRow: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    // marginHorizontal: '3%',
-  },
-  cleaningRow: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    // marginHorizontal: '3%',
-  },
-  acRow: {
-    borderTopWidth: 2,
-    borderTopColor: '#EFCBB4',
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    // marginHorizontal: '3%',
-  },
-  ratingHeadingColumn: {
-    fontSize: 17,
-    fontWeight: 'bold',
-    color: 'black',
-    paddingVertical: '3%',
-    // marginVertical: '9%',
-    borderRightWidth: 2,
-    borderRightColor: '#EFCBB4',
-    textAlign: 'center',
-    paddingHorizontal: '7%',
-  },
-  acHeading: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: 'black',
-    paddingVertical: '3%',
-    borderRightWidth: 2,
-    borderRightColor: '#EFCBB4',
-    textAlign: 'center',
-    padding: '14.4%',
-  },
-  cleaningHeading: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: 'black',
-    paddingVertical: '3%',
-    borderRightWidth: 2,
-    borderRightColor: '#EFCBB4',
-    textAlign: 'center',
-    padding: '6.6%',
-  },
-  blanketHeading: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: 'black',
-    paddingVertical: '3%',
-    borderRightWidth: 2,
-    borderRightColor: '#EFCBB4',
-    textAlign: 'center',
-    padding: '7.6%',
-  },
-  behaviourHeading: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: 'black',
-    paddingVertical: '3%',
-    borderRightWidth: 2,
-    borderRightColor: '#EFCBB4',
-    textAlign: 'center',
-    padding: '5.1%',
-  },
-  // acHeading: {
-  //   fontSize: 17,
-  //   fontWeight: 'bold',
-  //   color: 'black',
-  //   paddingVertical: '3%',
-  //   // marginVertical: '9%',
-  //   borderRightWidth: 2,
-  //   borderRightColor: '#EFCBB4',
-  //   textAlign: 'center',
-  //   paddingHorizontal: '7%',
-  // },
-  ratingHeadingColumnData: {
-    fontSize: 17,
-    fontWeight: '500',
-    color: 'black',
-    marginVertical: '5%',
-  },
-  acFieldStarRatingColumnFirst: {
-    marginLeft: '8%',
-  },
-  particularFieldStarRatingColumnFirst: {
-    flexDirection: 'row',
-  },
-  acFieldStarRatingColumnSecond: {
-    flexDirection: 'row',
-    marginLeft: 35,
-  },
-  acFieldStarRatingColumnThird: {
-    flexDirection: 'row',
-    marginLeft: 35,
   },
   SubmitButton: {
     flex: 1,
@@ -1493,18 +1026,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  scrollViewContainer: {
-    paddingHorizontal: '5%',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    maxHeight: '85%',
-  },
-  scrollViewContent: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+
   button: {
     padding: 5,
     borderWidth: 1,
@@ -1521,5 +1043,178 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 16,
     color: 'black',
+  },
+  table: {
+    borderWidth: 1,
+    borderColor: '#EFCBB4',
+    marginBottom: '1%',
+    color: 'black',
+    borderRadius: 6,
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  headingRow: {
+    flexDirection: 'row',
+  },
+  acRow1: {
+    flexDirection: 'row',
+  },
+  cleaningRow2: {
+    flexDirection: 'row',
+  },
+  blanketRow3: {
+    flexDirection: 'row',
+  },
+  behaviourRow4: {
+    flexDirection: 'row',
+  },
+  cell: {
+    flex: 1,
+    flexDirection: 'row',
+    padding: 8,
+    borderWidth: 1,
+    borderColor: '#EFCBB4',
+  },
+  acRow1cell: {
+    flex: 1,
+    flexDirection: 'row',
+    padding: 8,
+    borderWidth: 1,
+    borderColor: '#EFCBB4',
+  },
+  acRow1cell1: {
+    flex: 1,
+    flexDirection: 'row',
+    padding: 8,
+    borderTopWidth: 1,
+    borderColor: '#EFCBB4',
+  },
+  acRow1cell2: {
+    flex: 1,
+    flexDirection: 'row',
+    padding: 8,
+    borderTopWidth: 1,
+
+    borderColor: '#EFCBB4',
+  },
+  acRow1cell3: {
+    flex: 1,
+    flexDirection: 'row',
+    padding: 8,
+    borderTopWidth: 1,
+
+    borderColor: '#EFCBB4',
+  },
+
+  cleaningRow2cell1: {
+    flex: 1,
+    flexDirection: 'row',
+    padding: 8,
+
+    borderColor: '#EFCBB4',
+  },
+  cleaningRow2cell2: {
+    flex: 1,
+    flexDirection: 'row',
+    padding: 8,
+
+    borderColor: '#EFCBB4',
+  },
+  cleaningRow2cell3: {
+    flex: 1,
+    flexDirection: 'row',
+    padding: 8,
+
+    borderColor: '#EFCBB4',
+  },
+  blanketRow3Cell1: {
+    flex: 1,
+    flexDirection: 'row',
+    padding: 8,
+
+    borderColor: '#EFCBB4',
+  },
+  blanketRow3Cell2: {
+    flex: 1,
+    flexDirection: 'row',
+    padding: 8,
+
+    borderColor: '#EFCBB4',
+  },
+  blanketRow3Cell3: {
+    flex: 1,
+    flexDirection: 'row',
+    padding: 8,
+
+    borderColor: '#EFCBB4',
+  },
+  headingRow4Cell1: {
+    flex: 1,
+    flexDirection: 'row',
+    padding: 8,
+
+    borderColor: '#EFCBB4',
+  },
+  headingRow4Cell2: {
+    flex: 1,
+    flexDirection: 'row',
+    padding: 8,
+
+    borderColor: '#EFCBB4',
+  },
+  headingRow4Cell3: {
+    flex: 1,
+    flexDirection: 'row',
+    padding: 8,
+
+    borderColor: '#EFCBB4',
+  },
+  headingColumn1: {
+    flex: 1,
+    padding: 8,
+    borderRightWidth: 1,
+
+    borderColor: '#EFCBB4',
+  },
+  headingColumnParticular: {
+    flex: 1,
+    padding: 8,
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: '#EFCBB4',
+  },
+  headingColumn2: {
+    flex: 1,
+    flexDirection: 'row',
+    padding: 8,
+  },
+  headingColumn3: {
+    flex: 1,
+    flexDirection: 'row',
+    padding: 8,
+    borderLeftWidth: 1,
+    borderColor: '#EFCBB4',
+  },
+  headingColumn4: {
+    flex: 1,
+    flexDirection: 'row',
+    padding: 8,
+    borderLeftWidth: 1,
+    borderColor: '#EFCBB4',
+  },
+  headingText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: 'black',
+  },
+  headingTextdata: {
+    fontSize: 13,
+    fontWeight: 'bold',
+    color: 'black',
+  },
+  redStarSize: {
+    width: 22,
+    height: 22,
   },
 });

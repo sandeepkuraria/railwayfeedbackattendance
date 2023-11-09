@@ -52,16 +52,19 @@ const Login = () => {
       requestOptions,
     );
     const response = await res.json();
-
+    console.log('RESPONSE IN LOGIN----', response.data.profile_pic);
+    const pic = response.data.profile_pic;
     if (response.status === true) {
       console.log(response.data.name);
 
       navigation.replace('TrainList', {
         name: response.data.name,
+        pic: pic,
         token: response.token,
       });
       navigation.replace('Header', {
         name: response.data.name,
+        pic: pic,
         token: response.token,
       });
     } else {
@@ -235,8 +238,8 @@ const styles = StyleSheet.create({
   bottomBubbles: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginLeft: '-20%', // Adjusted for responsiveness
-    marginTop: '3%', // Adjusted for responsiveness
+    marginLeft: '-20%',
+    marginTop: '3%',
   },
   bottomBubblesLeft: {
     position: 'absolute',

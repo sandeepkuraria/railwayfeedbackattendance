@@ -16,14 +16,15 @@ import * as ImagePicker from 'react-native-image-picker';
 import ImgToBase64 from 'react-native-image-base64';
 import Geolocation from 'react-native-geolocation-service';
 import HeaderText from '../components/HeaderText';
+import BottomHomeListButton from '../components/BottomHomeListButton';
 
 const Attendance = ({route}) => {
   const navigation = useNavigation();
   const name = route.params.name;
   const token = route.params.token;
-  const [isLoading, setIsLoading] = useState(false);
-
+  const pic = route.params.pic;
   const trainData = route.params.trainData[0];
+  const [isLoading, setIsLoading] = useState(false);
 
   let step = parseInt(trainData?.step);
   step++;
@@ -174,222 +175,115 @@ const Attendance = ({route}) => {
 
   return (
     <View style={styles.mainContainer}>
-      <HeaderText name={name} />
-      <ScrollView>
-        <View style={styles.attendanceHeader}>
-          {/* <View>
-            <Text style={styles.attendanceHeader1}>Dear,</Text>
-          </View> */}
-          <View>
-            {/* <Text style={[styles.attendanceHeader2, {color: '#167fb9'}]}>
-              {name}
-            </Text> */}
-            <Text style={{color: 'black', fontSize: 20}}>
-              {step === 1 && (
-                <Text>
-                  Please provide attendance for {'\n'}
+      <View style={{marginBottom: '10%'}}>
+        <HeaderText name={name} pic={pic} />
+      </View>
+
+      <View style={styles.attendanceHeader}>
+        <View>
+          <Text style={{color: 'black', fontSize: 20}}>
+            {step === 1 && (
+              <Text>
+                Please provide attendance for {'\n'}
+                <Text style={{fontWeight: 'bold'}}>
                   {trainData?.from_station}
                 </Text>
-              )}
-              {step === 2 && (
-                <Text>
-                  Please provide attendance for {'\n'}
+              </Text>
+            )}
+            {step === 2 && (
+              <Text>
+                Please provide attendance for {'\n'}
+                <Text style={{fontWeight: 'bold'}}>
                   {trainData?.to_station}
                 </Text>
-              )}
-              {step === 3 && (
-                <Text>
-                  Please provide attendance for {'\n'}
+              </Text>
+            )}
+            {step === 3 && (
+              <Text>
+                Please provide attendance for {'\n'}
+                <Text style={{fontWeight: 'bold'}}>
                   {trainData?.return_station}
                 </Text>
-              )}
-              {step !== 1 && step !== 2 && step !== 3 && (
+              </Text>
+            )}
+            {/* {step !== 1 && step !== 2 && step !== 3 && (
                 <Text>Default message goes here.</Text>
+              )} */}
+          </Text>
+        </View>
+      </View>
+
+      <View style={styles.cameraCard}>
+        {photoCaptured ? (
+          <View>
+            <Image
+              source={{uri: selfieImage}} // Use the captured image URI
+              style={styles.capturedPhoto}
+            />
+          </View>
+        ) : (
+          <View>
+            <Image
+              source={require('../assets/images/camera.png')}
+              style={styles.cameraIcon}
+            />
+          </View>
+        )}
+      </View>
+
+      <View>
+        {photoCaptured ? (
+          <View
+            style={{
+              backgroundColor: '#EFCBB4',
+              borderRadius: 10,
+              marginHorizontal: '30%',
+              padding: '3%',
+            }}>
+            <TouchableOpacity onPress={handleRetakeSelfie}>
+              <Text style={styles.RetakeSelfieText}>Retake Selfie</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View
+            style={{
+              backgroundColor: '#EFCBB4',
+              borderRadius: 10,
+              marginHorizontal: '30%',
+              padding: '3%',
+            }}>
+            <TouchableOpacity onPress={handleTakeSelfie}>
+              <Text style={styles.TakeSelfieText}>Take Selfie</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
+
+      {/* submit button */}
+      <View>
+        <View>
+          {trainData?.step < 4 ? (
+            <TouchableOpacity
+              style={[
+                styles.SubmitButton,
+                isLoading && {backgroundColor: '#ccc'},
+              ]} // Change button style when loading
+              onPress={handleSubmitSelfie}
+              disabled={isLoading} // Disable the button when loading
+            >
+              {isLoading ? (
+                <ActivityIndicator size="small" color="#0000ff" />
+              ) : (
+                <Text style={styles.SubmitButtonText}>Submit</Text>
               )}
-            </Text>
-          </View>
+            </TouchableOpacity>
+          ) : null}
         </View>
-
-        {/* <View style={styles.cameraCard}>
-          {photoCaptured ? (
-            <View>
-              <Image
-                source={require('../assets/images/camera.png')}
-                style={styles.capturedPhoto}
-              />
-            </View>
-          ) : (
-            <View>
-              <Image
-                source={require('../assets/images/camera.png')}
-                style={styles.cameraIcon}
-              />
-            </View>
-          )}
-        </View> */}
-
-        <View style={styles.cameraCard}>
-          {photoCaptured ? (
-            <View>
-              <Image
-                source={{uri: selfieImage}} // Use the captured image URI
-                style={styles.capturedPhoto}
-              />
-            </View>
-          ) : (
-            <View>
-              <Image
-                source={require('../assets/images/camera.png')}
-                style={styles.cameraIcon}
-              />
-            </View>
-          )}
-        </View>
-
-        <View>
-          {photoCaptured ? (
-            <View
-              style={{
-                position: 'relative',
-                top: '130%',
-                // borderWidth: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '20%',
-                backgroundColor: '#EFCBB4',
-                borderRadius: 10,
-                marginHorizontal: '30%',
-                marginTop: '10%',
-              }}>
-              <TouchableOpacity onPress={handleRetakeSelfie}>
-                <Text style={styles.RetakeSelfieText}>Retake Selfie</Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <View
-              style={{
-                position: 'relative',
-                top: '130%',
-                // borderWidth: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '20%',
-                backgroundColor: '#EFCBB4',
-                borderRadius: 10,
-                marginHorizontal: '30%',
-                marginTop: '10%',
-              }}>
-              <TouchableOpacity onPress={handleTakeSelfie}>
-                <Text style={styles.TakeSelfieText}>Take Selfie</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        </View>
-
-        <View>
-          <Image
-            source={require('../assets/images/circle.png')}
-            style={styles.circleAfterSelfi}
-            resizeMode="contain"
-          />
-        </View>
-
-        {/* submit button */}
-        <View>
-          <View>
-            {trainData?.step < 4 ? (
-              <TouchableOpacity
-                style={[
-                  styles.SubmitButton,
-                  isLoading && {backgroundColor: '#ccc'},
-                ]} // Change button style when loading
-                onPress={handleSubmitSelfie}
-                disabled={isLoading} // Disable the button when loading
-              >
-                {isLoading ? (
-                  <ActivityIndicator size="small" color="#0000ff" />
-                ) : (
-                  <Text style={styles.SubmitButtonText}>Submit</Text>
-                )}
-              </TouchableOpacity>
-            ) : null}
-          </View>
-
-          {/* Display alert if selfie is submitted */}
-          <View>
-            {selfieSubmitted && <Text style={styles.submitMessage}></Text>}
-          </View>
-        </View>
-
-        {/* bottombubble right */}
-
-        <View
-          style={{
-            marginBottom: '50%',
-            // borderWidth: 2,
-            position: 'relative',
-            top: 10,
-          }}>
-          <Image
-            source={require('../assets/images/circle.png')}
-            style={styles.circleAfterSubmit}
-            resizeMode="contain"
-          />
-        </View>
-      </ScrollView>
+      </View>
 
       {/* ********************************buttonBottomRowContainer start ***************************** */}
 
-      {/* <View style={styles.buttonBottomRowContainer}>
-        <View>
-          <TouchableOpacity
-            style={styles.BottomRowbutton}
-            onPress={() =>
-              navigation.navigate('TrainList', {
-                name: name,
-                token: token,
-              })
-            }>
-            <Image
-              source={require('../assets/images/home.png')}
-              style={styles.icon}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.verticalBar}></View>
-        <View>
-          <TouchableOpacity style={[styles.BottomRowbutton, (height = 100)]}>
-            <Image
-              source={require('../assets/images/report.png')}
-              style={styles.icon}
-            />
-          </TouchableOpacity>
-        </View>
-      </View> */}
-
-      <View style={styles.buttonBottomRowContainer}>
-        <TouchableOpacity
-          style={styles.BottomRowbutton}
-          onPress={() =>
-            navigation.navigate('TrainList', {
-              name: name,
-              token: token,
-            })
-          }>
-          <Image
-            source={require('../assets/images/home.png')}
-            style={styles.icon}
-          />
-        </TouchableOpacity>
-
-        <View style={styles.verticalBar}></View>
-        <TouchableOpacity style={styles.BottomRowbutton}>
-          <Image
-            source={require('../assets/images/report.png')}
-            style={styles.icon}
-          />
-        </TouchableOpacity>
-      </View>
+      <BottomHomeListButton name={name} token={token} pic={pic} />
 
       {/* ********************************buttonBottomRowContainer end ***************************** */}
     </View>
@@ -405,8 +299,24 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   attendanceHeader: {
-    marginVertical: '6%',
+    paddingLeft: '15%',
+    marginBottom: '5%',
+  },
+  cameraCard: {
+    height: '35%',
+    width: '70%',
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    borderColor: '#ff8d3c',
     marginHorizontal: '15%',
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: '10%',
+  },
+  cameraIcon: {
+    width: 90,
+    height: 90,
   },
 
   attendanceHeader1: {
@@ -441,35 +351,11 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
   },
-  cameraCard: {
-    height: '35%',
-    width: '70%',
-    borderWidth: 1,
-    borderStyle: 'dashed',
-    borderColor: '#ff8d3c',
-    // elevation: 15,
-    // shadowColor: 'black',
-    // shadowOffset: {width: 10, height: 15},
-    // shadowOpacity: 0.8,
-    marginHorizontal: '15%',
-    shadowRadius: 8,
-    borderRadius: 20,
-    // backgroundColor: '#EFCBB4',
-    alignItems: 'center',
-    position: 'absolute',
-    top: '20%',
-  },
-  cameraIcon: {
-    position: 'relative',
-    marginVertical: '25%',
-    width: 90,
-    height: 90,
-  },
+
   capturedPhoto: {
-    position: 'relative',
-    width: 251,
+    width: 250,
     height: '100%',
-    backgroundColor: '#EFCBB4',
+    resizeMode: 'contain',
     borderRadius: 12,
   },
   verticalBar: {
@@ -510,6 +396,26 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginHorizontal: '10%',
   },
+
+  SubmitButton: {
+    marginTop: '10%',
+
+    backgroundColor: '#ff8d3c',
+    borderRadius: 12,
+    marginHorizontal: '30%',
+    paddingVertical: '2%',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+  },
+  SubmitButtonText: {
+    fontSize: 22,
+    textAlign: 'center',
+    color: 'black',
+    fontWeight: 'bold',
+  },
   circleAfterSelfi: {
     position: 'relative',
     top: 100,
@@ -526,28 +432,7 @@ const styles = StyleSheet.create({
     marginLeft: '68%',
     opacity: 0,
   },
-  SubmitButton: {
-    position: 'relative',
-    top: '120%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#ff8d3c',
-    borderRadius: 12,
-    marginHorizontal: '32%',
-    marginTop: '1%',
-    paddingVertical: '2%',
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-  },
-  SubmitButtonText: {
-    fontSize: 22,
-    textAlign: 'center',
-    color: 'black',
-    fontWeight: 'bold',
-  },
+
   selfieCard: {
     marginVertical: 10,
     padding: 10,

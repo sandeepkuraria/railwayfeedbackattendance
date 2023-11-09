@@ -3,8 +3,11 @@ import React, {useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native'; // Import the useNavigation hook
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {faHouse} from '@fortawesome/free-solid-svg-icons';
+import {faFile} from '@fortawesome/free-solid-svg-icons';
 
-const BottomHomeListButton = ({name, token}) => {
+const BottomHomeListButton = ({name, token, pic}) => {
   const navigation = useNavigation();
 
   console.log('name in BottomHomeListButton Component.......', name);
@@ -16,24 +19,16 @@ const BottomHomeListButton = ({name, token}) => {
           navigation.navigate('TrainList', {
             name: name,
             token: token,
+            pic: pic,
           })
         }>
-        <SimpleLineIcons name="home" size={25} color="black" />
-        {/* <Image
-          source={require('../assets/images/home.png')}
-          style={styles.icon}
-        /> */}
+        <FontAwesomeIcon icon={faHouse} size={35} />
       </TouchableOpacity>
 
       <View style={styles.verticalBar}></View>
 
       <TouchableOpacity style={styles.BottomRowbutton}>
-        <AntDesign name="database" size={25} color="black" />
-
-        {/* <Image
-          source={require('../assets/images/report.png')}
-          style={styles.icon}
-        /> */}
+        <FontAwesomeIcon icon={faFile} size={35} />
       </TouchableOpacity>
     </View>
   );

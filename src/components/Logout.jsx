@@ -4,6 +4,8 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/AntDesign';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {faRightFromBracket} from '@fortawesome/free-solid-svg-icons';
 
 const Logout = () => {
   const navigation = useNavigation();
@@ -25,12 +27,8 @@ const Logout = () => {
       <View>
         <TouchableOpacity onPress={handleLogout}>
           <View>
-            <Icon name="logout" size={25} color="black" />
+            <FontAwesomeIcon icon={faRightFromBracket} size={25} />
           </View>
-          {/* <Image
-            source={require('../assets/images/power-switch.png')}
-            style={styles.logoutButton}
-          /> */}
         </TouchableOpacity>
       </View>
     </View>

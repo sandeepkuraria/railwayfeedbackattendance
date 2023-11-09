@@ -16,29 +16,16 @@ import Header from '../components/Header';
 const TrainList = ({route}) => {
   const name = route.params.name;
   const token = route.params.token;
+  const pic = route.params.pic;
+  console.log('PIC IN TRAIN LIST', pic);
   const navigation = useNavigation();
   const [activeFAButton, setActiveFAButton] = useState('');
   const [trainData, setTrainData] = useState([]);
   const [trainDataFirstIndex, setTrainDataFirstIndex] = useState([]);
-  // const [trainDataUpcomingJourney, setTrainDataUpcomingJourney] = useState([]);
 
   let trainDataUpcomingJourney = [];
 
   trainDataUpcomingJourney = trainData.slice(1);
-
-  // console.log(
-  //   'this is trainData in trainlist ___***********************',
-  //   trainData,
-  // );
-  // console.log(
-  //   'trainDataFirstIndex in trainlist___________-------',
-  //   trainDataFirstIndex,
-  // );
-
-  // console.log(
-  //   'trainDataUpcomingJourney in trainlist___________-------',
-  //   trainDataUpcomingJourney,
-  // );
 
   useEffect(() => {
     upcomingDutiesApi();
@@ -108,6 +95,7 @@ const TrainList = ({route}) => {
     navigation.navigate('Feedback', {
       name: name,
       token: token,
+      pic: pic,
       trainData: trainData,
     });
   };
@@ -116,6 +104,7 @@ const TrainList = ({route}) => {
     navigation.navigate('Attendance', {
       name: name,
       token: token,
+      pic: pic,
       trainData: trainData,
     });
     console.log('Attendance pressed');
@@ -236,7 +225,7 @@ const TrainList = ({route}) => {
         </ScrollView>
       </View> */}
 
-      <Header name={name} token={token} />
+      <Header name={name} token={token} pic={pic} />
 
       <View>
         <ScrollView>
@@ -271,7 +260,7 @@ const TrainList = ({route}) => {
                 <View>
                   <TouchableOpacity
                     onPress={() => {
-                      markAttendance();
+                      markAttendance(train);
                       handleFAPress('Attendance');
                     }}
                     style={[
@@ -290,10 +279,13 @@ const TrainList = ({route}) => {
       </View>
 
       {/* ********************************buttonBottomRowContainer start ***************************** */}
+
       {/* <View style={styles.upComingJourney}>
         <Text style={styles.upComingJourneyText}>Up-Coming Journey</Text>
       </View> */}
+
       {/* upcoming train List */}
+
       <View>
         <View>
           {/* **************bottom list container start **************************/}
@@ -326,7 +318,9 @@ const TrainList = ({route}) => {
           />
         </TouchableOpacity>
       </View> */}
-      <BottomHomeListButton name={name} token={token} />
+
+      <BottomHomeListButton name={name} token={token} pic={pic} />
+
       {/* ********************************buttonBottomRowContainer end ***************************** */}
     </View>
   );
