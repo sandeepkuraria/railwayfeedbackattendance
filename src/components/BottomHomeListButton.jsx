@@ -13,23 +13,25 @@ const BottomHomeListButton = ({name, token, pic}) => {
   console.log('name in BottomHomeListButton Component.......', name);
   return (
     <View style={styles.buttonBottomRowContainer}>
-      <TouchableOpacity
-        style={styles.BottomRowbutton}
-        onPress={() =>
-          navigation.navigate('TrainList', {
-            name: name,
-            token: token,
-            pic: pic,
-          })
-        }>
-        <FontAwesomeIcon icon={faHouse} size={35} />
-      </TouchableOpacity>
+      <View style={styles.homeButton}>
+        <TouchableOpacity
+          style={styles.BottomRowbutton}
+          onPress={() =>
+            navigation.navigate('TrainList', {
+              name: name,
+              token: token,
+              pic: pic,
+            })
+          }>
+          <FontAwesomeIcon icon={faHouse} size={35} />
+        </TouchableOpacity>
+      </View>
 
-      <View style={styles.verticalBar}></View>
+      {/* <View style={styles.verticalBar}></View>
 
       <TouchableOpacity style={styles.BottomRowbutton}>
         <FontAwesomeIcon icon={faFile} size={35} />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };
@@ -44,20 +46,31 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+    backgroundColor: '#EFCBB4',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '2%',
+  },
+  homeButton: {
+    borderWidth: 2,
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   BottomRowbutton: {
     flex: 1,
-    flexDirection: 'row',
-    backgroundColor: '#EFCBB4',
-    padding: '3%',
+    // flexDirection: 'row',
+    // backgroundColor: '#EFCBB4',
+    padding: '0.5%',
     alignItems: 'center',
     justifyContent: 'center',
   },
   icon: {
+    fontSize: 12,
     justifyContent: 'space-between',
     // marginHorizontal: 15,
-    width: 30,
-    height: 30,
+    // width: 30,
+    // height: 30,
     // marginHorizontal: '10%',
     // marginBottom: 5,
   },

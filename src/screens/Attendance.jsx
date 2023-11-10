@@ -25,6 +25,7 @@ const Attendance = ({route}) => {
   const pic = route.params.pic;
   const trainData = route.params.trainData[0];
   const [isLoading, setIsLoading] = useState(false);
+  // const [showSubmitButton, setShowSubmitButton] = useState(true);
 
   let step = parseInt(trainData?.step);
   step++;
@@ -114,6 +115,7 @@ const Attendance = ({route}) => {
       navigation.replace('TrainList', {
         name: name,
         token: token,
+        pic: pic,
       });
     } else {
       setIsLoading(false);
@@ -170,7 +172,23 @@ const Attendance = ({route}) => {
       Alert.alert('Please take a selfie first.');
     }
   };
+  // const handleSubmitSelfie = () => {
+  //   if (photoCaptured) {
+  //     setIsLoading(true);
+  //     setSelfieSubmitted(true);
+  //     saveAttendenceApi();
 
+  //     if (trainData?.step === '1' || trainData?.step === '2') {
+  //       // Check if the current step is 3 after submission
+  //       if (step === 3) {
+  //         setShowSubmitButton(false); // Hide the submit button after the first cycle
+  //         Alert.alert('Congrates! you have comleted your journey!');
+  //       }
+  //     }
+  //   } else {
+  //     Alert.alert('Please take a selfie first.');
+  //   }
+  // };
   console.log('in ATTENDENCE', trainData);
 
   return (
@@ -278,6 +296,21 @@ const Attendance = ({route}) => {
               )}
             </TouchableOpacity>
           ) : null}
+          {/* {showSubmitButton && trainData?.step < 4 ? (
+            <TouchableOpacity
+              style={[
+                styles.SubmitButton,
+                isLoading && {backgroundColor: '#ccc'},
+              ]}
+              onPress={handleSubmitSelfie}
+              disabled={isLoading}>
+              {isLoading ? (
+                <ActivityIndicator size="small" color="#0000ff" />
+              ) : (
+                <Text style={styles.SubmitButtonText}>Submit</Text>
+              )}
+            </TouchableOpacity>
+          ) : null} */}
         </View>
       </View>
 

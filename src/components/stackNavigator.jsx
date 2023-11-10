@@ -8,7 +8,6 @@ import Feedback from '../screens/Feedback';
 import Attendance from '../screens/Attendance';
 import CompletedJourney from '../screens/CompletedJourney';
 import FeedbackList from '../screens/FeedbackList';
-// import Login2 from '../screens/Login2';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +20,7 @@ const StackNavigator = () => {
           component={Login}
           options={{headerShown: false, gestureEnabled: false}}
         />
+
         <Stack.Screen
           name="TrainList"
           component={TrainList}

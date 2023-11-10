@@ -10,7 +10,7 @@ const CurrentDate = () => {
       month: '2-digit',
       year: 'numeric',
     };
-    return currentDate.toLocaleDateString('en-US', options);
+    return currentDate.toLocaleDateString('en-IN', options);
   };
   return (
     <View>

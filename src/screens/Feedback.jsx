@@ -25,7 +25,6 @@ import Header from '../components/Header';
 
 // import Icon from 'react-native-vector-icons/dist/FontAwesome5';
 import Icon from 'react-native-vector-icons/Feather';
-import Table from '../components/Table';
 const Feedback = ({route}) => {
   const navigation = useNavigation();
   const name = route.params.name;
@@ -961,7 +960,6 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    // marginHorizontal: '3%',
   },
   SubmitButton: {
     flex: 1,
@@ -978,6 +976,7 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.2,
     shadowRadius: 2,
+    marginTop: '4.5%',
   },
   SubmitButtonText: {
     fontSize: 22,

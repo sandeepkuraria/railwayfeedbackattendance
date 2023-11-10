@@ -13,7 +13,6 @@ import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 
 const Login = () => {
-  // const [userName, setuserName] = useState('');
   const [emp_id, setemp_id] = useState('');
   const [password, setpassword] = useState('');
   const navigation = useNavigation();
@@ -70,28 +69,16 @@ const Login = () => {
     } else {
       Alert.alert(response.message);
     }
-
-    //  .then(response => response.json())
-    //   .then(result => console.log(result))
-    //   .catch(error => console.log('error', error));
   };
   // **************************** Login API end *********************************
 
   return (
     <SafeAreaView style={styles.mainContainer}>
       <KeyboardAvoidingView style={{flex: 2}}>
-        <View style={styles.circle_top_container}>
-          {/* <Image
-            source={require('../assets/images/circlefinal.png')}
-            style={styles.circle_top}
-            // resizeMode="contain"
-          /> */}
-        </View>
-
         <View
           style={{
-            alignItems: 'center',
-
+            // alignItems: 'center',
+            marginTop: '25%',
             height: '30%',
             width: '70%',
             marginHorizontal: '15%',
@@ -153,24 +140,6 @@ const Login = () => {
             </View>
           </View>
         </View>
-
-        <View style={styles.bottomBubbles}>
-          <View>
-            {/* <Image
-              source={require('../assets/images/circle.png')}
-              style={styles.bottomBubblesLeft}
-              resizeMode="contain"
-            /> */}
-          </View>
-
-          <View>
-            {/* <Image
-              source={require('../assets/images/circle.png')}
-              style={styles.bottomBubblesRight}
-              resizeMode="contain"
-            /> */}
-          </View>
-        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -181,24 +150,10 @@ export default Login;
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-  },
-  circle_top_container: {
-    width: '20%',
-    height: '10%',
-    marginTop: '15%',
-    zIndex: 10,
-    marginLeft: '10%',
-  },
-  circle_top: {
-    width: '8%',
-    height: '8%',
-    padding: '30%',
-    resizeMode: 'cover',
-    overflow: 'visible',
+    justifyContent: 'center',
   },
   logo: {
     borderWidth: 2,
-    // aspectRatio: 4 / 3,
     width: '100%',
     height: '100%',
   },
@@ -213,14 +168,12 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-
   input: {
     borderRadius: 25,
     marginBottom: '3%',
     marginHorizontal: '14%',
     paddingLeft: '5%',
     fontSize: 14,
-    // backgroundColor: '#ff8d3c',
     borderWidth: 1,
     borderColor: '#ff8d3c',
   },
@@ -229,31 +182,8 @@ const styles = StyleSheet.create({
     elevation: 10,
     backgroundColor: '#ff8d3c',
     paddingVertical: '1%',
-    // borderWidth: 2,
     borderRadius: 10,
     textAlign: 'center',
     marginHorizontal: '35%',
-  },
-
-  bottomBubbles: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginLeft: '-20%',
-    marginTop: '3%',
-  },
-  bottomBubblesLeft: {
-    position: 'absolute',
-    top: -240,
-    width: 400,
-    height: 400,
-    // marginTop: -310,
-    marginLeft: '50%',
-    zIndex: -999,
-  },
-  bottomBubblesRight: {
-    width: 100,
-    height: 100,
-    top: -80,
-    marginRight: '3%',
   },
 });

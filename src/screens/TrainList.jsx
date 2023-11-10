@@ -7,9 +7,9 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
+  Alert,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import Logout from '../components/Logout';
 import BottomHomeListButton from '../components/BottomHomeListButton';
 import Header from '../components/Header';
 
@@ -22,11 +22,19 @@ const TrainList = ({route}) => {
   const [activeFAButton, setActiveFAButton] = useState('');
   const [trainData, setTrainData] = useState([]);
   const [trainDataFirstIndex, setTrainDataFirstIndex] = useState([]);
-
+  let step = parseInt(trainData[0]?.step);
+  step++;
+  console.log(
+    'step in TrainList *****************______________******************',
+    step,
+  );
   let trainDataUpcomingJourney = [];
 
   trainDataUpcomingJourney = trainData.slice(1);
-
+  console.log(
+    'trainDataUpcomingJourney in TrainList *******************************',
+    trainDataUpcomingJourney,
+  );
   useEffect(() => {
     upcomingDutiesApi();
   }, []);
@@ -66,10 +74,11 @@ const TrainList = ({route}) => {
 
     if (response.status === true) {
       console.log(
-        'TrainList console data : - ',
+        'TrainList console data ********************************** : - ',
         trainData[0].date,
         trainData[0].train_no,
         trainData[0].train_name,
+        trainData[0].step,
       );
     } else {
       Alert.alert(response.message);
@@ -90,8 +99,25 @@ const TrainList = ({route}) => {
 
   //for upcoming trainlist data to be shown as list end
 
+  // const handleFeedback = item => {
+  //   console.log('Feedback pressed', item);
+
+  //   navigation.navigate('Feedback', {
+  //     name: name,
+  //     token: token,
+  //     pic: pic,
+  //     trainData: trainData,
+  //   });
+  // };
   const handleFeedback = item => {
+    if (trainData.length === 0) {
+      console.log('No data available. Feedback button disabled.');
+      Alert.alert('No current journey available.');
+      return;
+    }
+
     console.log('Feedback pressed', item);
+
     navigation.navigate('Feedback', {
       name: name,
       token: token,
@@ -271,13 +297,86 @@ const TrainList = ({route}) => {
                   </TouchableOpacity>
                 </View>
               </View>
-
-              <View style={styles.dashedLine}></View>
             </View>
           ))}
         </ScrollView>
       </View>
 
+      <View style={styles.dashedLine}></View>
+
+      {/* <Image
+          source={require('../assets/images/businessb&w.png')}
+          style={{width: 40, height: 40}}
+        /> */}
+      {/* 
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-around',
+        }}>
+        <Text style={{color: 'black'}}> current step is {step}</Text>
+        {step === 1 && (
+          <Image
+            source={require('../assets/images/businessColored.png')}
+            style={{width: 40, height: 40}}
+          />
+        )}
+        {step === 2 && (
+          <Image
+            source={require('../assets/images/businessColored.png')}
+            style={{width: 40, height: 40}}
+          />
+        )}
+        {step === 3 && (
+          <Image
+            source={require('../assets/images/businessColored.png')}
+            style={{width: 40, height: 40}}
+          />
+        )}
+      </View> */}
+      <View
+        style={{
+          flexDirection: 'column', // Change to column direction for the text to appear below images
+          // alignItems: 'center',
+          // justifyContent: 'space-around',
+        }}>
+        {/* {step == 3 && (
+          <Text style={{color: 'green'}}>
+            <Text style={{color: 'darkorange'}}> Congratulations! </Text>
+            Your journey is completed.
+          </Text>
+        )} */}
+        {/* {step == 2 && (
+          <Text style={{color: 'green'}}>
+            <Text style={{color: 'darkorange'}}> Congratulations! </Text>
+            Your second attendance is completed.
+          </Text>
+        )}
+        {step == 1 && (
+          <Text style={{color: 'green'}}>
+            <Text style={{color: 'darkorange'}}> Congratulations! </Text>
+            Your first attendance is completed.
+          </Text>
+        )} */}
+
+        {/* <Text style={{color: 'black'}}>Current step is {step}</Text> */}
+
+        {/* <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            marginTop: '1%',
+          }}>
+          {Array.from({length: parseInt(step)}).map((_, index) => (
+            <Image
+              key={index}
+              source={require('../assets/images/businessColored.png')}
+              style={{width: 40, height: 40}}
+            />
+          ))}
+        </View> */}
+      </View>
       {/* ********************************buttonBottomRowContainer start ***************************** */}
 
       {/* <View style={styles.upComingJourney}>
@@ -287,37 +386,19 @@ const TrainList = ({route}) => {
       {/* upcoming train List */}
 
       <View>
-        <View>
-          {/* **************bottom list container start **************************/}
-          <View style={styles.bottomTextContainer}>
-            <ScrollView>
-              <FlatList
-                data={trainDataUpcomingJourney}
-                renderItem={renderItem}
-                keyExtractor={(item, index) => index.toString()}
-              />
-            </ScrollView>
-          </View>
+        {/* **************bottom list container start **************************/}
+        {/* <View style={styles.bottomTextContainer}>
+          <ScrollView>
+            <FlatList
+              data={trainDataUpcomingJourney}
+              renderItem={renderItem}
+              keyExtractor={(item, index) => index.toString()}
+            />
+          </ScrollView>
+        </View> */}
 
-          {/* **************bottom list container end **************************/}
-        </View>
+        {/* **************bottom list container end **************************/}
       </View>
-
-      {/* <View style={styles.buttonBottomRowContainer}>
-        <TouchableOpacity style={styles.BottomRowbutton}>
-          <Image
-            source={require('../assets/images/home.png')}
-            style={styles.icon}
-          />
-        </TouchableOpacity>
-        <View style={styles.verticalBar}></View>
-        <TouchableOpacity style={styles.BottomRowbutton}>
-          <Image
-            source={require('../assets/images/report.png')}
-            style={styles.icon}
-          />
-        </TouchableOpacity>
-      </View> */}
 
       <BottomHomeListButton name={name} token={token} pic={pic} />
 
@@ -332,7 +413,6 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
   },
-
   headerContainer: {
     flex: 0,
     flexDirection: 'row',
@@ -364,27 +444,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#EFCBB4',
     borderRadius: 8,
   },
-
   allotedCoachHeading: {
     color: 'black',
     fontSize: 18,
-    // paddingHorizontal: '17%',
-    // paddingVertical: '1%',
   },
   verticalBar1: {
     height: '100%',
     width: 2,
     backgroundColor: 'orange',
-    // paddingVertical: '1%',
   },
   allotedCoachName: {
     color: 'black',
     fontSize: 18,
     fontWeight: 'bold',
-    // textAlign: 'center',
-    // paddingRight: '15%',
-    // paddingVertical: '1%',
-    // marginRight: '10%',
   },
 
   trainCard: {
@@ -462,12 +534,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   // coach buttons style end*************************************************
-
   buttonFAContainer: {
     flex: 0,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: '12%',
+    marginTop: '10%',
+    marginBottom: '5%',
     marginHorizontal: '10%',
   },
   buttonFA: {
@@ -494,22 +566,18 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
   },
-
   dashedLine: {
-    flex: 0,
-    marginTop: '10%',
+    marginTop: '5%',
+    marginBottom: '1%',
     width: '100%',
-    borderBottomColor: '#EFCBB4',
-    borderBottomWidth: 1,
+    borderColor: '#EFCBB4',
+    borderWidth: 1,
     borderStyle: 'dashed',
   },
-
   upComingJourney: {
     flex: 0,
     marginTop: '2%',
-    //borderBottomWidth: 1,
     paddingLeft: '2%',
-    //borderBottomColor: '#EFCBB4',
     width: '60%',
     justifyContent: 'center',
   },
@@ -522,7 +590,7 @@ const styles = StyleSheet.create({
     paddingBottom: '3%',
   },
   bottomTextContainer: {
-    flex: 0,
+    height: '58%',
     flexDirection: 'row',
     justifyContent: 'space-around',
     elevation: 30,
@@ -564,11 +632,8 @@ const styles = StyleSheet.create({
   },
   icon: {
     justifyContent: 'space-between',
-    // marginHorizontal: 15,
     width: 30,
     height: 30,
-    // marginHorizontal: '10%',
-    // marginBottom: 5,
   },
   verticalBar: {
     height: '100%',
@@ -581,7 +646,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#EFCBB4',
     marginHorizontal: '2%',
-    //borderRadius: 10,
     padding: '1%',
     marginBottom: '0.5%',
   },
