@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -12,11 +12,14 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import BottomHomeListButton from '../components/BottomHomeListButton';
 import Header from '../components/Header';
+import {AuthContext} from '../context/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const TrainList = ({route}) => {
-  const name = route.params.name;
-  const token = route.params.token;
-  const pic = route.params.pic;
+  const name = '';
+  const pic = '';
+  const {token, getToken} = useContext(AuthContext);
+  console.log(token, '--------tokenintrain---------');
   console.log('PIC IN TRAIN LIST', pic);
   const navigation = useNavigation();
   const [activeFAButton, setActiveFAButton] = useState('');
@@ -24,6 +27,7 @@ const TrainList = ({route}) => {
   const [trainDataFirstIndex, setTrainDataFirstIndex] = useState([]);
   let step = parseInt(trainData[0]?.step);
   step++;
+
   console.log(
     'step in TrainList *****************______________******************',
     step,
@@ -31,13 +35,21 @@ const TrainList = ({route}) => {
   let trainDataUpcomingJourney = [];
 
   trainDataUpcomingJourney = trainData.slice(1);
+
   console.log(
     'trainDataUpcomingJourney in TrainList *******************************',
     trainDataUpcomingJourney,
   );
+
   useEffect(() => {
-    upcomingDutiesApi();
-  }, []);
+    getToken();
+    console.log(token, 'tokenTrain');
+    if (token === null) {
+      navigation.navigate('Login');
+    } else {
+      upcomingDutiesApi();
+    }
+  }, [token]);
 
   const renderItem = ({item}) => (
     <View style={styles.card}>
@@ -85,6 +97,8 @@ const TrainList = ({route}) => {
     }
   };
 
+  // console.log('COACH --', trainData[0].coaches.split(',')[0]);
+
   // ******************** upcoming duties API end *******************************
   // const getFormattedCurrentDate = () => {
   //   const currentDate = new Date();
@@ -109,6 +123,7 @@ const TrainList = ({route}) => {
   //     trainData: trainData,
   //   });
   // };
+
   const handleFeedback = item => {
     if (trainData.length === 0) {
       console.log('No data available. Feedback button disabled.');
@@ -123,6 +138,7 @@ const TrainList = ({route}) => {
       token: token,
       pic: pic,
       trainData: trainData,
+      coachB: trainData[0].coaches.split(',')[0],
     });
   };
 

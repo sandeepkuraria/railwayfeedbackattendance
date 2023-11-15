@@ -8,69 +8,89 @@ import {
   TouchableOpacity,
   View,
   KeyboardAvoidingView,
+  ActivityIndicator,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {useNavigation} from '@react-navigation/native';
+import {AuthContext} from '../context/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = () => {
-  const [emp_id, setemp_id] = useState('');
-  const [password, setpassword] = useState('');
+  const {
+    setemp_id,
+    setpassword,
+    emp_id,
+    password,
+    loginresponse,
+    loginApi,
+    isLoading,
+    setIsLoading,
+  } = useContext(AuthContext);
+  console.log(emp_id, 'AUTH IN LOGIN');
+
   const navigation = useNavigation();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     console.log('emp_id : ', emp_id);
     console.log('Password : ', password);
     if (emp_id === '' && password === '') {
       Alert.alert('Please enter employee id/password');
     } else {
       loginApi();
+      setIsLoading(true);
     }
   };
+
   // ******************************* LoginAPI start ************************
-  const loginApi = async () => {
-    var myHeaders = new Headers();
+  // const loginApi = async () => {
+  //   var myHeaders = new Headers();
 
-    myHeaders.append(
-      'Cookie',
-      'ci_session=e2dd6dd7ec0b6ac1ff3c57f01fb27e7495b05e82',
-    );
+  //   myHeaders.append(
+  //     'Cookie',
+  //     'ci_session=e2dd6dd7ec0b6ac1ff3c57f01fb27e7495b05e82',
+  //   );
 
-    var formdata = new FormData();
-    formdata.append('emp_id', emp_id);
-    formdata.append('password', password);
+  //   var formdata = new FormData();
+  //   formdata.append('emp_id', emp_id);
+  //   formdata.append('password', password);
 
-    var requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: formdata,
-      redirect: 'follow',
-    };
+  //   var requestOptions = {
+  //     method: 'POST',
+  //     headers: myHeaders,
+  //     body: formdata,
+  //     redirect: 'follow',
+  //   };
 
-    const res = await fetch(
-      'https://railway.retinodes.com/api/v1/authentication/login',
-      requestOptions,
-    );
-    const response = await res.json();
-    console.log('RESPONSE IN LOGIN----', response.data.profile_pic);
-    const pic = response.data.profile_pic;
-    if (response.status === true) {
-      console.log(response.data.name);
+  //   const res = await fetch(
+  //     'https://railway.retinodes.com/api/v1/authentication/login',
+  //     requestOptions,
+  //   );
+  //   const response = await res.json();
+  //   console.log('RESPONSE IN LOGIN----', response.data.profile_pic);
+  //   const pic = response.data.profile_pic;
+  //   if (response.status === true) {
+  //     console.log(response.data.name);
+  //     setIsLoading(false);
 
-      navigation.replace('TrainList', {
-        name: response.data.name,
-        pic: pic,
-        token: response.token,
-      });
-      navigation.replace('Header', {
-        name: response.data.name,
-        pic: pic,
-        token: response.token,
-      });
-    } else {
-      Alert.alert(response.message);
-    }
-  };
-  // **************************** Login API end *********************************
+  //     navigation.replace('TrainList', {
+  //       name: response.data.name,
+  //       pic: pic,
+  //       token: response.token,
+  //     });
+  //     navigation.replace('Header', {
+  //       name: response.data.name,
+  //       pic: pic,
+  //       token: response.token,
+  //     });
+  //   } else {
+  //     setIsLoading(false);
+
+  //     Alert.alert(response.message);
+  //   }
+  // };
+  // **************************** Login API end ****************************
+
+  console.log('LOGIN RESPONSE---', loginresponse);
 
   return (
     <SafeAreaView style={styles.mainContainer}>
@@ -125,17 +145,24 @@ const Login = () => {
             </View>
 
             <View style={styles.loginButton}>
-              <TouchableOpacity onPress={handleLogin}>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 20,
-                    fontWeight: 'bold',
-                    paddingLeft: '25%',
-                    paddingVertical: '2%',
-                  }}>
-                  LOGIN
-                </Text>
+              <TouchableOpacity
+                style={[isLoading && {backgroundColor: '#ccc'}]}
+                onPress={handleLogin}
+                disabled={isLoading}>
+                {isLoading ? (
+                  <ActivityIndicator size="small" color="#0000ff" />
+                ) : (
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                      paddingLeft: '25%',
+                      paddingVertical: '2%',
+                    }}>
+                    LOGIN
+                  </Text>
+                )}
               </TouchableOpacity>
             </View>
           </View>

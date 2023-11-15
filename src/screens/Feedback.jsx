@@ -12,24 +12,27 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
 } from 'react-native';
-import {Rating} from 'react-native-ratings';
-import LinearGradient from 'react-native-linear-gradient';
-import {RadioButton} from 'react-native-paper';
-import {Card} from 'react-native-paper';
+// import {Rating} from 'react-native-ratings';
+// import LinearGradient from 'react-native-linear-gradient';
+// import {RadioButton} from 'react-native-paper';
+// import {Card} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native'; // Import the useNavigation hook
 // import Icon from 'react-native-vector-icons/Octicons';
 import StarRating from 'react-native-star-rating';
 import Logout from '../components/Logout';
 import BottomHomeListButton from '../components/BottomHomeListButton';
 import Header from '../components/Header';
+// import {RadioButton} from 'react-native-paper';
 
 // import Icon from 'react-native-vector-icons/dist/FontAwesome5';
 import Icon from 'react-native-vector-icons/Feather';
+import {RadioButton} from 'react-native-paper';
 const Feedback = ({route}) => {
   const navigation = useNavigation();
   const name = route.params.name;
   const pic = route.params.pic;
   const token = route.params.token;
+  const coachB = route.params.coachB;
   const trainData = route.params.trainData;
   let trainDataFirstIndex = [];
   trainDataFirstIndex = trainData[0];
@@ -38,125 +41,158 @@ const Feedback = ({route}) => {
     'trainDataFirstIndex in feedback___________-------',
     trainDataFirstIndex,
   );
+
   //numeric value input in feedback start
   const [pnrNo, setPnrNo] = useState('');
-  const [selectedCoach, setSelectedCoach] = useState(null);
+  const [selectedCoach, setSelectedCoach] = useState(coachB);
   const [coachButtons, setCoachButtons] = useState([]);
   const [description, setDescription] = useState('');
   const [mobile, setMobile] = useState('');
+  const [bedrollProvided, setBedrollProvided] = useState('yes');
+  const [linenItemsProvided, setLinenItemsProvided] = useState('yes');
+  const [freshLinenItems, setFreshLinenItems] = useState('yes');
+  const [feelingSafe, setFeelingSafe] = useState('yes');
+  const [attenderBehavior, setAttenderBehavior] = useState('yes');
+  const [ratingLinenService, setRatingLinenService] = useState('yes');
 
-  const [isACRedActive, setIsACRedActive] = useState(false);
-  const [isACBlueActive, setIsACBlueActive] = useState(false);
-  const [isACYellowActive, setIsACYellowActive] = useState(false);
+  const handleRadioButtonChange = (field, value) => {
+    switch (field) {
+      case 'bedrollProvided':
+        setBedrollProvided(value);
+        break;
+      case 'linenItemsProvided':
+        setLinenItemsProvided(value);
+        break;
+      case 'freshLinenItems':
+        setFreshLinenItems(value);
+        break;
+      case 'feelingSafe':
+        setFeelingSafe(value);
+        break;
+      case 'attenderBehavior':
+        setAttenderBehavior(value);
+        break;
+      case 'ratingLinenService':
+        setRatingLinenService(value);
+        break;
+      default:
+        break;
+    }
+  };
 
-  const [isCleaningRedActive, setIsCleaningRedActive] = useState(false);
-  const [isCleaningBlueActive, setIsCleaningBlueActive] = useState(false);
-  const [isCleaningYellowActive, setIsCleaningYellowActive] = useState(false);
+  // const [isACRedActive, setIsACRedActive] = useState(false);
+  // const [isACBlueActive, setIsACBlueActive] = useState(false);
+  // const [isACYellowActive, setIsACYellowActive] = useState(false);
 
-  const [isBlanketRedActive, setIsBlanketRedActive] = useState(false);
-  const [isBlanketBlueActive, setIsBlanketBlueActive] = useState(false);
-  const [isBlanketYellowActive, setIsBlanketYellowActive] = useState(false);
+  // const [isCleaningRedActive, setIsCleaningRedActive] = useState(false);
+  // const [isCleaningBlueActive, setIsCleaningBlueActive] = useState(false);
+  // const [isCleaningYellowActive, setIsCleaningYellowActive] = useState(false);
 
-  const [isBehaviourRedActive, setIsBehaviourRedActive] = useState(false);
-  const [isBehaviourBlueActive, setIsBehaviourBlueActive] = useState(false);
-  const [isBehaviourYellowActive, setIsBehaviourYellowActive] = useState(false);
+  // const [isBlanketRedActive, setIsBlanketRedActive] = useState(false);
+  // const [isBlanketBlueActive, setIsBlanketBlueActive] = useState(false);
+  // const [isBlanketYellowActive, setIsBlanketYellowActive] = useState(false);
 
-  const [acFieldValue, setAcFieldValue] = useState(0);
-  const [cleaningFieldValue, setCleaningFieldValue] = useState(0);
-  const [blanketFieldValue, setBlanketFieldValue] = useState(0);
-  const [behaviourFieldValue, setBehaviourFieldValue] = useState(0);
+  // const [isBehaviourRedActive, setIsBehaviourRedActive] = useState(false);
+  // const [isBehaviourBlueActive, setIsBehaviourBlueActive] = useState(false);
+  // const [isBehaviourYellowActive, setIsBehaviourYellowActive] = useState(false);
+
+  // const [acFieldValue, setAcFieldValue] = useState(0);
+  // const [cleaningFieldValue, setCleaningFieldValue] = useState(0);
+  // const [blanketFieldValue, setBlanketFieldValue] = useState(0);
+  // const [behaviourFieldValue, setBehaviourFieldValue] = useState(0);
+
   const [isLoading, setIsLoading] = useState(false);
 
   // **************************AC start***************************************
 
-  const handleACRedPress = () => {
-    setIsACRedActive(true);
-    setIsACBlueActive(false);
-    setIsACYellowActive(false);
-    setAcFieldValue(1); // Set AC field heading value to 1
-    console.log('AC Value:', 1);
-  };
-  const handleACBluePress = () => {
-    setIsACRedActive(false);
-    setIsACBlueActive(true);
-    setIsACYellowActive(false);
-    setAcFieldValue(2); // Set AC field heading value to 2
-    console.log('AC Value:', 2);
-  };
-  const handleACYellowPress = () => {
-    setIsACRedActive(false);
-    setIsACBlueActive(false);
-    setIsACYellowActive(true);
-    setAcFieldValue(3); // Set AC field heading value to 3
-    console.log('AC Value:', 3);
-  };
+  // const handleACRedPress = () => {
+  //   setIsACRedActive(true);
+  //   setIsACBlueActive(false);
+  //   setIsACYellowActive(false);
+  //   setAcFieldValue(1); // Set AC field heading value to 1
+  //   console.log('AC Value:', 1);
+  // };
+  // const handleACBluePress = () => {
+  //   setIsACRedActive(false);
+  //   setIsACBlueActive(true);
+  //   setIsACYellowActive(false);
+  //   setAcFieldValue(2); // Set AC field heading value to 2
+  //   console.log('AC Value:', 2);
+  // };
+  // const handleACYellowPress = () => {
+  //   setIsACRedActive(false);
+  //   setIsACBlueActive(false);
+  //   setIsACYellowActive(true);
+  //   setAcFieldValue(3); // Set AC field heading value to 3
+  //   console.log('AC Value:', 3);
+  // };
   // **************************AC end***************************************
   //  ****************************Cleaning Start*******************************
-  const handleCleaningRedPress = () => {
-    setIsCleaningRedActive(true);
-    setIsCleaningBlueActive(false);
-    setIsCleaningYellowActive(false);
-    setCleaningFieldValue(1); // Set CLEANING field heading value to 1
-    console.log('Cleaning Value:', 1);
-  };
-  const handleCleaningBluePress = () => {
-    setIsCleaningRedActive(false);
-    setIsCleaningBlueActive(true);
-    setIsCleaningYellowActive(false);
-    setCleaningFieldValue(2); // Set CLEANING field heading value to 2
-    console.log('Cleaning Value:', 2);
-  };
-  const handleCleaningYellowPress = () => {
-    setIsCleaningRedActive(false);
-    setIsCleaningBlueActive(false);
-    setIsCleaningYellowActive(true);
-    setCleaningFieldValue(3); // Set CLEANING field heading value to 3
-    console.log('Cleaning Value:', 3);
-  };
+  // const handleCleaningRedPress = () => {
+  //   setIsCleaningRedActive(true);
+  //   setIsCleaningBlueActive(false);
+  //   setIsCleaningYellowActive(false);
+  //   setCleaningFieldValue(1); // Set CLEANING field heading value to 1
+  //   console.log('Cleaning Value:', 1);
+  // };
+  // const handleCleaningBluePress = () => {
+  //   setIsCleaningRedActive(false);
+  //   setIsCleaningBlueActive(true);
+  //   setIsCleaningYellowActive(false);
+  //   setCleaningFieldValue(2); // Set CLEANING field heading value to 2
+  //   console.log('Cleaning Value:', 2);
+  // };
+  // const handleCleaningYellowPress = () => {
+  //   setIsCleaningRedActive(false);
+  //   setIsCleaningBlueActive(false);
+  //   setIsCleaningYellowActive(true);
+  //   setCleaningFieldValue(3); // Set CLEANING field heading value to 3
+  //   console.log('Cleaning Value:', 3);
+  // };
   // **************************************************
-  const handleBlanketRedPress = () => {
-    setIsBlanketRedActive(true);
-    setIsBlanketBlueActive(false);
-    setIsBlanketYellowActive(false);
-    setBlanketFieldValue(1); // Set BLANKET field heading value to 1
-    console.log('Blanket Value:', 1);
-  };
-  const handleBlanketBluePress = () => {
-    setIsBlanketRedActive(false);
-    setIsBlanketBlueActive(true);
-    setIsBlanketYellowActive(false);
-    setBlanketFieldValue(2); // Set BLANKET field heading value to 2
-    console.log('Blanket Value:', 2);
-  };
-  const handleBlanketYellowPress = () => {
-    setIsBlanketRedActive(false);
-    setIsBlanketBlueActive(false);
-    setIsBlanketYellowActive(true);
-    setBlanketFieldValue(3); // Set BLANKET field heading value to 3
-    console.log(' Blanket Value:', 3);
-  };
+  // const handleBlanketRedPress = () => {
+  //   setIsBlanketRedActive(true);
+  //   setIsBlanketBlueActive(false);
+  //   setIsBlanketYellowActive(false);
+  //   setBlanketFieldValue(1); // Set BLANKET field heading value to 1
+  //   console.log('Blanket Value:', 1);
+  // };
+  // const handleBlanketBluePress = () => {
+  //   setIsBlanketRedActive(false);
+  //   setIsBlanketBlueActive(true);
+  //   setIsBlanketYellowActive(false);
+  //   setBlanketFieldValue(2); // Set BLANKET field heading value to 2
+  //   console.log('Blanket Value:', 2);
+  // };
+  // const handleBlanketYellowPress = () => {
+  //   setIsBlanketRedActive(false);
+  //   setIsBlanketBlueActive(false);
+  //   setIsBlanketYellowActive(true);
+  //   setBlanketFieldValue(3); // Set BLANKET field heading value to 3
+  //   console.log(' Blanket Value:', 3);
+  // };
   // *****************************************************************************
-  const handleBehaviourRedPress = () => {
-    setIsBehaviourRedActive(true);
-    setIsBehaviourBlueActive(false);
-    setIsBehaviourYellowActive(false);
-    setBehaviourFieldValue(1); // Set BEHAVIOUR field heading value to 1
-    console.log('Behaviour Value:', 1);
-  };
-  const handleBehaviourBluePress = () => {
-    setIsBehaviourRedActive(false);
-    setIsBehaviourBlueActive(true);
-    setIsBehaviourYellowActive(false);
-    setBehaviourFieldValue(2); // Set BEHAVIOUR field heading value to 2
-    console.log('Behaviour Value:', 2);
-  };
-  const handleBehaviourYellowPress = () => {
-    setIsBehaviourRedActive(false);
-    setIsBehaviourBlueActive(false);
-    setIsBehaviourYellowActive(true);
-    setBehaviourFieldValue(3); // Set BEHAVIOUR field heading value to 3
-    console.log('Behaviour Value:', 3);
-  };
+  // const handleBehaviourRedPress = () => {
+  //   setIsBehaviourRedActive(true);
+  //   setIsBehaviourBlueActive(false);
+  //   setIsBehaviourYellowActive(false);
+  //   setBehaviourFieldValue(1); // Set BEHAVIOUR field heading value to 1
+  //   console.log('Behaviour Value:', 1);
+  // };
+  // const handleBehaviourBluePress = () => {
+  //   setIsBehaviourRedActive(false);
+  //   setIsBehaviourBlueActive(true);
+  //   setIsBehaviourYellowActive(false);
+  //   setBehaviourFieldValue(2); // Set BEHAVIOUR field heading value to 2
+  //   console.log('Behaviour Value:', 2);
+  // };
+  // const handleBehaviourYellowPress = () => {
+  //   setIsBehaviourRedActive(false);
+  //   setIsBehaviourBlueActive(false);
+  //   setIsBehaviourYellowActive(true);
+  //   setBehaviourFieldValue(3); // Set BEHAVIOUR field heading value to 3
+  //   console.log('Behaviour Value:', 3);
+  // };
 
   useEffect(() => {
     if (data && data.coaches) {
@@ -170,6 +206,7 @@ const Feedback = ({route}) => {
   }, [data]);
 
   const handleCoachSelection = coach => {
+    console.log('INSIDE HANDLE COACH SELECTION---', coach);
     setSelectedCoach(coach);
   };
 
@@ -178,6 +215,7 @@ const Feedback = ({route}) => {
 
     setPnrNo(numericInput);
   };
+
   const handleMobileInputChange = input => {
     const numericInput2 = input.replace(/[^0-9]/g, '');
 
@@ -188,6 +226,7 @@ const Feedback = ({route}) => {
 
   // **********************************************************************
 
+  console.log('COACHB----', coachB);
   const handleSubmit = async () => {
     if (
       pnrNo.length !== 10 ||
@@ -365,8 +404,7 @@ const Feedback = ({route}) => {
           </View>
 
           <View style={styles.ratingWithSubmitBox}>
-            {/* Table form start */}
-            <View style={styles.table}>
+            {/* <View style={styles.table}>
               <View style={styles.headingRow}>
                 <View style={styles.headingColumnParticular}>
                   <Text style={styles.headingText}>Particular</Text>
@@ -702,9 +740,109 @@ const Feedback = ({route}) => {
                   </TouchableOpacity>
                 </View>
               </View>
-            </View>
-            {/* Table form end */}
+            </View> */}
+            <View style={{flexDirection: 'row'}}>
+              <View style={{borderWidth: 1, borderColor: 'red'}}>
+                <Text style={styles.feedbackList}>
+                  Bedroll Provided on Time
+                </Text>
+                <Text style={styles.feedbackList}>
+                  All Linen Items Provided in Bedroll
+                </Text>
+                <Text style={styles.feedbackList}>
+                  All Linen Items Provided Fresh/Un-Used
+                </Text>
+                <Text style={styles.feedbackList}>
+                  Are you feeling safe in your journey
+                </Text>
+                <Text style={styles.feedbackList}>
+                  Behaviours/Response of Attender
+                </Text>
+                <Text style={styles.feedbackList}>
+                  Your Rating for Linen Service
+                </Text>
+              </View>
 
+              <View style={{borderWidth: 1}}>
+                <View>
+                  <RadioButton.Group
+                    onValueChange={value =>
+                      handleRadioButtonChange('bedrollProvided', value)
+                    }
+                    value={bedrollProvided}>
+                    <View style={styles.radioButtons}>
+                      <RadioButton.Item label="Yes" value="yes" color="red" />
+                      <RadioButton.Item label="No" value="no" color="blue" />
+                    </View>
+                  </RadioButton.Group>
+                </View>
+
+                <View>
+                  <RadioButton.Group
+                    onValueChange={value =>
+                      handleRadioButtonChange('linenItemsProvided', value)
+                    }
+                    value={linenItemsProvided}>
+                    <View style={styles.radioButtons}>
+                      <RadioButton.Item label="Yes" value="yes" color="red" />
+                      <RadioButton.Item label="No" value="no" color="blue" />
+                    </View>
+                  </RadioButton.Group>
+                </View>
+
+                <View>
+                  <RadioButton.Group
+                    onValueChange={value =>
+                      handleRadioButtonChange('freshLinenItems', value)
+                    }
+                    value={freshLinenItems}>
+                    <View style={styles.radioButtons}>
+                      <RadioButton.Item label="Yes" value="yes" color="red" />
+                      <RadioButton.Item label="No" value="no" color="blue" />
+                    </View>
+                  </RadioButton.Group>
+                </View>
+
+                <View>
+                  <RadioButton.Group
+                    onValueChange={value =>
+                      handleRadioButtonChange('attenderBehavior', value)
+                    }
+                    value={bedrollProvided}>
+                    <View style={styles.radioButtons}>
+                      <RadioButton.Item label="Yes" value="yes" color="red" />
+                      <RadioButton.Item label="No" value="no" color="blue" />
+                    </View>
+                  </RadioButton.Group>
+                </View>
+
+                <View>
+                  <RadioButton.Group
+                    onValueChange={value =>
+                      handleRadioButtonChange('feelingSafe', value)
+                    }
+                    value={bedrollProvided}>
+                    <View style={styles.radioButtons}>
+                      <RadioButton.Item label="Yes" value="yes" color="red" />
+                      <RadioButton.Item label="No" value="no" color="blue" />
+                    </View>
+                  </RadioButton.Group>
+                </View>
+
+                <View>
+                  <RadioButton.Group
+                    onValueChange={value =>
+                      handleRadioButtonChange('ratingLinenService', value)
+                    }
+                    value={bedrollProvided}>
+                    <View style={styles.radioButtons}>
+                      <RadioButton.Item label="Yes" value="yes" color="red" />
+                      <RadioButton.Item label="No" value="no" color="blue" />
+                    </View>
+                  </RadioButton.Group>
+                </View>
+              </View>
+            </View>
             <View style={styles.card}>
               <TextInput
                 multiline={true}
@@ -1215,5 +1353,11 @@ const styles = StyleSheet.create({
   redStarSize: {
     width: 22,
     height: 22,
+  },
+  feedbackList: {
+    color: 'black',
+  },
+  radioButtons: {
+    flexDirection: 'row',
   },
 });
