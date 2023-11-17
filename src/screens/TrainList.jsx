@@ -12,19 +12,25 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import BottomHomeListButton from '../components/BottomHomeListButton';
 import Header from '../components/Header';
-import {AuthContext} from '../context/AuthContext';
+import {TrainListContext} from '../context/TrainListContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {AuthContext} from '../context/AuthContext';
 
-const TrainList = ({route}) => {
-  const name = '';
-  const pic = '';
-  const {token, getToken} = useContext(AuthContext);
+const TrainList = () => {
+  const {token, getToken, name, pic} = useContext(AuthContext);
+  const {trainData, trainDataFirstIndex, upcomingDutiesApi} =
+    useContext(TrainListContext);
+
+  // const {token, getToken} = useContext(AuthContext);
   console.log(token, '--------tokenintrain---------');
   console.log('PIC IN TRAIN LIST', pic);
+  console.log('trainData in trainlist', trainData);
+  console.log('trainDataFirstIndex in TrainList', trainDataFirstIndex);
+
   const navigation = useNavigation();
   const [activeFAButton, setActiveFAButton] = useState('');
-  const [trainData, setTrainData] = useState([]);
-  const [trainDataFirstIndex, setTrainDataFirstIndex] = useState([]);
+  // const [trainData, setTrainData] = useState([]);
+  // const [trainDataFirstIndex, setTrainDataFirstIndex] = useState([]);
   let step = parseInt(trainData[0]?.step);
   step++;
 
@@ -32,6 +38,7 @@ const TrainList = ({route}) => {
     'step in TrainList *****************______________******************',
     step,
   );
+
   let trainDataUpcomingJourney = [];
 
   trainDataUpcomingJourney = trainData.slice(1);
@@ -62,40 +69,39 @@ const TrainList = ({route}) => {
   );
 
   // ******************** upcoming duties API start *******************************
-  const upcomingDutiesApi = async () => {
-    var myHeaders = new Headers();
-    myHeaders.append('Authorization', `Bearer ${token}`);
+  // const upcomingDutiesApi = async () => {
+  //   var myHeaders = new Headers();
+  //   myHeaders.append('Authorization', `Bearer ${token}`);
 
-    var requestOptions = {
-      method: 'GET',
-      headers: myHeaders,
-      redirect: 'follow',
-    };
+  //   var requestOptions = {
+  //     method: 'GET',
+  //     headers: myHeaders,
+  //     redirect: 'follow',
+  //   };
 
-    const res = await fetch(
-      'https://railway.retinodes.com/api/v1/assignduty/upcomingduties',
-      requestOptions,
-    );
-    const response = await res.json();
+  //   const res = await fetch(
+  //     'https://railway.retinodes.com/api/v1/assignduty/upcomingduties',
+  //     requestOptions,
+  //   );
+  //   const response = await res.json();
 
-    // setTrainData(response.data);
+  //   // setTrainData(response.data);
+  //   setTrainData(response.data || []);
+  //   setTrainDataFirstIndex(response.data[0] || []);
+  //   // setTrainDataUpcomingJourney(response.data.slice(1) || []);
 
-    setTrainData(response.data || []);
-    setTrainDataFirstIndex(response.data[0] || []);
-    // setTrainDataUpcomingJourney(response.data.slice(1) || []);
-
-    if (response.status === true) {
-      console.log(
-        'TrainList console data ********************************** : - ',
-        trainData[0].date,
-        trainData[0].train_no,
-        trainData[0].train_name,
-        trainData[0].step,
-      );
-    } else {
-      Alert.alert(response.message);
-    }
-  };
+  //   if (response.status === true) {
+  //     console.log(
+  //       'TrainList console data ********************************** : - ',
+  //       trainData[0].date,
+  //       trainData[0].train_no,
+  //       trainData[0].train_name,
+  //       trainData[0].step,
+  //     );
+  //   } else {
+  //     Alert.alert(response.message);
+  //   }
+  // };
 
   // console.log('COACH --', trainData[0].coaches.split(',')[0]);
 
@@ -157,7 +163,6 @@ const TrainList = ({route}) => {
   };
 
   // console.log(trainData, '-----traindata');
-
   return (
     <View style={styles.mainContainer}>
       {/* <View style={styles.headerContainer}>

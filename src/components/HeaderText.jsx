@@ -11,7 +11,7 @@ const HeaderText = ({name, pic}) => {
       <View>
         <Avatar.Image
           size={65}
-          source={pic ? {uri: pic} : require('../assets/images/krhitik.png')}
+          source={pic ? {uri: pic} : require('../assets/images/user.png')}
         />
       </View>
 

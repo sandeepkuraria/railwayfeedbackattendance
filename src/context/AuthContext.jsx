@@ -10,9 +10,12 @@ const AuthContextProvider = ({children}) => {
   const [emp_id, setemp_id] = useState('');
   const [password, setpassword] = useState('');
   const [loginresponse, setLoginResponse] = useState();
-
   const [token, setToken] = useState(null);
+  const [name, setname] = useState(null);
+  const [pic, setpic] = useState(null);
+
   console.log(token, 'sandeep');
+
   const getToken = async () => {
     try {
       const storedToken = await AsyncStorage.getItem('token');
@@ -20,7 +23,7 @@ const AuthContextProvider = ({children}) => {
       setToken(storedToken);
       console.log('tooooo', token);
     } catch (error) {
-      // setToken(null);
+      setToken(null);
       console.log('errrrr', error);
     }
   };
@@ -30,7 +33,8 @@ const AuthContextProvider = ({children}) => {
 
   useEffect(() => {
     getToken();
-  }, []); // Run this effect whenever the token changes
+  }, []);
+  // Run this effect whenever the token changes
 
   useEffect(() => {
     // Call getToken when the component mounts
@@ -66,6 +70,9 @@ const AuthContextProvider = ({children}) => {
       console.log(response.data.name);
       setIsLoading(false);
 
+      setname(response.data.name);
+      setpic(response.data.profile_pic);
+
       navigation.navigate('TrainList', {
         name: response.data.name,
         pic: pic,
@@ -96,8 +103,11 @@ const AuthContextProvider = ({children}) => {
         loginresponse,
         isLoading,
         setIsLoading,
+        setLoginResponse,
         getToken,
         token,
+        name,
+        pic,
       }}>
       {children}
     </AuthContext.Provider>

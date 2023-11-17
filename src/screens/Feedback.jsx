@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   View,
   Text,
@@ -18,8 +18,8 @@ import {
 // import {Card} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native'; // Import the useNavigation hook
 // import Icon from 'react-native-vector-icons/Octicons';
-import StarRating from 'react-native-star-rating';
-import Logout from '../components/Logout';
+// import StarRating from 'react-native-star-rating';
+// import Logout from '../components/Logout';
 import BottomHomeListButton from '../components/BottomHomeListButton';
 import Header from '../components/Header';
 // import {RadioButton} from 'react-native-paper';
@@ -27,33 +27,75 @@ import Header from '../components/Header';
 // import Icon from 'react-native-vector-icons/dist/FontAwesome5';
 import Icon from 'react-native-vector-icons/Feather';
 import {RadioButton} from 'react-native-paper';
-const Feedback = ({route}) => {
-  const navigation = useNavigation();
-  const name = route.params.name;
-  const pic = route.params.pic;
-  const token = route.params.token;
-  const coachB = route.params.coachB;
-  const trainData = route.params.trainData;
-  let trainDataFirstIndex = [];
-  trainDataFirstIndex = trainData[0];
+import {TrainListContext} from '../context/TrainListContext';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+import {AuthContext} from '../context/AuthContext';
+import {FeedbackContext} from '../context/FeedbackContext';
 
-  console.log(
-    'trainDataFirstIndex in feedback___________-------',
-    trainDataFirstIndex,
-  );
+const Feedback = ({route}) => {
+  const {token, getToken, name, pic} = useContext(AuthContext);
+  const {trainData, trainDataFirstIndex, upcomingDutiesApi} =
+    useContext(TrainListContext);
+
+  const {
+    selectedCoach,
+    pnrNo,
+    description,
+    linenServiceRating,
+    mobile,
+    bedrollProvided,
+    linenItemsProvided,
+    freshLinenItems,
+    behaviors_of_attender,
+    feelingSafe,
+    coachB,
+    PostFeedbackApi,
+    setBehaviors_of_attender,
+    setFeelingSafe,
+    setFreshLinenItems,
+    setLinenItemsProvided,
+    setBedrollProvided,
+    setMobile,
+    setLinenServiceRating,
+    setDescription,
+    setPnrNo,
+    setSelectedCoach,
+    setCoachB,
+    isLoading,
+    setIsLoading,
+  } = useContext(FeedbackContext);
+
+  const navigation = useNavigation();
+  const [coachButtons, setCoachButtons] = useState([]);
+  console.log(selectedCoach !== '', 'sb', selectedCoach);
+  // const [loading    ,   setIsLoading] = useState([]);
+  // const name = route.params.name;
+  // const pic = route.params.pic;
+  // const token = route.params.token;
+  // const coachB = route.params.coachB;
+  // const trainData = route.params.trainData;
+  // let trainDataFirstIndex = [];
+  // trainDataFirstIndex = trainData[0];
+
+  // console.log(
+  //   'trainDataFirstIndex in feedback___________-------',
+  //   trainDataFirstIndex,
+  // );
 
   //numeric value input in feedback start
-  const [pnrNo, setPnrNo] = useState('');
-  const [selectedCoach, setSelectedCoach] = useState(coachB);
-  const [coachButtons, setCoachButtons] = useState([]);
-  const [description, setDescription] = useState('');
-  const [mobile, setMobile] = useState('');
-  const [bedrollProvided, setBedrollProvided] = useState('yes');
-  const [linenItemsProvided, setLinenItemsProvided] = useState('yes');
-  const [freshLinenItems, setFreshLinenItems] = useState('yes');
-  const [feelingSafe, setFeelingSafe] = useState('yes');
-  const [attenderBehavior, setAttenderBehavior] = useState('yes');
-  const [ratingLinenService, setRatingLinenService] = useState('yes');
+  // const [pnrNo, setPnrNo] = useState('');
+  // const [selectedCoach, setSelectedCoach] = useState(coachB);
+
+  // const [description, setDescription] = useState('');
+  // const [mobile, setMobile] = useState('');
+  // const [bedrollProvided, setBedrollProvided] = useState('');
+  // const [linenItemsProvided, setLinenItemsProvided] = useState('');
+  // const [freshLinenItems, setFreshLinenItems] = useState('');
+  // const [feelingSafe, setFeelingSafe] = useState('');
+  // const [behaviors_of_attender, setBehaviors_of_attender] = useState(0);
+  // const [linenServiceRating, setLinenServiceRating] = useState(0);
+  // const [attenderBehavior, setAttenderBehavior] = useState('yes');
+  // const [ratingLinenService, setRatingLinenService] = useState('yes');
 
   const handleRadioButtonChange = (field, value) => {
     switch (field) {
@@ -80,6 +122,28 @@ const Feedback = ({route}) => {
     }
   };
 
+  const [IsBehavioursYellow1Active, setIsBehavioursYellow1Active] =
+    useState(false);
+  const [IsBehavioursYellow2Active, setIsBehavioursYellow2Active] =
+    useState(false);
+  const [IsBehavioursYellow3Active, setIsBehavioursYellow3Active] =
+    useState(false);
+  const [IsBehavioursYellow4Active, setIsBehavioursYellow4Active] =
+    useState(false);
+  const [IsBehavioursYellow5Active, setIsBehavioursYellow5Active] =
+    useState(false);
+
+  const [IsLinenServiceYellow1Active, setLinenServiceYellow1Active] =
+    useState(false);
+  const [IsLinenServiceYellow2Active, setLinenServiceYellow2Active] =
+    useState(false);
+  const [IsLinenServiceYellow3Active, setLinenServiceYellow3Active] =
+    useState(false);
+  const [IsLinenServiceYellow4Active, setLinenServiceYellow4Active] =
+    useState(false);
+  const [IsLinenServiceYellow5Active, setLinenServiceYellow5Active] =
+    useState(false);
+
   // const [isACRedActive, setIsACRedActive] = useState(false);
   // const [isACBlueActive, setIsACBlueActive] = useState(false);
   // const [isACYellowActive, setIsACYellowActive] = useState(false);
@@ -101,10 +165,99 @@ const Feedback = ({route}) => {
   // const [blanketFieldValue, setBlanketFieldValue] = useState(0);
   // const [behaviourFieldValue, setBehaviourFieldValue] = useState(0);
 
-  const [isLoading, setIsLoading] = useState(false);
+  const handleBehavioursYellowPress1 = () => {
+    setIsBehavioursYellow5Active(false);
+    setIsBehavioursYellow4Active(false);
+    setIsBehavioursYellow3Active(false);
+    setIsBehavioursYellow2Active(false);
+    setIsBehavioursYellow1Active(true);
+    setBehaviors_of_attender(1); // Set Behaviors_of_attender field heading value to 1
+    console.log('Behaviors_of_attender Rating:', 1);
+  };
+  const handleBehavioursYellowPress2 = () => {
+    setIsBehavioursYellow5Active(false);
+    setIsBehavioursYellow4Active(false);
+    setIsBehavioursYellow3Active(false);
+    setIsBehavioursYellow2Active(true);
+    setIsBehavioursYellow1Active(true);
+    setBehaviors_of_attender(2); // Set Behaviors_of_attender field heading value to 1
+    console.log('Behaviors_of_attender Rating:', 2);
+  };
+  const handleBehavioursYellowPress3 = () => {
+    setIsBehavioursYellow5Active(false);
+    setIsBehavioursYellow4Active(false);
+    setIsBehavioursYellow3Active(true);
+    setIsBehavioursYellow2Active(true);
+    setIsBehavioursYellow1Active(true);
+    setBehaviors_of_attender(3); // Set Behaviors_of_attender field heading value to 1
+    console.log('Behaviors_of_attender Rating:', 3);
+  };
+  const handleBehavioursYellowPress4 = () => {
+    setIsBehavioursYellow5Active(false);
+    setIsBehavioursYellow4Active(true);
+    setIsBehavioursYellow3Active(true);
+    setIsBehavioursYellow2Active(true);
+    setIsBehavioursYellow1Active(true);
+    setBehaviors_of_attender(4); // Set Behaviors_of_attender field heading value to 1
+    console.log('Behaviors_of_attender Rating:', 4);
+  };
+  const handleBehavioursYellowPress5 = () => {
+    setIsBehavioursYellow5Active(true);
+    setIsBehavioursYellow4Active(true);
+    setIsBehavioursYellow3Active(true);
+    setIsBehavioursYellow2Active(true);
+    setIsBehavioursYellow1Active(true);
+    setBehaviors_of_attender(5); // Set Behaviors_of_attender field heading value to 1
+    console.log('Behaviors_of_attender Rating:', 5);
+  };
+
+  const handleLinenServiceRating1 = () => {
+    setLinenServiceYellow5Active(false);
+    setLinenServiceYellow4Active(false);
+    setLinenServiceYellow3Active(false);
+    setLinenServiceYellow2Active(false);
+    setLinenServiceYellow1Active(true);
+    setLinenServiceRating(1); // Set LinenServiceRating field heading value to 1
+    console.log('LinenServiceRating Rating:', 1);
+  };
+  const handleLinenServiceRating2 = () => {
+    setLinenServiceYellow5Active(false);
+    setLinenServiceYellow4Active(false);
+    setLinenServiceYellow3Active(false);
+    setLinenServiceYellow2Active(true);
+    setLinenServiceYellow1Active(true);
+    setLinenServiceRating(2); // Set LinenServiceRating field heading value to 2
+    console.log('LinenServiceRating Rating:', 2);
+  };
+  const handleLinenServiceRating3 = () => {
+    setLinenServiceYellow5Active(false);
+    setLinenServiceYellow4Active(false);
+    setLinenServiceYellow3Active(true);
+    setLinenServiceYellow2Active(true);
+    setLinenServiceYellow1Active(true);
+    setLinenServiceRating(3); // Set LinenServiceRating field heading value to 3
+    console.log('LinenServiceRating Rating:', 3);
+  };
+  const handleLinenServiceRating4 = () => {
+    setLinenServiceYellow5Active(false);
+    setLinenServiceYellow4Active(true);
+    setLinenServiceYellow3Active(true);
+    setLinenServiceYellow2Active(true);
+    setLinenServiceYellow1Active(true);
+    setLinenServiceRating(4); // Set LinenServiceRating field heading value to 4
+    console.log('LinenServiceRating Rating:', 4);
+  };
+  const handleLinenServiceRating5 = () => {
+    setLinenServiceYellow5Active(true);
+    setLinenServiceYellow4Active(true);
+    setLinenServiceYellow3Active(true);
+    setLinenServiceYellow2Active(true);
+    setLinenServiceYellow1Active(true);
+    setLinenServiceRating(5); // Set LinenServiceRating field heading value to 5
+    console.log('LinenServiceRating Rating:', 5);
+  };
 
   // **************************AC start***************************************
-
   // const handleACRedPress = () => {
   //   setIsACRedActive(true);
   //   setIsACBlueActive(false);
@@ -212,13 +365,11 @@ const Feedback = ({route}) => {
 
   const handlePnrInputChange = input => {
     const numericInput = input.replace(/[^0-9]/g, '');
-
     setPnrNo(numericInput);
   };
 
   const handleMobileInputChange = input => {
     const numericInput2 = input.replace(/[^0-9]/g, '');
-
     setMobile(numericInput2);
   };
 
@@ -228,17 +379,20 @@ const Feedback = ({route}) => {
 
   console.log('COACHB----', coachB);
   const handleSubmit = async () => {
+    setIsLoading(true);
     if (
       pnrNo.length !== 10 ||
       mobile.length !== 10 ||
-      acFieldValue === 0 ||
-      cleaningFieldValue === 0 ||
-      blanketFieldValue === 0 ||
-      behaviourFieldValue === 0
+      bedrollProvided === '' ||
+      linenItemsProvided === '' ||
+      freshLinenItems === '' ||
+      feelingSafe === '' ||
+      behaviors_of_attender === 0 ||
+      linenServiceRating === 0 ||
+      selectedCoach !== ''
+      //  || rating === 0
     ) {
-      setIsLoading(false);
     } else {
-      setIsLoading(true);
     }
     if (pnrNo.length !== 10) {
       Alert.alert('Please ensure PNR number is exactly 10 digits');
@@ -250,20 +404,20 @@ const Feedback = ({route}) => {
     }
 
     if (
-      acFieldValue === 0 ||
-      cleaningFieldValue === 0 ||
-      blanketFieldValue === 0 ||
-      behaviourFieldValue === 0
+      bedrollProvided === '' ||
+      linenItemsProvided === '' ||
+      freshLinenItems === '' ||
+      feelingSafe === ''
     ) {
       Alert.alert('Please fill in all fields');
       return;
     }
 
     console.log('PNR No:', pnrNo);
-    console.log('AC Rating:', acFieldValue);
-    console.log('Cleaning Rating:', cleaningFieldValue);
-    console.log('Blanket Rating:', blanketFieldValue);
-    console.log('Behaviour Rating:', behaviourFieldValue);
+    console.log('bedrollProvided :', bedrollProvided);
+    console.log('linenItemsProvided :', linenItemsProvided);
+    console.log('freshLinenItems :', freshLinenItems);
+    console.log('feelingSafe :', feelingSafe);
     console.log('description :', description);
     console.log('mobile :', mobile);
 
@@ -277,68 +431,89 @@ const Feedback = ({route}) => {
     }
   };
 
-  console.log('TRAINDATA IN FEEDBACK---', trainData[0]);
+  // console.log('TRAINDATA IN FEEDBACK---', trainData[0]);
   const data = trainData[0];
-  console.log('data in feedback', data.coaches, data.id);
+  // console.log('data in feedback', data.coaches, data.id);
 
-  const PostFeedbackApi = async () => {
-    console.log('INSIDE PostFeedbackApi API FUNCTION');
-    console.log(data.id);
-    console.log(data.coaches);
-    console.log(pnrNo);
-    console.log(acFieldValue);
-    console.log(cleaningFieldValue);
-    console.log(selectedCoach);
-    var myHeaders = new Headers();
+  // const PostFeedbackApi = async () => {
+  //   console.log('INSIDE PostFeedbackApi API FUNCTION');
+  //   console.log(data.id);
+  //   console.log(data.coaches);
+  //   console.log(pnrNo);
+  //   console.log(acFieldValue);
+  //   console.log(cleaningFieldValue);
+  //   console.log(selectedCoach);
+  //   var myHeaders = new Headers();
 
-    myHeaders.append('Authorization', `Bearer ${token}`);
+  //   myHeaders.append('Authorization', `Bearer ${token}`);
 
-    var formdata = new FormData();
-    formdata.append('dutyId', data.id);
-    formdata.append('coach', selectedCoach);
-    formdata.append('pnr', pnrNo);
-    formdata.append('mobile', mobile);
-    formdata.append('description', description);
-    formdata.append('feedback[AC]', acFieldValue);
-    formdata.append('feedback[CLEANING]', cleaningFieldValue);
-    formdata.append('feedback[BLANKET]', blanketFieldValue);
-    formdata.append('feedback[BEHAVIOR]', behaviourFieldValue);
+  //   var formdata = new FormData();
+  //   formdata.append('dutyId', data.id);
+  //   formdata.append('coach', selectedCoach);
+  //   formdata.append('pnr', pnrNo);
+  //   formdata.append('mobile', mobile);
+  //   formdata.append('description', description);
+  //   formdata.append('feedback[AC]', acFieldValue);
+  //   formdata.append('feedback[CLEANING]', cleaningFieldValue);
+  //   formdata.append('feedback[BLANKET]', blanketFieldValue);
+  //   formdata.append('feedback[BEHAVIOR]', behaviourFieldValue);
 
-    var requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: formdata,
-      redirect: 'follow',
-    };
+  //   var requestOptions = {
+  //     method: 'POST',
+  //     headers: myHeaders,
+  //     body: formdata,
+  //     redirect: 'follow',
+  //   };
 
-    const res = await fetch(
-      'https://railway.retinodes.com/api/v1/assignduty/save_feedback',
-      requestOptions,
-    );
+  //   const res = await fetch(
+  //     'https://railway.retinodes.com/api/v1/assignduty/save_feedback',
+  //     requestOptions,
+  //   );
 
-    const response = await res.json();
+  //   const response = await res.json();
 
-    if (response.status === true) {
-      Alert.alert(response.message);
-      setIsLoading(false);
+  //   if (response.status === true) {
+  //     Alert.alert(response.message);
+  //     setIsLoading(false);
 
-      console.log(response);
-      navigation.replace('TrainList', {
-        name: name,
-        token: token,
-        pic: pic,
-      });
-    } else {
-      setIsLoading(false);
+  //     console.log(response);
+  //     navigation.replace('TrainList', {
+  //       name: name,
+  //       token: token,
+  //       pic: pic,
+  //     });
+  //   } else {
+  //     setIsLoading(false);
 
-      Alert.alert(response.message);
-      console.log(response);
-    }
+  //     Alert.alert(response.message);
+  //     console.log(response);
+  //   }
 
-    //  .then(response => response.json())
-    //   .then(result => console.log(result))
-    //   .catch(error => console.log('error', error));
-  };
+  //   //  .then(response => response.json())
+  //   //   .then(result => console.log(result))
+  //   //   .catch(error => console.log('error', error));
+  // };
+
+  const CustomRadioButton = ({label, value, onSelect, isChecked}) => (
+    <TouchableOpacity onPress={() => onSelect(value)}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          // borderWidth: 1,
+        }}>
+        <RadioButton.Android
+          value={value}
+          status={isChecked ? 'checked' : 'unchecked'}
+          color="red"
+          uncheckedColor="green"
+          onPress={() => onSelect(value)}
+        />
+        <Text style={{fontSize: 8, color: 'black'}}>{label}</Text>
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.mainContainer}>
@@ -741,29 +916,231 @@ const Feedback = ({route}) => {
                 </View>
               </View>
             </View> */}
-            <View style={{flexDirection: 'row'}}>
-              <View style={{borderWidth: 1, borderColor: 'red'}}>
+
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-start',
+                borderWidth: 1,
+                // marginHorizontal: 10,
+                borderRadius: 6,
+                borderColor: '#EFCBB4',
+                marginBottom: '2%',
+              }}>
+              <View style={{}}>
                 <Text style={styles.feedbackList}>
                   Bedroll Provided on Time
                 </Text>
+                <RadioButton.Group
+                  onValueChange={value =>
+                    handleRadioButtonChange('bedrollProvided', value)
+                  }
+                  value={bedrollProvided}>
+                  <View style={styles.radioButtons}>
+                    <CustomRadioButton
+                      label="Yes"
+                      value="yes"
+                      onSelect={handleRadioButtonChange}
+                      isChecked={bedrollProvided === 'yes'}
+                    />
+                    <View style={{}} />
+                    <CustomRadioButton
+                      label="No"
+                      value="no"
+                      labelStyle={{}}
+                      onSelect={handleRadioButtonChange}
+                      isChecked={bedrollProvided === 'no'}
+                    />
+                  </View>
+                </RadioButton.Group>
                 <Text style={styles.feedbackList}>
                   All Linen Items Provided in Bedroll
                 </Text>
+                <RadioButton.Group
+                  onValueChange={value =>
+                    handleRadioButtonChange('linenItemsProvided', value)
+                  }
+                  value={linenItemsProvided}>
+                  <View style={styles.radioButtons}>
+                    <CustomRadioButton
+                      label="Yes"
+                      value="yes"
+                      onSelect={handleRadioButtonChange}
+                      isChecked={linenItemsProvided === 'yes'}
+                    />
+                    <View style={{}} />
+                    <CustomRadioButton
+                      label="No"
+                      value="no"
+                      labelStyle={{}}
+                      onSelect={handleRadioButtonChange}
+                      isChecked={linenItemsProvided === 'no'}
+                    />
+                  </View>
+                </RadioButton.Group>
                 <Text style={styles.feedbackList}>
                   All Linen Items Provided Fresh/Un-Used
                 </Text>
+                <RadioButton.Group
+                  onValueChange={value =>
+                    handleRadioButtonChange('freshLinenItems', value)
+                  }
+                  value={freshLinenItems}>
+                  <View style={styles.radioButtons}>
+                    <CustomRadioButton
+                      label="Yes"
+                      value="yes"
+                      onSelect={handleRadioButtonChange}
+                      isChecked={freshLinenItems === 'yes'}
+                    />
+                    <View style={{}} />
+                    <CustomRadioButton
+                      label="No"
+                      value="no"
+                      labelStyle={{}}
+                      onSelect={handleRadioButtonChange}
+                      isChecked={freshLinenItems === 'no'}
+                    />
+                  </View>
+                </RadioButton.Group>
                 <Text style={styles.feedbackList}>
                   Are you feeling safe in your journey
                 </Text>
+                <RadioButton.Group
+                  onValueChange={value =>
+                    handleRadioButtonChange('feelingSafe', value)
+                  }
+                  value={feelingSafe}>
+                  <View style={styles.radioButtons}>
+                    <CustomRadioButton
+                      label="Yes"
+                      value="yes"
+                      onSelect={handleRadioButtonChange}
+                      isChecked={feelingSafe === 'yes'}
+                    />
+                    <View style={{}} />
+                    <CustomRadioButton
+                      label="No"
+                      value="no"
+                      labelStyle={{}}
+                      onSelect={handleRadioButtonChange}
+                      isChecked={feelingSafe === 'no'}
+                    />
+                  </View>
+                </RadioButton.Group>
                 <Text style={styles.feedbackList}>
                   Behaviours/Response of Attender
                 </Text>
+                <View style={styles.acRow1cell1}>
+                  <TouchableOpacity onPress={handleBehavioursYellowPress1}>
+                    <Image
+                      source={
+                        IsBehavioursYellow1Active
+                          ? require('../assets/images/yellow_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={styles.redStarSize}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleBehavioursYellowPress2}>
+                    <Image
+                      source={
+                        IsBehavioursYellow2Active
+                          ? require('../assets/images/yellow_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={styles.redStarSize}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleBehavioursYellowPress3}>
+                    <Image
+                      source={
+                        IsBehavioursYellow3Active
+                          ? require('../assets/images/yellow_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={styles.redStarSize}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleBehavioursYellowPress4}>
+                    <Image
+                      source={
+                        IsBehavioursYellow4Active
+                          ? require('../assets/images/yellow_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={styles.redStarSize}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleBehavioursYellowPress5}>
+                    <Image
+                      source={
+                        IsBehavioursYellow5Active
+                          ? require('../assets/images/yellow_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={styles.redStarSize}
+                    />
+                  </TouchableOpacity>
+                </View>
                 <Text style={styles.feedbackList}>
                   Your Rating for Linen Service
                 </Text>
+                <View style={styles.acRow1cell1}>
+                  <TouchableOpacity onPress={handleLinenServiceRating1}>
+                    <Image
+                      source={
+                        IsLinenServiceYellow1Active
+                          ? require('../assets/images/yellow_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={styles.redStarSize}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleLinenServiceRating2}>
+                    <Image
+                      source={
+                        IsLinenServiceYellow2Active
+                          ? require('../assets/images/yellow_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={styles.redStarSize}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleLinenServiceRating3}>
+                    <Image
+                      source={
+                        IsLinenServiceYellow3Active
+                          ? require('../assets/images/yellow_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={styles.redStarSize}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleLinenServiceRating4}>
+                    <Image
+                      source={
+                        IsLinenServiceYellow4Active
+                          ? require('../assets/images/yellow_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={styles.redStarSize}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleLinenServiceRating5}>
+                    <Image
+                      source={
+                        IsLinenServiceYellow5Active
+                          ? require('../assets/images/yellow_star.png')
+                          : require('../assets/images/star.png')
+                      }
+                      style={styles.redStarSize}
+                    />
+                  </TouchableOpacity>
+                </View>
               </View>
 
-              <View style={{borderWidth: 1}}>
+              {/* <View>
                 <View>
                   <RadioButton.Group
                     onValueChange={value =>
@@ -771,8 +1148,23 @@ const Feedback = ({route}) => {
                     }
                     value={bedrollProvided}>
                     <View style={styles.radioButtons}>
-                      <RadioButton.Item label="Yes" value="yes" color="red" />
-                      <RadioButton.Item label="No" value="no" color="blue" />
+                      <RadioButton.Item
+                        label="Yes"
+                        value="yes"
+                        color="red"
+                        labelStyle={{fontSize: 10}}
+                        uncheckedColor="green"
+                        size={10}
+                      />
+                      <View style={{marginLeft: '-20%'}} />
+                      <RadioButton.Item
+                        label="No"
+                        value="no"
+                        color="blue"
+                        labelStyle={{fontSize: 10}}
+                        uncheckedColor="green"
+                        size={10}
+                      />
                     </View>
                   </RadioButton.Group>
                 </View>
@@ -841,8 +1233,9 @@ const Feedback = ({route}) => {
                     </View>
                   </RadioButton.Group>
                 </View>
-              </View>
+              </View> */}
             </View>
+
             <View style={styles.card}>
               <TextInput
                 multiline={true}
@@ -854,6 +1247,7 @@ const Feedback = ({route}) => {
                 onChangeText={text => setDescription(text)}
               />
             </View>
+
             <TouchableOpacity
               style={[
                 styles.SubmitButton,
@@ -1359,5 +1753,10 @@ const styles = StyleSheet.create({
   },
   radioButtons: {
     flexDirection: 'row',
+    justifyContent: 'center',
+    textAlign: 'center',
+    // borderWidth: 1,
+
+    width: '65%',
   },
 });

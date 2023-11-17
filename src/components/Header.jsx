@@ -1,51 +1,19 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import CurrentDate from './CurrentDate';
 import {ScrollView} from 'react-native-gesture-handler';
 import HeaderText from './HeaderText';
+import {AuthContext} from '../context/AuthContext';
+import {TrainListContext} from '../context/TrainListContext';
 
-const Header = ({name, token, pic}) => {
-  const [trainDataFirstIndex, setTrainDataFirstIndex] = useState([]);
-  const [trainData, setTrainData] = useState([]);
+const Header = ({name, pic}) => {
+  // const [trainDataFirstIndex, setTrainDataFirstIndex] = useState([]);
+  const {token} = useContext(AuthContext); // Destructure the token from AuthContext
+  const {trainData, trainDataFirstIndex} = useContext(TrainListContext);
 
-  useEffect(() => {
-    upcomingDutiesApi();
-  }, []);
-  console.log(name, pic);
+  useEffect(() => {}, []);
+  console.log(name, pic, trainData, trainDataFirstIndex);
   // ******************** upcoming duties API end *******************************
-  const upcomingDutiesApi = async () => {
-    var myHeaders = new Headers();
-    myHeaders.append('Authorization', `Bearer ${token}`);
-
-    var requestOptions = {
-      method: 'GET',
-      headers: myHeaders,
-      redirect: 'follow',
-    };
-
-    const res = await fetch(
-      'https://railway.retinodes.com/api/v1/assignduty/upcomingduties',
-      requestOptions,
-    );
-    const response = await res.json();
-
-    // setTrainData(response.data);
-
-    setTrainData(response.data || []);
-    setTrainDataFirstIndex(response.data[0] || []);
-    // setTrainDataUpcomingJourney(response.data.slice(1) || []);
-
-    if (response.status === true) {
-      console.log(
-        'Header console data : - ',
-        trainData[0].date,
-        trainData[0].train_no,
-        trainData[0].train_name,
-      );
-    } else {
-      Alert.alert(response.message);
-    }
-  };
 
   console.log(trainData, '-----traindata in Header Component');
 
