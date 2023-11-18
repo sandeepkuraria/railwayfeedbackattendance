@@ -11,6 +11,10 @@ import {AuthContextProvider} from '../context/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TrainListContextProvider} from '../context/TrainListContext';
 import {FeedbackContextProvider} from '../context/FeedbackContext';
+import {
+  AttendanceContext,
+  AttendanceContextProvider,
+} from '../context/AttendanceContext';
 
 const Stack = createStackNavigator();
 
@@ -30,43 +34,45 @@ const StackNavigator = () => {
       <AuthContextProvider>
         <TrainListContextProvider>
           <FeedbackContextProvider>
-            <Stack.Navigator initialRouteName="TrainList">
-              <Stack.Screen
-                name="Login"
-                component={Login}
-                options={{headerShown: false, gestureEnabled: false}}
-              />
+            <AttendanceContextProvider>
+              <Stack.Navigator initialRouteName="TrainList">
+                <Stack.Screen
+                  name="Login"
+                  component={Login}
+                  options={{headerShown: false, gestureEnabled: false}}
+                />
 
-              <Stack.Screen
-                name="TrainList"
-                component={TrainList}
-                options={{headerShown: false}}
-              />
+                <Stack.Screen
+                  name="TrainList"
+                  component={TrainList}
+                  options={{headerShown: false}}
+                />
 
-              <Stack.Screen
-                name="Feedback"
-                component={Feedback}
-                options={{headerShown: false}}
-              />
+                <Stack.Screen
+                  name="Feedback"
+                  component={Feedback}
+                  options={{headerShown: false}}
+                />
 
-              <Stack.Screen
-                name="Attendance"
-                component={Attendance}
-                options={{headerShown: false}}
-              />
+                <Stack.Screen
+                  name="Attendance"
+                  component={Attendance}
+                  options={{headerShown: false}}
+                />
 
-              <Stack.Screen
-                name="CompletedJourney"
-                component={CompletedJourney}
-                options={{headerShown: false}}
-              />
+                <Stack.Screen
+                  name="CompletedJourney"
+                  component={CompletedJourney}
+                  options={{headerShown: false}}
+                />
 
-              <Stack.Screen
-                name="FeedbackList"
-                component={FeedbackList}
-                options={{headerShown: false}}
-              />
-            </Stack.Navigator>
+                <Stack.Screen
+                  name="FeedbackList"
+                  component={FeedbackList}
+                  options={{headerShown: false}}
+                />
+              </Stack.Navigator>
+            </AttendanceContextProvider>
           </FeedbackContextProvider>
         </TrainListContextProvider>
       </AuthContextProvider>

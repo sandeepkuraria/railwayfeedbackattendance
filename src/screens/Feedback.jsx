@@ -68,7 +68,7 @@ const Feedback = ({route}) => {
   const navigation = useNavigation();
   const [coachButtons, setCoachButtons] = useState([]);
   console.log(selectedCoach !== '', 'sb', selectedCoach);
-  // const [loading    ,   setIsLoading] = useState([]);
+  // const [loading,setIsLoading] = useState([]);
   // const name = route.params.name;
   // const pic = route.params.pic;
   // const token = route.params.token;

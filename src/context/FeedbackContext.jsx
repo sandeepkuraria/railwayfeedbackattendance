@@ -1,5 +1,4 @@
 import React, {createContext, useState, useContext} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {AuthContext} from './AuthContext'; // Import AuthContext to access the token

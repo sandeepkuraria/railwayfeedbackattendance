@@ -9,7 +9,7 @@ import {
   PermissionsAndroid,
   ActivityIndicator,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {useNavigation} from '@react-navigation/native'; // Import the useNavigation hook
 import {Alert} from 'react-native'; // Import the Alert component
 import * as ImagePicker from 'react-native-image-picker';
@@ -17,15 +17,40 @@ import ImgToBase64 from 'react-native-image-base64';
 import Geolocation from 'react-native-geolocation-service';
 import HeaderText from '../components/HeaderText';
 import BottomHomeListButton from '../components/BottomHomeListButton';
+import {TrainListContext} from '../context/TrainListContext';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+import {AuthContext} from '../context/AuthContext';
+import {AttendanceContext} from '../context/AttendanceContext';
 
 const Attendance = ({route}) => {
+  const {token, getToken, name, pic} = useContext(AuthContext);
+  const {trainData, trainDataFirstIndex, upcomingDutiesApi} =
+    useContext(TrainListContext);
+  const {
+    latitude,
+    setLatitude,
+    longitude,
+    setLongitude,
+    baseimg,
+    setBaseImg,
+    saveAttendenceApi,
+    data,
+    // isLoading,
+    // setIsLoading
+  } = useContext(AttendanceContext);
+  console.log(
+    (token,
+    'token in attendance page latest using trainlistContext***********'),
+  );
+
   const navigation = useNavigation();
-  const name = route.params.name;
-  const token = route.params.token;
-  const pic = route.params.pic;
-  const trainData = route.params.trainData[0];
+  // const name = route.params.name;
+  // const token = route.params.token;
+  // const pic = route.params.pic;
+  // const trainData = route.params.trainData[0];
   const [isLoading, setIsLoading] = useState(false);
   // const [showSubmitButton, setShowSubmitButton] = useState(true);
+  let traindata = trainData[0];
 
   let step = parseInt(trainData?.step);
   step++;
@@ -38,9 +63,9 @@ const Attendance = ({route}) => {
   const [photoCaptured, setPhotoCaptured] = useState(false);
   const [selfieSubmitted, setSelfieSubmitted] = useState(false);
   const [selfieImage, setSelfieImage] = useState();
-  const [latitude, setLatitude] = useState();
-  const [longitude, setLongitude] = useState();
-  const [baseimg, setBaseImg] = useState();
+  // const [latitude, setLatitude] = useState();
+  // const [longitude, setLongitude] = useState();
+  // const [baseimg, setBaseImg] = useState();
 
   const getlocation = () => {
     Geolocation.getCurrentPosition(
@@ -81,48 +106,48 @@ const Attendance = ({route}) => {
 
   console.log(trainData?.id);
 
-  const saveAttendenceApi = async () => {
-    var myHeaders = new Headers();
-    myHeaders.append('Authorization', `Bearer ${token}`);
-    myHeaders.append(
-      'Cookie',
-      'ci_session=b3612beb7ae4c49d7e8341db34272b0730aba59e',
-    );
+  // const saveAttendenceApi = async () => {
+  //   var myHeaders = new Headers();
+  //   myHeaders.append('Authorization', `Bearer ${token}`);
+  //   myHeaders.append(
+  //     'Cookie',
+  //     'ci_session=b3612beb7ae4c49d7e8341db34272b0730aba59e',
+  //   );
 
-    var formdata = new FormData();
-    formdata.append('dutyId', trainData?.id);
-    formdata.append('lat', latitude);
-    formdata.append('long', longitude);
-    formdata.append('photo', baseimg);
-    formdata.append('step', step);
+  //   var formdata = new FormData();
+  //   formdata.append('dutyId', trainData?.id);
+  //   formdata.append('lat', latitude);
+  //   formdata.append('long', longitude);
+  //   formdata.append('photo', baseimg);
+  //   formdata.append('step', step);
 
-    var requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: formdata,
-      redirect: 'follow',
-    };
+  //   var requestOptions = {
+  //     method: 'POST',
+  //     headers: myHeaders,
+  //     body: formdata,
+  //     redirect: 'follow',
+  //   };
 
-    const res = await fetch(
-      'https://railway.retinodes.com/api/v1/assignduty/save_attendace',
-      requestOptions,
-    );
-    const response = await res.json();
-    console.log('response', response);
-    if (response.status === true) {
-      Alert.alert(response.message);
-      setIsLoading(false);
-      navigation.replace('TrainList', {
-        name: name,
-        token: token,
-        pic: pic,
-      });
-    } else {
-      setIsLoading(false);
-      console.log(response.message);
-      Alert.alert(response.message);
-    }
-  };
+  //   const res = await fetch(
+  //     'https://railway.retinodes.com/api/v1/assignduty/save_attendace',
+  //     requestOptions,
+  //   );
+  //   const response = await res.json();
+  //   console.log('response', response);
+  //   if (response.status === true) {
+  //     Alert.alert(response.message);
+  //     setIsLoading(false);
+  //     navigation.replace('TrainList', {
+  //       name: name,
+  //       token: token,
+  //       pic: pic,
+  //     });
+  //   } else {
+  //     setIsLoading(false);
+  //     console.log(response.message);
+  //     Alert.alert(response.message);
+  //   }
+  // };
 
   const options = {
     title: 'Select a photo',
@@ -172,6 +197,7 @@ const Attendance = ({route}) => {
       Alert.alert('Please take a selfie first.');
     }
   };
+
   // const handleSubmitSelfie = () => {
   //   if (photoCaptured) {
   //     setIsLoading(true);
