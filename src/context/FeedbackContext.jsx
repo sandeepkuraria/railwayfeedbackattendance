@@ -1,8 +1,8 @@
 import React, {createContext, useState, useContext} from 'react';
 import {Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {AuthContext} from './AuthContext'; // Import AuthContext to access the token
-import {TrainListContext} from './TrainListContext'; // Import AuthContext to access the token
+import {AuthContext} from './AuthContext';
+import {TrainListContext} from './TrainListContext';
 
 const FeedbackContext = createContext();
 
@@ -19,16 +19,17 @@ const FeedbackContextProvider = ({children}) => {
   const [feelingSafe, setFeelingSafe] = useState('');
   const [linenServiceRating, setLinenServiceRating] = useState(0);
   const [behaviors_of_attender, setBehaviors_of_attender] = useState(0);
-  const [coachB, setCoachB] = useState(0);
-  const {trainData} = useContext(TrainListContext);
+  // const [coachB, setCoachB] = useState(0);
+  const {trainData, coachB} = useContext(TrainListContext);
   console.log('trainData', trainData);
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
-
   const {token, name, pic} = useContext(AuthContext);
+
   const data = trainData[0];
-  //   setCoachB(trainData[0]?.coaches?.split(',')[0]);
-  //   console.log('coachB in FeedbackContext', coachB);
+
+  // setCoachB(trainData[0]?.coaches?.split(',')[0]);
+  // console.log('coachB in FeedbackContext', coachB);
   //   console.log('data in feedback context', data.coaches, data.id);
 
   const PostFeedbackApi = async () => {
@@ -105,7 +106,7 @@ const FeedbackContextProvider = ({children}) => {
         freshLinenItems,
         behaviors_of_attender,
         feelingSafe,
-        coachB,
+
         PostFeedbackApi,
         setBehaviors_of_attender,
         setFeelingSafe,
@@ -117,7 +118,7 @@ const FeedbackContextProvider = ({children}) => {
         setDescription,
         setPnrNo,
         setSelectedCoach,
-        setCoachB,
+
         isLoading,
         setIsLoading,
       }}>

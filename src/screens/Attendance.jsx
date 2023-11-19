@@ -34,7 +34,7 @@ const Attendance = ({route}) => {
     baseimg,
     setBaseImg,
     saveAttendenceApi,
-    data,
+    // data,
     // isLoading,
     // setIsLoading
   } = useContext(AttendanceContext);

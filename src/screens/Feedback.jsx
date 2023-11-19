@@ -16,14 +16,14 @@ import {
 // import LinearGradient from 'react-native-linear-gradient';
 // import {RadioButton} from 'react-native-paper';
 // import {Card} from 'react-native-paper';
-import {useNavigation} from '@react-navigation/native'; // Import the useNavigation hook
+import {useNavigation} from '@react-navigation/native';
+// Import the useNavigation hook
 // import Icon from 'react-native-vector-icons/Octicons';
 // import StarRating from 'react-native-star-rating';
 // import Logout from '../components/Logout';
 import BottomHomeListButton from '../components/BottomHomeListButton';
 import Header from '../components/Header';
 // import {RadioButton} from 'react-native-paper';
-
 // import Icon from 'react-native-vector-icons/dist/FontAwesome5';
 import Icon from 'react-native-vector-icons/Feather';
 import {RadioButton} from 'react-native-paper';
@@ -34,7 +34,7 @@ import {FeedbackContext} from '../context/FeedbackContext';
 
 const Feedback = ({route}) => {
   const {token, getToken, name, pic} = useContext(AuthContext);
-  const {trainData, trainDataFirstIndex, upcomingDutiesApi} =
+  const {trainData, trainDataFirstIndex, upcomingDutiesApi, coachB} =
     useContext(TrainListContext);
 
   const {
@@ -48,7 +48,7 @@ const Feedback = ({route}) => {
     freshLinenItems,
     behaviors_of_attender,
     feelingSafe,
-    coachB,
+
     PostFeedbackApi,
     setBehaviors_of_attender,
     setFeelingSafe,
@@ -67,6 +67,7 @@ const Feedback = ({route}) => {
 
   const navigation = useNavigation();
   const [coachButtons, setCoachButtons] = useState([]);
+
   console.log(selectedCoach !== '', 'sb', selectedCoach);
   // const [loading,setIsLoading] = useState([]);
   // const name = route.params.name;
@@ -422,7 +423,8 @@ const Feedback = ({route}) => {
     console.log('mobile :', mobile);
 
     try {
-      await PostFeedbackApi(); // Call PostFeedbackApi function
+      await PostFeedbackApi();
+      // Call PostFeedbackApi function
 
       // Alert.alert('Feedback submitted successfully!');
     } catch (error) {

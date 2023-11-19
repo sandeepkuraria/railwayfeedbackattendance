@@ -13,6 +13,10 @@ const TrainListContextProvider = ({children}) => {
   const navigation = useNavigation();
   const {token} = useContext(AuthContext);
 
+  const coachB = trainData[0]?.coaches?.split(',')[0];
+
+  console.log('coachB in TrainListContext ************', coachB);
+
   // Destructure the token from AuthContext
 
   console.log(
@@ -65,9 +69,11 @@ const TrainListContextProvider = ({children}) => {
         trainDataFirstIndex,
         setTrainDataFirstIndex,
         upcomingDutiesApi,
+        coachB,
       }}>
       {children}
     </TrainListContext.Provider>
   );
 };
+
 export {TrainListContextProvider, TrainListContext};
