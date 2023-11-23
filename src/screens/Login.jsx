@@ -13,7 +13,6 @@ import {
 import React, {useState, useContext} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {AuthContext} from '../context/AuthContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = () => {
   const {
@@ -29,15 +28,15 @@ const Login = () => {
   console.log(emp_id, 'AUTH IN LOGIN');
 
   const navigation = useNavigation();
-
+  console.log('isloading in Login ++++++++++++++++++++++++++++', isLoading);
   const handleLogin = async () => {
     console.log('emp_id : ', emp_id);
     console.log('Password : ', password);
     if (emp_id === '' && password === '') {
       Alert.alert('Please enter employee id/password');
     } else {
-      loginApi();
       setIsLoading(true);
+      loginApi();
     }
   };
 

@@ -18,26 +18,21 @@ import {AuthContext} from '../context/AuthContext';
 
 const TrainList = () => {
   const {token, getToken, name, pic} = useContext(AuthContext);
-  const {trainData, trainDataFirstIndex, upcomingDutiesApi} =
+  const {trainData, trainDataFirstIndex, upcomingDutiesApi, coachB} =
     useContext(TrainListContext);
 
   // const {token, getToken} = useContext(AuthContext);
   console.log(token, '--------tokenintrain---------');
-  console.log('PIC IN TRAIN LIST', pic);
+
+  // console.log('PIC IN TRAIN LIST', pic);
   console.log('trainData in trainlist', trainData);
   console.log('trainDataFirstIndex in TrainList', trainDataFirstIndex);
+  console.log('token in TrainList', token);
 
   const navigation = useNavigation();
   const [activeFAButton, setActiveFAButton] = useState('');
   // const [trainData, setTrainData] = useState([]);
   // const [trainDataFirstIndex, setTrainDataFirstIndex] = useState([]);
-  let step = parseInt(trainData[0]?.step);
-  step++;
-
-  console.log(
-    'step in TrainList *****************______________******************',
-    step,
-  );
 
   let trainDataUpcomingJourney = [];
 
@@ -55,6 +50,9 @@ const TrainList = () => {
       navigation.navigate('Login');
     } else {
       upcomingDutiesApi();
+      console.log(
+        'this is useEffect in TrainList *************************************',
+      );
     }
   }, [token]);
 
@@ -106,16 +104,6 @@ const TrainList = () => {
   // console.log('COACH --', trainData[0].coaches.split(',')[0]);
 
   // ******************** upcoming duties API end *******************************
-  // const getFormattedCurrentDate = () => {
-  //   const currentDate = new Date();
-  //   const options = {
-  //     weekday: 'long',
-  //     day: '2-digit',
-  //     month: '2-digit',
-  //     year: 'numeric',
-  //   };
-  //   return currentDate.toLocaleDateString('en-US', options);
-  // };
 
   //for upcoming trainlist data to be shown as list end
 
@@ -144,18 +132,18 @@ const TrainList = () => {
       token: token,
       pic: pic,
       trainData: trainData,
-      coachB: trainData[0].coaches.split(',')[0],
+      coachB: coachB,
     });
   };
 
-  const markAttendance = () => {
+  const markAttendance = item => {
     navigation.navigate('Attendance', {
       name: name,
       token: token,
       pic: pic,
       trainData: trainData,
     });
-    console.log('Attendance pressed');
+    console.log('Attendance pressed', item);
   };
 
   const handleFAPress = button => {
@@ -272,7 +260,7 @@ const TrainList = () => {
         </ScrollView>
       </View> */}
 
-      <Header name={name} token={token} pic={pic} />
+      <Header />
 
       <View>
         <ScrollView>
@@ -281,7 +269,7 @@ const TrainList = () => {
               <View style={styles.allotedCoach}>
                 <View>
                   <Text style={styles.allotedCoachHeading}>
-                    Alloted Coaches
+                    Allotted Coaches
                   </Text>
                 </View>
                 <View style={styles.verticalBar1}></View>
@@ -358,9 +346,7 @@ const TrainList = () => {
       </View> */}
       <View
         style={{
-          flexDirection: 'column', // Change to column direction for the text to appear below images
-          // alignItems: 'center',
-          // justifyContent: 'space-around',
+          flexDirection: 'column',
         }}>
         {/* {step == 3 && (
           <Text style={{color: 'green'}}>
@@ -421,7 +407,7 @@ const TrainList = () => {
         {/* **************bottom list container end **************************/}
       </View>
 
-      <BottomHomeListButton name={name} token={token} pic={pic} />
+      <BottomHomeListButton />
 
       {/* ********************************buttonBottomRowContainer end ***************************** */}
     </View>

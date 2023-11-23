@@ -6,16 +6,17 @@ import HeaderText from './HeaderText';
 import {AuthContext} from '../context/AuthContext';
 import {TrainListContext} from '../context/TrainListContext';
 
-const Header = ({name, pic}) => {
+const Header = () => {
   // const [trainDataFirstIndex, setTrainDataFirstIndex] = useState([]);
-  const {token} = useContext(AuthContext); // Destructure the token from AuthContext
+
+  const {token, name, pic} = useContext(AuthContext);
   const {trainData, trainDataFirstIndex} = useContext(TrainListContext);
 
   useEffect(() => {}, []);
-  console.log(name, pic, trainData, trainDataFirstIndex);
+  console.log(token, name, pic, trainData, trainDataFirstIndex);
   // ******************** upcoming duties API end *******************************
 
-  console.log(trainData, '-----traindata in Header Component');
+  console.log(trainData, '-_----traindata in Header Component');
 
   //   const storeData = async (key, value) => {
   //     try {

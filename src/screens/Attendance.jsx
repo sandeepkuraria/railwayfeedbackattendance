@@ -24,8 +24,7 @@ import {AttendanceContext} from '../context/AttendanceContext';
 
 const Attendance = ({route}) => {
   const {token, getToken, name, pic} = useContext(AuthContext);
-  const {trainData, trainDataFirstIndex, upcomingDutiesApi} =
-    useContext(TrainListContext);
+  const {trainData} = useContext(TrainListContext);
   const {
     latitude,
     setLatitude,
@@ -33,36 +32,31 @@ const Attendance = ({route}) => {
     setLongitude,
     baseimg,
     setBaseImg,
-    saveAttendenceApi,
-    // data,
-    // isLoading,
-    // setIsLoading
+    isLoading,
+    setIsLoading,
+    saveAttendanceApi,
+    step,
   } = useContext(AttendanceContext);
-  console.log(
-    (token,
-    'token in attendance page latest using trainlistContext***********'),
-  );
-
   const navigation = useNavigation();
   // const name = route.params.name;
   // const token = route.params.token;
   // const pic = route.params.pic;
   // const trainData = route.params.trainData[0];
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   // const [showSubmitButton, setShowSubmitButton] = useState(true);
-  let traindata = trainData[0];
-
-  let step = parseInt(trainData?.step);
-  step++;
+  const traindata = trainData[0];
+  // let step = parseInt(traindata?.step);
+  // step++;
 
   console.log(
-    'This is step coming from upcoming duties(TrainList page) in attendance page :- ',
+    'This is step coming from attendance context in attendance page :- ',
     step,
   );
 
   const [photoCaptured, setPhotoCaptured] = useState(false);
   const [selfieSubmitted, setSelfieSubmitted] = useState(false);
   const [selfieImage, setSelfieImage] = useState();
+  const [showSubmitButton, setShowSubmitButton] = useState(true);
   // const [latitude, setLatitude] = useState();
   // const [longitude, setLongitude] = useState();
   // const [baseimg, setBaseImg] = useState();
@@ -100,13 +94,50 @@ const Attendance = ({route}) => {
     }
   }
 
+  // useEffect(() => {
+  //   requestPermissions();
+  // }, []);
+
+  // const getFormattedCurrentDate = () => {
+  //   const currentDate = new Date();
+  //   const options = {
+  //     // weekday: 'long',
+  //     day: '2-digit',
+  //     month: '2-digit',
+  //     year: 'numeric',
+  //   };
+  //   return currentDate.toLocaleDateString('en-IN', options);
+  // };
+
   useEffect(() => {
     requestPermissions();
-  }, []);
+  }, [trainData]);
 
-  console.log(trainData?.id);
+  // useEffect(() => {
+  //   requestPermissions();
 
-  // const saveAttendenceApi = async () => {
+  //   if (trainData) {
+  //     const currentDate = getFormattedCurrentDate();
+
+  //     // Check if the current date is equal to reach_date or return_date
+  //     const isReachDateEqual = currentDate === trainData[0]?.reach_date;
+  //     const isReturnDateEqual = currentDate === trainData[0]?.return_date;
+  //     // Check the step and set showSubmitButton accordingly
+  //     if (isReachDateEqual || isReturnDateEqual) {
+  //       if (trainData[0]?.step > 3) {
+  //         setShowSubmitButton(false);
+  //       } else {
+  //         setShowSubmitButton(true);
+  //       }
+  //     } else {
+  //       setShowSubmitButton(false);
+  //     }
+  //   }
+  // }, [trainData]);
+
+  // && trainData[0]?.reach_date===
+
+  // const saveAttendanceApi = async () => {
   //   var myHeaders = new Headers();
   //   myHeaders.append('Authorization', `Bearer ${token}`);
   //   myHeaders.append(
@@ -183,16 +214,26 @@ const Attendance = ({route}) => {
     setSelfieSubmitted(false);
     setSelfieImage(null);
   };
+  console.log('trainData?.step in Attendance page', trainData[0]?.step);
+  console.log('step in attendance page', step);
 
-  const handleSubmitSelfie = () => {
+  const handleSubmitSelfie = async () => {
     if (photoCaptured) {
       setIsLoading(true);
       setSelfieSubmitted(true);
-      saveAttendenceApi();
-      if (trainData?.step === '1' || trainData?.step === '2') {
-      } else if (step === '3') {
-        Alert.alert('Congrates! you have comleted your journey!');
-      }
+
+      // Call the saveAttendanceApi function
+      await saveAttendanceApi();
+
+      // Now you can navigate or show the alert
+      navigation.replace('TrainList', {
+        name: name,
+        pic: pic,
+        token: token,
+        trainData: trainData,
+      });
+
+      Alert.alert('Congrats! You have completed your journey!');
     } else {
       Alert.alert('Please take a selfie first.');
     }
@@ -202,7 +243,22 @@ const Attendance = ({route}) => {
   //   if (photoCaptured) {
   //     setIsLoading(true);
   //     setSelfieSubmitted(true);
-  //     saveAttendenceApi();
+  //     saveAttendanceApi();
+  //     if (trainData?.step === '1' || trainData?.step === '2') {
+  //       console.log('step in attendance page', step);
+  //     } else if (step === 3) {
+  //       Alert.alert('Congrates! you have comleted your journey!');
+  //     }
+  //   } else {
+  //     Alert.alert('Please take a selfie first.');
+  //   }
+  // };
+
+  // const handleSubmitSelfie = () => {
+  //   if (photoCaptured) {
+  //     setIsLoading(true);
+  //     setSelfieSubmitted(true);
+  //     saveAttendencaApi();
 
   //     if (trainData?.step === '1' || trainData?.step === '2') {
   //       // Check if the current step is 3 after submission
@@ -214,6 +270,57 @@ const Attendance = ({route}) => {
   //   } else {
   //     Alert.alert('Please take a selfie first.');
   //   }
+  // };
+
+  // useEffect(() => {
+  //   requestPermissions();
+  //   if (step === 1 || step === 2 || step === 3 || traindata) {
+  //     setShowSubmitButton(true);
+  //   }
+  //   console.log('traindata available :-------------------', traindata);
+  //   if (trainData) {
+  //     const currentDate = getFormattedCurrentDate();
+  //     const reachDate = trainData[0]?.reach_date;
+  //     const returnDate = trainData[0]?.return_date;
+
+  //     // Check if the current date is equal to reach_date or return_date
+  //     const isReachDateEqual =
+  //       reachDate && currentDate === formatDate(reachDate);
+  //     const isReturnDateEqual =
+  //       returnDate && currentDate === formatDate(returnDate);
+  //     console.log(
+  //       'isReturnDateEqual,isReturnDateEqual,currentDate,reachDate in useEffect in Attendance page:-',
+  //       isReturnDateEqual,
+  //       isReturnDateEqual,
+  //       currentDate,
+  //       reachDate,
+  //     );
+  //     console.log(
+  //       `trainData[0]?.step === '0' in Attendance page`,
+  //       trainData[0]?.step === '0',
+  //     );
+  //     // Check the step and set showSubmitButton accordingly
+  //     // if (isReachDateEqual || isReturnDateEqual) {
+  //     //   if (step > 3) {
+  //     //     setShowSubmitButton(false);
+  //     //   } else {
+  //     //     setShowSubmitButton(true);
+  //     //   }
+  //     // } else {
+  //     //   setShowSubmitButton(false);
+  //     // }
+  //   }
+  // }, [trainData]);
+
+  // Add a function to format dates consistently
+  // const formatDate = dateString => {
+  //   const dateObject = new Date(dateString);
+  //   const options = {
+  //     day: '2-digit',
+  //     month: '2-digit',
+  //     year: 'numeric',
+  //   };
+  //   return dateObject.toLocaleDateString('en-IN', options);
   // };
   console.log('in ATTENDENCE', trainData);
 
@@ -230,7 +337,7 @@ const Attendance = ({route}) => {
               <Text>
                 Please provide attendance for {'\n'}
                 <Text style={{fontWeight: 'bold'}}>
-                  {trainData?.from_station}
+                  {trainData[0]?.from_station}
                 </Text>
               </Text>
             )}
@@ -238,7 +345,7 @@ const Attendance = ({route}) => {
               <Text>
                 Please provide attendance for {'\n'}
                 <Text style={{fontWeight: 'bold'}}>
-                  {trainData?.to_station}
+                  {trainData[0]?.to_station}
                 </Text>
               </Text>
             )}
@@ -246,13 +353,10 @@ const Attendance = ({route}) => {
               <Text>
                 Please provide attendance for {'\n'}
                 <Text style={{fontWeight: 'bold'}}>
-                  {trainData?.return_station}
+                  {trainData[0]?.return_station}
                 </Text>
               </Text>
             )}
-            {/* {step !== 1 && step !== 2 && step !== 3 && (
-                <Text>Default message goes here.</Text>
-              )} */}
           </Text>
         </View>
       </View>
@@ -302,27 +406,17 @@ const Attendance = ({route}) => {
           </View>
         )}
       </View>
+      {/* <View>
+        <Text style={{color: 'black'}}>This is step {step}</Text>
+      </View> */}
 
       {/* submit button */}
+
       <View>
         <View>
-          {trainData?.step < 4 ? (
-            <TouchableOpacity
-              style={[
-                styles.SubmitButton,
-                isLoading && {backgroundColor: '#ccc'},
-              ]} // Change button style when loading
-              onPress={handleSubmitSelfie}
-              disabled={isLoading} // Disable the button when loading
-            >
-              {isLoading ? (
-                <ActivityIndicator size="small" color="#0000ff" />
-              ) : (
-                <Text style={styles.SubmitButtonText}>Submit</Text>
-              )}
-            </TouchableOpacity>
-          ) : null}
-          {/* {showSubmitButton && trainData?.step < 4 ? (
+          {(showSubmitButton && trainData && step === 1) ||
+          step === 2 ||
+          step === 3 ? (
             <TouchableOpacity
               style={[
                 styles.SubmitButton,
@@ -336,13 +430,13 @@ const Attendance = ({route}) => {
                 <Text style={styles.SubmitButtonText}>Submit</Text>
               )}
             </TouchableOpacity>
-          ) : null} */}
+          ) : null}
         </View>
       </View>
 
       {/* ********************************buttonBottomRowContainer start ***************************** */}
 
-      <BottomHomeListButton name={name} token={token} pic={pic} />
+      <BottomHomeListButton />
 
       {/* ********************************buttonBottomRowContainer end ***************************** */}
     </View>

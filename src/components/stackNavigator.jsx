@@ -8,13 +8,9 @@ import Attendance from '../screens/Attendance';
 import CompletedJourney from '../screens/CompletedJourney';
 import FeedbackList from '../screens/FeedbackList';
 import {AuthContextProvider} from '../context/AuthContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TrainListContextProvider} from '../context/TrainListContext';
 import {FeedbackContextProvider} from '../context/FeedbackContext';
-import {
-  AttendanceContext,
-  AttendanceContextProvider,
-} from '../context/AttendanceContext';
+import {AttendanceContextProvider} from '../context/AttendanceContext';
 
 const Stack = createStackNavigator();
 
@@ -35,7 +31,7 @@ const StackNavigator = () => {
         <TrainListContextProvider>
           <FeedbackContextProvider>
             <AttendanceContextProvider>
-              <Stack.Navigator initialRouteName="TrainList">
+              <Stack.Navigator>
                 <Stack.Screen
                   name="Login"
                   component={Login}

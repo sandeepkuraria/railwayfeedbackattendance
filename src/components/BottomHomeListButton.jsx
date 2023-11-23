@@ -1,13 +1,16 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native'; // Import the useNavigation hook
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faHouse} from '@fortawesome/free-solid-svg-icons';
 import {faFile} from '@fortawesome/free-solid-svg-icons';
+import {AuthContext} from '../context/AuthContext';
 
-const BottomHomeListButton = ({name, token, pic}) => {
+const BottomHomeListButton = () => {
+  const {token, name, pic} = useContext(AuthContext); // Destructure the token from AuthContext
+
   const navigation = useNavigation();
 
   console.log('name in BottomHomeListButton Component.......', name);

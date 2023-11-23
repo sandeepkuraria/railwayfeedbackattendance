@@ -9,6 +9,10 @@ const FeedbackContext = createContext();
 // console.log('TRAINDATA IN FEEDBACKContext---', trainData[0]);
 
 const FeedbackContextProvider = ({children}) => {
+  const {trainData, coachB} = useContext(TrainListContext);
+  const {token, name, pic} = useContext(AuthContext);
+  const navigation = useNavigation();
+  const data = trainData[0];
   const [selectedCoach, setSelectedCoach] = useState(coachB);
   const [pnrNo, setPnrNo] = useState('');
   const [description, setDescription] = useState('');
@@ -19,15 +23,16 @@ const FeedbackContextProvider = ({children}) => {
   const [feelingSafe, setFeelingSafe] = useState('');
   const [linenServiceRating, setLinenServiceRating] = useState(0);
   const [behaviors_of_attender, setBehaviors_of_attender] = useState(0);
-  // const [coachB, setCoachB] = useState(0);
-  const {trainData, coachB} = useContext(TrainListContext);
-  console.log('trainData', trainData);
-  const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
-  const {token, name, pic} = useContext(AuthContext);
 
-  const data = trainData[0];
+  console.log('trainData', trainData);
 
+  console.log(
+    'Selected coach and coachB in feedback context ****************___________',
+    coachB,
+    selectedCoach,
+    'helllooooo',
+  );
   // setCoachB(trainData[0]?.coaches?.split(',')[0]);
   // console.log('coachB in FeedbackContext', coachB);
   //   console.log('data in feedback context', data.coaches, data.id);
@@ -83,7 +88,6 @@ const FeedbackContextProvider = ({children}) => {
       });
     } else {
       setIsLoading(false);
-
       Alert.alert(response.message);
       console.log(response);
     }
@@ -106,7 +110,7 @@ const FeedbackContextProvider = ({children}) => {
         freshLinenItems,
         behaviors_of_attender,
         feelingSafe,
-
+        coachB,
         PostFeedbackApi,
         setBehaviors_of_attender,
         setFeelingSafe,
@@ -118,9 +122,8 @@ const FeedbackContextProvider = ({children}) => {
         setDescription,
         setPnrNo,
         setSelectedCoach,
-
-        isLoading,
-        setIsLoading,
+        // isLoading,
+        // setIsLoading,
       }}>
       {children}
     </FeedbackContext.Provider>
