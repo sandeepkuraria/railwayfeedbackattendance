@@ -413,25 +413,23 @@ const Attendance = ({route}) => {
       {/* submit button */}
 
       <View>
-        <View>
-          {(showSubmitButton && trainData && step === 1) ||
-          step === 2 ||
-          step === 3 ? (
-            <TouchableOpacity
-              style={[
-                styles.SubmitButton,
-                isLoading && {backgroundColor: '#ccc'},
-              ]}
-              onPress={handleSubmitSelfie}
-              disabled={isLoading}>
-              {isLoading ? (
-                <ActivityIndicator size="small" color="#0000ff" />
-              ) : (
-                <Text style={styles.SubmitButtonText}>Submit</Text>
-              )}
-            </TouchableOpacity>
-          ) : null}
-        </View>
+        {(showSubmitButton && trainData && step === 1) ||
+        step === 2 ||
+        step === 3 ? (
+          <TouchableOpacity
+            style={[
+              styles.SubmitButton,
+              isLoading && {backgroundColor: '#ccc'},
+            ]}
+            onPress={handleSubmitSelfie}
+            disabled={isLoading}>
+            {isLoading ? (
+              <ActivityIndicator size="small" color="#0000ff" />
+            ) : (
+              <Text style={styles.SubmitButtonText}>Submit</Text>
+            )}
+          </TouchableOpacity>
+        ) : null}
       </View>
 
       {/* ********************************buttonBottomRowContainer start ***************************** */}
@@ -552,7 +550,6 @@ const styles = StyleSheet.create({
 
   SubmitButton: {
     marginTop: '10%',
-
     backgroundColor: '#ff8d3c',
     borderRadius: 12,
     marginHorizontal: '30%',

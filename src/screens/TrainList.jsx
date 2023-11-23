@@ -153,113 +153,6 @@ const TrainList = () => {
   // console.log(trainData, '-----traindata');
   return (
     <View style={styles.mainContainer}>
-      {/* <View style={styles.headerContainer}>
-        <View>
-          <Text style={styles.headerText}>{name}</Text>
-        </View>
-        <View>
-          <Logout />
-        </View>
-      </View>
-
-      <View style={styles.cardTextDateHeading}>
-        <Text style={styles.cardTextDate}>{getFormattedCurrentDate()}</Text>
-      </View>
-
-      <View>
-        <ScrollView>
-          {[trainDataFirstIndex].map((train, index) => (
-            <View key={index}>
-              <View style={styles.trainCard}>
-                <View
-                  style={{
-                    // paddingTop: '1%',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginHorizontal: '6%',
-                  }}>
-                  <Text style={styles.cardTextHeaders}>{train.train_no}</Text>
-                  <Text style={styles.cardTextHeaders}>{train.train_name}</Text>
-                </View>
-                <View style={styles.fromTo}>
-                  <View>
-                    <Text style={styles.fromToText}>{train.from_station}</Text>
-                    <Text style={styles.fromToText}>
-                      {train.start_time} Hrs
-                    </Text>
-                  </View>
-                  <Text
-                    style={{color: 'black', fontSize: 18, fontWeight: '500'}}>
-                    -
-                  </Text>
-                  <View>
-                    <Text style={styles.fromToText}>{train.to_station}</Text>
-                    <Text style={styles.fromToText}>
-                      {train.reach_time} Hrs
-                    </Text>
-                  </View>
-                  <Text
-                    style={{color: 'black', fontSize: 18, fontWeight: '500'}}>
-                    -
-                  </Text>
-                  <View>
-                    <Text style={styles.fromToText}>
-                      {train.return_station}
-                    </Text>
-                    <Text style={styles.fromToText}>
-                      {train.return_time} Hrs
-                    </Text>
-                  </View>
-                </View>
-              </View>
-
-              <View style={styles.allotedCoach}>
-                <View>
-                  <Text style={styles.allotedCoachHeading}>
-                    Alloted Coaches
-                  </Text>
-                </View>
-                <View style={styles.verticalBar1}></View>
-                <View>
-                  <Text style={styles.allotedCoachName}>{train.coaches}</Text>
-                </View>
-              </View>
-
-              <View style={styles.buttonFAContainer}>
-                <View>
-                  <TouchableOpacity
-                    onPress={() => {
-                      handleFeedback(train);
-                      handleFAPress('Feedback');
-                    }}
-                    style={[
-                      styles.buttonFA,
-                      activeFAButton === 'Feedback' && styles.activeFAButton,
-                    ]}>
-                    <Text style={styles.buttonFeedbackText}>FEEDBACK</Text>
-                  </TouchableOpacity>
-                </View>
-                <View>
-                  <TouchableOpacity
-                    onPress={() => {
-                      markAttendance();
-                      handleFAPress('Attendance');
-                    }}
-                    style={[
-                      styles.buttonFA,
-                      activeFAButton === 'Attendance' && styles.activeFAButton,
-                    ]}>
-                    <Text style={styles.buttonAttendanceText}>ATTENDANCE</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-
-              <View style={styles.dashedLine}></View>
-            </View>
-          ))}
-        </ScrollView>
-      </View> */}
-
       <Header />
 
       <View>
@@ -292,6 +185,7 @@ const TrainList = () => {
                     <Text style={styles.buttonFeedbackText}>FEEDBACK</Text>
                   </TouchableOpacity>
                 </View>
+
                 <View>
                   <TouchableOpacity
                     onPress={() => {

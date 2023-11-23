@@ -29,9 +29,11 @@ const Login = () => {
 
   const navigation = useNavigation();
   console.log('isloading in Login ++++++++++++++++++++++++++++', isLoading);
+
   const handleLogin = async () => {
     console.log('emp_id : ', emp_id);
     console.log('Password : ', password);
+
     if (emp_id === '' && password === '') {
       Alert.alert('Please enter employee id/password');
     } else {
@@ -143,7 +145,7 @@ const Login = () => {
               />
             </View>
 
-            <View style={styles.loginButton}>
+            {/* <View style={styles.loginButton}>
               <TouchableOpacity
                 style={[isLoading && {backgroundColor: '#ccc'}]}
                 onPress={handleLogin}
@@ -161,6 +163,22 @@ const Login = () => {
                     }}>
                     LOGIN
                   </Text>
+                )}
+              </TouchableOpacity>
+            </View> */}
+
+            <View>
+              <TouchableOpacity
+                style={[
+                  styles.loginButton,
+                  isLoading && {backgroundColor: '#ccc'},
+                ]}
+                onPress={handleLogin}
+                disabled={isLoading}>
+                {isLoading ? (
+                  <ActivityIndicator size="small" color="#0000ff" />
+                ) : (
+                  <Text style={styles.loginButtonText}>LOGIN</Text>
                 )}
               </TouchableOpacity>
             </View>
@@ -203,13 +221,32 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ff8d3c',
   },
+  // loginButton: {
+  //   marginVertical: '3%',
+  //   elevation: 10,
+  //   backgroundColor: '#ff8d3c',
+  //   paddingVertical: '1%',
+  //   borderRadius: 10,
+  //   textAlign: 'center',
+  //   marginHorizontal: '35%',
+  // },
   loginButton: {
     marginVertical: '3%',
-    elevation: 10,
     backgroundColor: '#ff8d3c',
-    paddingVertical: '1%',
     borderRadius: 10,
+    marginHorizontal: '30%',
+    paddingVertical: '2%',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    // justifyContent: 'center',
+  },
+  loginButtonText: {
+    fontSize: 20,
     textAlign: 'center',
-    marginHorizontal: '35%',
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
