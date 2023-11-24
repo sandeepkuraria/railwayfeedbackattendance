@@ -322,6 +322,7 @@ const Attendance = ({route}) => {
   //   };
   //   return dateObject.toLocaleDateString('en-IN', options);
   // };
+
   console.log('in ATTENDENCE', trainData);
 
   return (

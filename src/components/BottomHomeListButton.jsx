@@ -30,9 +30,23 @@ const BottomHomeListButton = () => {
         </TouchableOpacity>
       </View>
 
-      {/* <View style={styles.verticalBar}></View>
+      <View style={styles.verticalBar}></View>
 
-      <TouchableOpacity style={styles.BottomRowbutton}>
+      <View style={styles.homeButton}>
+        <TouchableOpacity
+          style={styles.BottomRowbutton}
+          onPress={() =>
+            navigation.navigate('ReportList', {
+              name: name,
+              token: token,
+              pic: pic,
+            })
+          }>
+          <FontAwesomeIcon icon={faFile} size={35} />
+        </TouchableOpacity>
+      </View>
+
+      {/* <TouchableOpacity style={styles.BottomRowbutton}>
         <FontAwesomeIcon icon={faFile} size={35} />
       </TouchableOpacity> */}
     </View>
@@ -51,35 +65,36 @@ const styles = StyleSheet.create({
     right: 0,
     backgroundColor: '#EFCBB4',
     alignItems: 'center',
-    justifyContent: 'center',
-    padding: '2%',
+    justifyContent: 'space-evenly',
+    paddingVertical: '2%',
   },
   homeButton: {
-    borderWidth: 2,
-    borderRadius: 50,
+    // borderWidth: 2,
+    // borderRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  BottomRowbutton: {
-    flex: 1,
-    // flexDirection: 'row',
-    // backgroundColor: '#EFCBB4',
-    padding: '0.5%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  icon: {
-    fontSize: 12,
-    justifyContent: 'space-between',
-    // marginHorizontal: 15,
-    // width: 30,
-    // height: 30,
-    // marginHorizontal: '10%',
-    // marginBottom: 5,
-  },
+  // BottomRowbutton: {
+  //   flex: 1,
+  //   // flexDirection: 'row',
+  //   // backgroundColor: '#EFCBB4',
+  //   padding: '0.5%',
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  // },
+  // icon: {
+  //   fontSize: 12,
+  //   justifyContent: 'space-between',
+  //   // marginHorizontal: 15,
+  //   // width: 30,
+  //   // height: 30,
+  //   // marginHorizontal: '10%',
+  //   // marginBottom: 5,
+  // },
   verticalBar: {
-    height: '100%',
-    width: 2,
-    backgroundColor: 'orange',
+    height: '140%',
+    borderWidth: 1,
+    borderColor: 'orange',
+    // backgroundColor: 'orange',
   },
 });

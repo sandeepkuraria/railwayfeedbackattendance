@@ -11,6 +11,8 @@ import {AuthContextProvider} from '../context/AuthContext';
 import {TrainListContextProvider} from '../context/TrainListContext';
 import {FeedbackContextProvider} from '../context/FeedbackContext';
 import {AttendanceContextProvider} from '../context/AttendanceContext';
+import ReportList from '../screens/ReportList';
+import AttendanceList from '../screens/AttendanceList';
 
 const Stack = createStackNavigator();
 
@@ -62,6 +64,16 @@ const StackNavigator = () => {
                   options={{headerShown: false}}
                 />
 
+                <Stack.Screen
+                  name="ReportList"
+                  component={ReportList}
+                  options={{headerShown: false}}
+                />
+                <Stack.Screen
+                  name="AttendanceList"
+                  component={AttendanceList}
+                  options={{headerShown: false}}
+                />
                 <Stack.Screen
                   name="FeedbackList"
                   component={FeedbackList}
