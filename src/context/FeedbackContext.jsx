@@ -1,4 +1,4 @@
-import React, {createContext, useState, useContext} from 'react';
+import React, {createContext, useState, useContext, useEffect} from 'react';
 import {Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {AuthContext} from './AuthContext';
@@ -24,6 +24,8 @@ const FeedbackContextProvider = ({children}) => {
   const [linenServiceRating, setLinenServiceRating] = useState(0);
   const [behaviors_of_attender, setBehaviors_of_attender] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  //Get Feedback states variables
+  const [feedbackList, setFeedbackList] = useState([]);
 
   console.log('trainData', trainData);
 
@@ -97,6 +99,51 @@ const FeedbackContextProvider = ({children}) => {
     //   .catch(error => console.log('error', error));
   };
 
+  //Get Feedback API
+  const fetchFeedbackList = async () => {
+    try {
+      setIsLoading(true);
+
+      const myHeaders = new Headers();
+      myHeaders.append('Authorization', `Bearer ${token}`);
+      myHeaders.append(
+        'Cookie',
+        'ci_session=f043f708a9cfdb9ca7cbc60aefa23a3b4e63ab0e',
+      );
+
+      const requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow',
+      };
+
+      const response = await fetch(
+        'https://railway.retinodes.com/api/v1/assignduty/getFeedback?dutyId=1',
+        requestOptions,
+      );
+
+      console.log('fetchFeedbackList API Response Status:', response.status); // Log response status
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch feedback data');
+      }
+
+      const result = await response.json();
+      console.log('Fetched feedback data:', result);
+
+      setFeedbackList(result.data); // Assuming feedback data is inside the "data" property
+
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error fetching feedback:', error);
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchFeedbackList();
+  }, []);
+
   return (
     <FeedbackContext.Provider
       value={{
@@ -124,6 +171,9 @@ const FeedbackContextProvider = ({children}) => {
         setSelectedCoach,
         // isLoading,
         // setIsLoading,
+        feedbackList,
+        isLoading,
+        fetchFeedbackList,
       }}>
       {children}
     </FeedbackContext.Provider>

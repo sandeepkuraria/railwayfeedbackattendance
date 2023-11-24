@@ -51,7 +51,6 @@ const ReportList = () => {
   return (
     <View style={styles.mainContainer}>
       <Header />
-
       <View>
         <ScrollView>
           {[trainDataFirstIndex].map((train, index) => (
@@ -64,7 +63,7 @@ const ReportList = () => {
                       handleFAPress('FeedbackList');
                     }}
                     style={[
-                      styles.buttonFA,
+                      styles.buttonF,
                       activeFAButton === 'FeedbackList' &&
                         styles.activeFAButton,
                     ]}>
@@ -78,7 +77,7 @@ const ReportList = () => {
                       handleFAPress('AttendanceList');
                     }}
                     style={[
-                      styles.buttonFA,
+                      styles.buttonA,
                       activeFAButton === 'AttendanceList' &&
                         styles.activeFAButton,
                     ]}>
@@ -92,6 +91,7 @@ const ReportList = () => {
           ))}
         </ScrollView>
       </View>
+      <BottomHomeListButton />
     </View>
   );
 };
@@ -108,13 +108,20 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: '10%',
     marginBottom: '5%',
-    marginHorizontal: '10%',
+    marginHorizontal: '3%',
   },
-  buttonFA: {
+  buttonF: {
     borderWidth: 2,
     borderColor: '#EFCBB4',
     paddingVertical: '6%',
-    paddingHorizontal: '1%',
+    // paddingHorizontal: '1%',
+    borderRadius: 50,
+  },
+  buttonA: {
+    borderWidth: 2,
+    borderColor: '#EFCBB4',
+    paddingVertical: '6%',
+    paddingHorizontal: '3%',
     borderRadius: 50,
   },
   activeFAButton: {
