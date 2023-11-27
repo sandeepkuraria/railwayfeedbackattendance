@@ -11,15 +11,14 @@ const HeaderText = ({name, pic}) => {
 
   return (
     <View style={styles.headerContainer}>
-      <View>
+      <View style={styles.pic}>
         <Avatar.Image
-          size={65}
+          size={40}
           source={pic ? {uri: pic} : require('../assets/images/user.png')}
         />
-      </View>
-
-      <View>
-        <Text style={styles.headerText}>{name}</Text>
+        <View>
+          <Text style={styles.headerText}>{name}</Text>
+        </View>
       </View>
 
       {/* Logout Button */}
@@ -39,7 +38,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: '1%',
     backgroundColor: 'white',
-    justifyContent: 'space-around',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+
     backgroundColor: '#EFCBB4',
     paddingVertical: '1%',
   },
@@ -48,11 +49,19 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#167fb9',
+    paddingLeft: '3%',
   },
   logout: {
     paddingVertical: '5%',
     fontSize: 18,
     fontWeight: 'bold',
     color: '#167fb9',
+    marginHorizontal: '3%',
+  },
+  pic: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingLeft: '3%',
   },
 });

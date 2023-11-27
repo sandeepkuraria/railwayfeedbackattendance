@@ -150,63 +150,74 @@ const TrainList = () => {
     setActiveFAButton(button);
   };
 
-  // console.log(trainData, '-----traindata');
+  console.log('-----trainDataFirstIndex in trainlist', trainDataFirstIndex);
   return (
     <View style={styles.mainContainer}>
       <Header />
-
       <View>
         <ScrollView>
           {[trainDataFirstIndex].map((train, index) => (
             <View key={index}>
-              <View style={styles.allotedCoach}>
-                <View>
-                  <Text style={styles.allotedCoachHeading}>
-                    Allotted Coaches
-                  </Text>
+              {train && train.coaches ? (
+                <View style={styles.allotedCoach}>
+                  <View>
+                    {/* Allotted Coaches */}
+                    <Text style={styles.allotedCoachHeading}>
+                      Allotted Coaches
+                    </Text>
+                  </View>
+                  <View style={styles.verticalBar1}></View>
+                  <View>
+                    <Text style={styles.allotedCoachName}>{train.coaches}</Text>
+                  </View>
                 </View>
-                <View style={styles.verticalBar1}></View>
-                <View>
-                  <Text style={styles.allotedCoachName}>{train.coaches}</Text>
-                </View>
-              </View>
+              ) : null}
+              {train && train.coaches ? (
+                <View style={styles.buttonFAContainer}>
+                  <View>
+                    <TouchableOpacity
+                      onPress={() => {
+                        handleFeedback(train);
+                        handleFAPress('Feedback');
+                      }}
+                      style={[
+                        styles.buttonFA,
+                        activeFAButton === 'Feedback' && styles.activeFAButton,
+                      ]}>
+                      <Text style={styles.buttonFeedbackText}>FEEDBACK</Text>
+                    </TouchableOpacity>
+                  </View>
 
-              <View style={styles.buttonFAContainer}>
-                <View>
-                  <TouchableOpacity
-                    onPress={() => {
-                      handleFeedback(train);
-                      handleFAPress('Feedback');
-                    }}
-                    style={[
-                      styles.buttonFA,
-                      activeFAButton === 'Feedback' && styles.activeFAButton,
-                    ]}>
-                    <Text style={styles.buttonFeedbackText}>FEEDBACK</Text>
-                  </TouchableOpacity>
+                  <View>
+                    <TouchableOpacity
+                      onPress={() => {
+                        markAttendance(train);
+                        handleFAPress('Attendance');
+                      }}
+                      style={[
+                        styles.buttonFA,
+                        activeFAButton === 'Attendance' &&
+                          styles.activeFAButton,
+                      ]}>
+                      <Text style={styles.buttonAttendanceText}>
+                        ATTENDANCE
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-
-                <View>
-                  <TouchableOpacity
-                    onPress={() => {
-                      markAttendance(train);
-                      handleFAPress('Attendance');
-                    }}
-                    style={[
-                      styles.buttonFA,
-                      activeFAButton === 'Attendance' && styles.activeFAButton,
-                    ]}>
-                    <Text style={styles.buttonAttendanceText}>ATTENDANCE</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
+              ) : null}
             </View>
           ))}
         </ScrollView>
       </View>
 
-      <View style={styles.dashedLine}></View>
-
+      {[trainDataFirstIndex].map((train, index) => (
+        <View key={index}>
+          {train && train.coaches ? (
+            <View style={styles.dashedLine}></View>
+          ) : null}
+        </View>
+      ))}
       {/* <Image
           source={require('../assets/images/businessb&w.png')}
           style={{width: 40, height: 40}}
@@ -341,7 +352,7 @@ const styles = StyleSheet.create({
     height: '17%',
     marginTop: '10%',
     marginHorizontal: '10%',
-    marginBottom: '1%',
+    marginBottom: '7%',
     backgroundColor: '#EFCBB4',
     borderRadius: 8,
   },
@@ -439,9 +450,10 @@ const styles = StyleSheet.create({
     flex: 0,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: '10%',
+    // marginTop: '6%',
     marginBottom: '5%',
     marginHorizontal: '10%',
+    height: '100%',
   },
   buttonFA: {
     borderWidth: 2,

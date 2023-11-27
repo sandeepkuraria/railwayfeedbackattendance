@@ -21,6 +21,8 @@ import {RadioButton} from 'react-native-paper';
 import {TrainListContext} from '../context/TrainListContext';
 import {AuthContext} from '../context/AuthContext';
 import {FeedbackContext} from '../context/FeedbackContext';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {faPhone} from '@fortawesome/free-solid-svg-icons';
 
 const Feedback = () => {
   const {token, getToken, name, pic} = useContext(AuthContext);
@@ -389,7 +391,7 @@ const Feedback = () => {
 
           <View style={styles.mobileNoContainer}>
             <View style={styles.mobileIconView}>
-              <Icon name="phone" size={24} color="black" />
+              <FontAwesomeIcon icon={faPhone} size={25} />
             </View>
 
             <View style={styles.mobileNo}>
@@ -407,265 +409,276 @@ const Feedback = () => {
           </View>
 
           <View style={styles.ratingWithSubmitBox}>
-            <View style={styles.fieldContainer}>
-              <View style={styles.fieldTextContainer}>
-                <Text style={styles.feedbackList}>
-                  Bedroll Provided on Time
-                </Text>
-              </View>
-              <View style={styles.fieldInputContainer}>
-                <View style={styles.radioYesNo}>
-                  <RadioButton.Group
-                    onValueChange={value =>
-                      handleRadioButtonChange('bedrollProvided', value)
-                    }
-                    value={bedrollProvided}>
-                    <View style={styles.radioButtons}>
-                      <CustomRadioButton
-                        label="Yes"
-                        value="yes"
-                        onSelect={handleRadioButtonChange}
-                        isChecked={bedrollProvided === 'yes'}
-                      />
-                      <View style={{}} />
-                      <CustomRadioButton
-                        label="No"
-                        value="no"
-                        labelStyle={{}}
-                        onSelect={handleRadioButtonChange}
-                        isChecked={bedrollProvided === 'no'}
-                      />
-                    </View>
-                  </RadioButton.Group>
+            <View
+              style={{
+                borderColor: '#EFCBB4',
+                flex: 0,
+                borderWidth: 1,
+                borderRadius: 6,
+                borderColor: '#EFCBB4',
+                marginBottom: '2%',
+                shadowRadius: 2,
+                margin: '0.5%',
+              }}>
+              <View style={styles.fieldContainer}>
+                <View style={styles.fieldTextContainer}>
+                  <Text style={styles.feedbackList}>
+                    Bedroll Provided on Time
+                  </Text>
+                </View>
+                <View style={styles.fieldInputContainer}>
+                  <View style={styles.radioYesNo}>
+                    <RadioButton.Group
+                      onValueChange={value =>
+                        handleRadioButtonChange('bedrollProvided', value)
+                      }
+                      value={bedrollProvided}>
+                      <View style={styles.radioButtons}>
+                        <CustomRadioButton
+                          label="Yes"
+                          value="yes"
+                          onSelect={handleRadioButtonChange}
+                          isChecked={bedrollProvided === 'yes'}
+                        />
+                        <View style={{}} />
+                        <CustomRadioButton
+                          label="No"
+                          value="no"
+                          labelStyle={{}}
+                          onSelect={handleRadioButtonChange}
+                          isChecked={bedrollProvided === 'no'}
+                        />
+                      </View>
+                    </RadioButton.Group>
+                  </View>
                 </View>
               </View>
-            </View>
-            <View style={styles.fieldContainer}>
-              <View style={styles.fieldTextContainer}>
-                <Text style={styles.feedbackList}>
-                  All Linen Items Provided in {'\n'}Bedroll
-                </Text>
-              </View>
-              <View style={styles.fieldInputContainer}>
-                <View style={styles.radioYesNo}>
-                  <RadioButton.Group
-                    onValueChange={value =>
-                      handleRadioButtonChange('linenItemsProvided', value)
-                    }
-                    value={linenItemsProvided}>
-                    <View style={styles.radioButtons}>
-                      <CustomRadioButton
-                        label="Yes"
-                        value="yes"
-                        onSelect={handleRadioButtonChange}
-                        isChecked={linenItemsProvided === 'yes'}
-                      />
-                      <View style={{}} />
-                      <CustomRadioButton
-                        label="No"
-                        value="no"
-                        labelStyle={{}}
-                        onSelect={handleRadioButtonChange}
-                        isChecked={linenItemsProvided === 'no'}
-                      />
-                    </View>
-                  </RadioButton.Group>
+              <View style={styles.fieldContainer}>
+                <View style={styles.fieldTextContainer}>
+                  <Text style={styles.feedbackList}>
+                    All Linen Items Provided in {'\n'}Bedroll
+                  </Text>
+                </View>
+                <View style={styles.fieldInputContainer}>
+                  <View style={styles.radioYesNo}>
+                    <RadioButton.Group
+                      onValueChange={value =>
+                        handleRadioButtonChange('linenItemsProvided', value)
+                      }
+                      value={linenItemsProvided}>
+                      <View style={styles.radioButtons}>
+                        <CustomRadioButton
+                          label="Yes"
+                          value="yes"
+                          onSelect={handleRadioButtonChange}
+                          isChecked={linenItemsProvided === 'yes'}
+                        />
+                        <View style={{}} />
+                        <CustomRadioButton
+                          label="No"
+                          value="no"
+                          labelStyle={{}}
+                          onSelect={handleRadioButtonChange}
+                          isChecked={linenItemsProvided === 'no'}
+                        />
+                      </View>
+                    </RadioButton.Group>
+                  </View>
                 </View>
               </View>
-            </View>
-            <View style={styles.fieldContainer}>
-              <View style={styles.fieldTextContainer}>
-                <Text style={styles.feedbackList}>
-                  All Linen Items Provided {'\n'}Fresh/Un-Used
-                </Text>
-              </View>
-              <View style={styles.fieldInputContainer}>
-                <View style={styles.radioYesNo}>
-                  <RadioButton.Group
-                    onValueChange={value =>
-                      handleRadioButtonChange('freshLinenItems', value)
-                    }
-                    value={freshLinenItems}>
-                    <View style={styles.radioButtons}>
-                      <CustomRadioButton
-                        label="Yes"
-                        value="yes"
-                        onSelect={handleRadioButtonChange}
-                        isChecked={freshLinenItems === 'yes'}
-                      />
-                      <View style={{}} />
-                      <CustomRadioButton
-                        label="No"
-                        value="no"
-                        labelStyle={{}}
-                        onSelect={handleRadioButtonChange}
-                        isChecked={freshLinenItems === 'no'}
-                      />
-                    </View>
-                  </RadioButton.Group>
+              <View style={styles.fieldContainer}>
+                <View style={styles.fieldTextContainer}>
+                  <Text style={styles.feedbackList}>
+                    All Linen Items Provided {'\n'}Fresh/Un-Used
+                  </Text>
+                </View>
+                <View style={styles.fieldInputContainer}>
+                  <View style={styles.radioYesNo}>
+                    <RadioButton.Group
+                      onValueChange={value =>
+                        handleRadioButtonChange('freshLinenItems', value)
+                      }
+                      value={freshLinenItems}>
+                      <View style={styles.radioButtons}>
+                        <CustomRadioButton
+                          label="Yes"
+                          value="yes"
+                          onSelect={handleRadioButtonChange}
+                          isChecked={freshLinenItems === 'yes'}
+                        />
+                        <View style={{}} />
+                        <CustomRadioButton
+                          label="No"
+                          value="no"
+                          labelStyle={{}}
+                          onSelect={handleRadioButtonChange}
+                          isChecked={freshLinenItems === 'no'}
+                        />
+                      </View>
+                    </RadioButton.Group>
+                  </View>
                 </View>
               </View>
-            </View>
-            <View style={styles.fieldContainer}>
-              <View style={styles.fieldTextContainer}>
-                <Text style={styles.feedbackList}>
-                  Are you feeling safe in {'\n'}your journey
-                </Text>
-              </View>
-              <View style={styles.fieldInputContainer}>
-                <View style={styles.radioYesNo}>
-                  <RadioButton.Group
-                    onValueChange={value =>
-                      handleRadioButtonChange('feelingSafe', value)
-                    }
-                    value={feelingSafe}>
-                    <View style={styles.radioButtons}>
-                      <CustomRadioButton
-                        label="Yes"
-                        value="yes"
-                        onSelect={handleRadioButtonChange}
-                        isChecked={feelingSafe === 'yes'}
-                      />
-                      <View style={{}} />
-                      <CustomRadioButton
-                        label="No"
-                        value="no"
-                        labelStyle={{}}
-                        onSelect={handleRadioButtonChange}
-                        isChecked={feelingSafe === 'no'}
-                      />
-                    </View>
-                  </RadioButton.Group>
+              <View style={styles.fieldContainer}>
+                <View style={styles.fieldTextContainer}>
+                  <Text style={styles.feedbackList}>
+                    Are you feeling safe in {'\n'}your journey
+                  </Text>
+                </View>
+                <View style={styles.fieldInputContainer}>
+                  <View style={styles.radioYesNo}>
+                    <RadioButton.Group
+                      onValueChange={value =>
+                        handleRadioButtonChange('feelingSafe', value)
+                      }
+                      value={feelingSafe}>
+                      <View style={styles.radioButtons}>
+                        <CustomRadioButton
+                          label="Yes"
+                          value="yes"
+                          onSelect={handleRadioButtonChange}
+                          isChecked={feelingSafe === 'yes'}
+                        />
+                        <View style={{}} />
+                        <CustomRadioButton
+                          label="No"
+                          value="no"
+                          labelStyle={{}}
+                          onSelect={handleRadioButtonChange}
+                          isChecked={feelingSafe === 'no'}
+                        />
+                      </View>
+                    </RadioButton.Group>
+                  </View>
                 </View>
               </View>
-            </View>
-            <View style={styles.fieldContainer}>
-              <View style={styles.fieldTextContainer}>
-                <Text style={styles.feedbackList}>
-                  Behaviours/Response of {'\n'}Attender
-                </Text>
+              <View style={styles.fieldContainer}>
+                <View style={styles.fieldTextContainer}>
+                  <Text style={styles.feedbackList}>
+                    Behaviours/Response of {'\n'}Attender
+                  </Text>
+                </View>
+                <View style={styles.fieldInputContainerstar}>
+                  <View style={styles.radioYesNo}>
+                    <View style={styles.acRow1cell1}>
+                      <TouchableOpacity onPress={handleBehavioursYellowPress1}>
+                        <Image
+                          source={
+                            IsBehavioursYellow1Active
+                              ? require('../assets/images/yellow_star.png')
+                              : require('../assets/images/star.png')
+                          }
+                          style={styles.redStarSize}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={handleBehavioursYellowPress2}>
+                        <Image
+                          source={
+                            IsBehavioursYellow2Active
+                              ? require('../assets/images/yellow_star.png')
+                              : require('../assets/images/star.png')
+                          }
+                          style={styles.redStarSize}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={handleBehavioursYellowPress3}>
+                        <Image
+                          source={
+                            IsBehavioursYellow3Active
+                              ? require('../assets/images/yellow_star.png')
+                              : require('../assets/images/star.png')
+                          }
+                          style={styles.redStarSize}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={handleBehavioursYellowPress4}>
+                        <Image
+                          source={
+                            IsBehavioursYellow4Active
+                              ? require('../assets/images/yellow_star.png')
+                              : require('../assets/images/star.png')
+                          }
+                          style={styles.redStarSize}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={handleBehavioursYellowPress5}>
+                        <Image
+                          source={
+                            IsBehavioursYellow5Active
+                              ? require('../assets/images/yellow_star.png')
+                              : require('../assets/images/star.png')
+                          }
+                          style={styles.redStarSize}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </View>
               </View>
-              <View style={styles.fieldInputContainerstar}>
-                <View style={styles.radioYesNo}>
-                  <View style={styles.acRow1cell1}>
-                    <TouchableOpacity onPress={handleBehavioursYellowPress1}>
-                      <Image
-                        source={
-                          IsBehavioursYellow1Active
-                            ? require('../assets/images/yellow_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={styles.redStarSize}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleBehavioursYellowPress2}>
-                      <Image
-                        source={
-                          IsBehavioursYellow2Active
-                            ? require('../assets/images/yellow_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={styles.redStarSize}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleBehavioursYellowPress3}>
-                      <Image
-                        source={
-                          IsBehavioursYellow3Active
-                            ? require('../assets/images/yellow_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={styles.redStarSize}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleBehavioursYellowPress4}>
-                      <Image
-                        source={
-                          IsBehavioursYellow4Active
-                            ? require('../assets/images/yellow_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={styles.redStarSize}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleBehavioursYellowPress5}>
-                      <Image
-                        source={
-                          IsBehavioursYellow5Active
-                            ? require('../assets/images/yellow_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={styles.redStarSize}
-                      />
-                    </TouchableOpacity>
+              <View style={styles.fieldContainer}>
+                <View style={styles.fieldTextContainer}>
+                  <Text style={styles.feedbackList}>
+                    Your Rating for Linen {'\n'}Service
+                  </Text>
+                </View>
+                <View style={styles.fieldInputContainerstar}>
+                  <View style={styles.radioYesNo}>
+                    <View style={styles.acRow1cell1}>
+                      <TouchableOpacity onPress={handleLinenServiceRating1}>
+                        <Image
+                          source={
+                            IsLinenServiceYellow1Active
+                              ? require('../assets/images/yellow_star.png')
+                              : require('../assets/images/star.png')
+                          }
+                          style={styles.redStarSize}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={handleLinenServiceRating2}>
+                        <Image
+                          source={
+                            IsLinenServiceYellow2Active
+                              ? require('../assets/images/yellow_star.png')
+                              : require('../assets/images/star.png')
+                          }
+                          style={styles.redStarSize}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={handleLinenServiceRating3}>
+                        <Image
+                          source={
+                            IsLinenServiceYellow3Active
+                              ? require('../assets/images/yellow_star.png')
+                              : require('../assets/images/star.png')
+                          }
+                          style={styles.redStarSize}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={handleLinenServiceRating4}>
+                        <Image
+                          source={
+                            IsLinenServiceYellow4Active
+                              ? require('../assets/images/yellow_star.png')
+                              : require('../assets/images/star.png')
+                          }
+                          style={styles.redStarSize}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={handleLinenServiceRating5}>
+                        <Image
+                          source={
+                            IsLinenServiceYellow5Active
+                              ? require('../assets/images/yellow_star.png')
+                              : require('../assets/images/star.png')
+                          }
+                          style={styles.redStarSize}
+                        />
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </View>
               </View>
             </View>
-            <View style={styles.fieldContainer}>
-              <View style={styles.fieldTextContainer}>
-                <Text style={styles.feedbackList}>
-                  Your Rating for Linen {'\n'}Service
-                </Text>
-              </View>
-              <View style={styles.fieldInputContainerstar}>
-                <View style={styles.radioYesNo}>
-                  <View style={styles.acRow1cell1}>
-                    <TouchableOpacity onPress={handleLinenServiceRating1}>
-                      <Image
-                        source={
-                          IsLinenServiceYellow1Active
-                            ? require('../assets/images/yellow_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={styles.redStarSize}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleLinenServiceRating2}>
-                      <Image
-                        source={
-                          IsLinenServiceYellow2Active
-                            ? require('../assets/images/yellow_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={styles.redStarSize}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleLinenServiceRating3}>
-                      <Image
-                        source={
-                          IsLinenServiceYellow3Active
-                            ? require('../assets/images/yellow_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={styles.redStarSize}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleLinenServiceRating4}>
-                      <Image
-                        source={
-                          IsLinenServiceYellow4Active
-                            ? require('../assets/images/yellow_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={styles.redStarSize}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleLinenServiceRating5}>
-                      <Image
-                        source={
-                          IsLinenServiceYellow5Active
-                            ? require('../assets/images/yellow_star.png')
-                            : require('../assets/images/star.png')
-                        }
-                        style={styles.redStarSize}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View>
-            </View>
-
             <View style={styles.card}>
               <TextInput
                 multiline={true}
@@ -711,7 +724,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderWidth: 1,
+    // borderWidth: 1,
     borderRadius: 6,
     borderColor: '#EFCBB4',
     marginBottom: '2%',
@@ -824,7 +837,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#EFCBB4',
     borderBottomLeftRadius: 8,
     borderTopLeftRadius: 8,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderLeftWidth: 1,
     borderRightWidth: 2,
+    borderTopColor: '#EFCBB4',
+    borderBottomColor: '#EFCBB4',
+    borderLeftColor: '#EFCBB4',
     borderRightColor: 'orange',
   },
   pnrNo: {
@@ -855,6 +874,7 @@ const styles = StyleSheet.create({
 
   mobileNoContainer: {
     flex: 1,
+    height: '100%',
     flexDirection: 'row',
     marginHorizontal: '26%',
     marginTop: '1%',
@@ -870,10 +890,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#EFCBB4',
     borderBottomLeftRadius: 8,
     borderTopLeftRadius: 8,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderLeftWidth: 1,
     borderRightWidth: 2,
+    borderTopColor: '#EFCBB4',
+    borderBottomColor: '#EFCBB4',
+    borderLeftColor: '#EFCBB4',
     borderRightColor: 'orange',
   },
   mobileNo: {
+    flexWrap: 'wrap',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
@@ -892,12 +919,11 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     marginHorizontal: '8%',
   },
-
   card: {
     flex: 0,
     borderRadius: 6,
     shadowRadius: 2,
-    margin: '0%',
+    margin: '0.5%',
   },
   input: {
     borderWidth: 1,

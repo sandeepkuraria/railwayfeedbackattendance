@@ -47,7 +47,61 @@ const Header = () => {
         <ScrollView>
           {[trainDataFirstIndex].map((train, index) => (
             <View key={index}>
-              <View style={styles.trainCard}>
+              {train && train.coaches ? (
+                <View style={styles.trainCard}>
+                  <View
+                    style={{
+                      // paddingTop: '1%',
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      marginHorizontal: '6%',
+                    }}>
+                    <Text style={styles.cardTextHeaders}>{train.train_no}</Text>
+                    <Text style={styles.cardTextHeaders}>
+                      {train.train_name}
+                    </Text>
+                  </View>
+                  <View style={styles.fromTo}>
+                    <View>
+                      <Text style={styles.fromToText}>
+                        {train.from_station}
+                      </Text>
+                      <Text style={styles.fromToText}>{train.start_time}</Text>
+                    </View>
+                    <Text
+                      style={{color: 'black', fontSize: 18, fontWeight: '500'}}>
+                      -
+                    </Text>
+                    <View>
+                      <Text style={styles.fromToText}>{train.to_station}</Text>
+                      <Text style={styles.fromToText}>{train.reach_time}</Text>
+                    </View>
+                    <Text
+                      style={{color: 'black', fontSize: 18, fontWeight: '500'}}>
+                      -
+                    </Text>
+                    <View>
+                      <Text style={styles.fromToText}>
+                        {train.return_station}
+                      </Text>
+                      <Text style={styles.fromToText}>{train.return_time}</Text>
+                    </View>
+                  </View>
+                </View>
+              ) : (
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginVertical: '50%',
+                    padding: 10,
+                  }}>
+                  <Text style={{color: 'darkred', fontSize: 18}}>
+                    No current journey!
+                  </Text>
+                </View>
+              )}
+              {/* <View style={styles.trainCard}>
                 <View
                   style={{
                     // paddingTop: '1%',
@@ -82,7 +136,7 @@ const Header = () => {
                     <Text style={styles.fromToText}>{train.return_time}</Text>
                   </View>
                 </View>
-              </View>
+              </View> */}
             </View>
           ))}
         </ScrollView>
@@ -115,6 +169,7 @@ const styles = StyleSheet.create({
   },
   cardTextDateHeading: {
     flex: 0,
+    padding: 5,
     marginBottom: '1%',
     backgroundColor: '#F8F9F9',
     justifyContent: 'center',

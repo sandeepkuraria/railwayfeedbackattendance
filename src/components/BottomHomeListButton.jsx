@@ -5,7 +5,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faHouse} from '@fortawesome/free-solid-svg-icons';
-import {faFile} from '@fortawesome/free-solid-svg-icons';
+import {faBars} from '@fortawesome/free-solid-svg-icons';
 import {AuthContext} from '../context/AuthContext';
 
 const BottomHomeListButton = () => {
@@ -26,7 +26,7 @@ const BottomHomeListButton = () => {
               pic: pic,
             })
           }>
-          <FontAwesomeIcon icon={faHouse} size={35} />
+          <FontAwesomeIcon icon={faHouse} size={25} />
         </TouchableOpacity>
       </View>
 
@@ -42,7 +42,7 @@ const BottomHomeListButton = () => {
               pic: pic,
             })
           }>
-          <FontAwesomeIcon icon={faFile} size={35} />
+          <FontAwesomeIcon icon={faBars} size={25} />
         </TouchableOpacity>
       </View>
 
@@ -92,9 +92,8 @@ const styles = StyleSheet.create({
   //   // marginBottom: 5,
   // },
   verticalBar: {
-    height: '140%',
+    height: '155%',
     borderWidth: 1,
     borderColor: 'orange',
-    // backgroundColor: 'orange',
   },
 });
