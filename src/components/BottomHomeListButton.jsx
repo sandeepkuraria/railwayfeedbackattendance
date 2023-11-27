@@ -36,7 +36,7 @@ const BottomHomeListButton = () => {
         <TouchableOpacity
           style={styles.BottomRowbutton}
           onPress={() =>
-            navigation.navigate('ReportList', {
+            navigation.navigate('CompletedJourney', {
               name: name,
               token: token,
               pic: pic,

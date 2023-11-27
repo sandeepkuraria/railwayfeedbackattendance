@@ -38,7 +38,6 @@ const ReportList = () => {
       coachB: coachB,
     });
   };
-
   const markAttendanceList = item => {
     navigation.navigate('AttendanceList', {
       name: name,
@@ -48,6 +47,7 @@ const ReportList = () => {
     });
     console.log('AttendanceList pressed', item);
   };
+
   return (
     <View style={styles.mainContainer}>
       <Header />
