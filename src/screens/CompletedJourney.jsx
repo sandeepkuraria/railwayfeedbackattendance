@@ -13,7 +13,6 @@ import {useNavigation} from '@react-navigation/native';
 import BottomHomeListButton from '../components/BottomHomeListButton';
 import Header from '../components/Header';
 import {TrainListContext} from '../context/TrainListContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {AuthContext} from '../context/AuthContext';
 import HeaderText from '../components/HeaderText';
 import CurrentDate from '../components/CurrentDate';
@@ -21,50 +20,30 @@ import CurrentDate from '../components/CurrentDate';
 const CompletedJourney = () => {
   const {token, getToken, name, pic} = useContext(AuthContext);
 
-  const {trainData, trainDataFirstIndex, upcomingDutiesApi, coachB} =
-    useContext(TrainListContext);
+  const {
+    trainData,
+    trainDataFirstIndex,
+    upcomingDutiesApi,
+    coachB,
+    completedJourneys,
+    setCompletedJourneys,
+    fetchCompletedJourneys,
+    activeFAButton,
+    setActiveFAButton,
+  } = useContext(TrainListContext);
 
   const navigation = useNavigation();
-  const [completedJourneys, setCompletedJourneys] = useState([]);
-
   useEffect(() => {
-    // Fetch completed journey data from your API here
-
-    const fetchCompletedJourneys = async () => {
-      var myHeaders = new Headers();
-
-      myHeaders.append('Authorization', `Bearer ${token}`); // Use the token from AuthContext
-
-      var requestOptions = {
-        method: 'GET',
-        headers: myHeaders,
-        redirect: 'follow',
-      };
-
-      try {
-        const res = await fetch(
-          'https://railway.retinodes.com/api/v1/assignduty/completedduties',
-          requestOptions,
-        );
-
-        const response = await res.json();
-
-        if (res.ok) {
-          setCompletedJourneys(response.data);
-        } else {
-          console.error(
-            'Failed to fetch completed journeys:',
-            response.message,
-          );
-        }
-      } catch (error) {
-        console.error('Error fetching completed journeys:', error);
-      }
-    };
-
     fetchCompletedJourneys();
   }, []);
 
+  // Combine the items from trainDataFirstIndex and completedJourneys
+  const combinedData = [...trainDataFirstIndex, ...completedJourneys];
+
+  console.log(
+    'combinedData in comletedJourney...........>>>>>>>>>>',
+    combinedData,
+  );
   const renderItem = ({item}) => (
     <View style={styles.journeyItem}>
       <View>
@@ -72,16 +51,81 @@ const CompletedJourney = () => {
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
-            marginHorizontal: '6%',
+            marginHorizontal: '8%',
           }}>
           <Text style={styles.cardTextHeaders}>{item.train_no}</Text>
-          <Text style={styles.cardTextHeaders}>{item.train_name}</Text>
+          <Text style={styles.cardTextHeaders}>{item.date}</Text>
         </View>
 
-        <Text style={styles.cardTextDate}>{item.date}</Text>
+        <Text style={styles.cardTextDate}>{item.train_name}</Text>
+
+        <View>
+          {[trainDataFirstIndex].map((train, index) => (
+            <View key={index}>
+              <View style={styles.buttonFAContainer}>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      handleFeedbackList(train);
+                      handleFAPress('FeedbackList');
+                    }}
+                    style={[
+                      styles.buttonF,
+                      activeFAButton ===
+                        //  'FeedbackList' &&
+                        styles.activeFAButton,
+                    ]}>
+                    <Text style={styles.buttonFeedbackText}>Feedback-List</Text>
+                  </TouchableOpacity>
+                </View>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      markAttendanceList(train);
+                      handleFAPress('AttendanceList');
+                    }}
+                    style={[
+                      styles.buttonA,
+                      activeFAButton ===
+                        // 'AttendanceList' &&
+                        styles.activeFAButton,
+                    ]}>
+                    <Text style={styles.buttonAttendanceText}>
+                      Attendance-List
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          ))}
+        </View>
       </View>
     </View>
   );
+
+  const handleFAPress = button => {
+    setActiveFAButton(button);
+  };
+  const handleFeedbackList = item => {
+    console.log('FeedbackList pressed', item);
+
+    navigation.navigate('FeedbackList', {
+      // name: name,
+      // token: token,
+      // pic: pic,
+      // trainData: trainData,
+      // coachB: coachB,
+    });
+  };
+  const markAttendanceList = item => {
+    navigation.navigate('AttendanceList', {
+      // name: name,
+      // token: token,
+      // pic: pic,
+      // trainData: trainData,
+    });
+    console.log('AttendanceList pressed', item);
+  };
 
   return (
     <View style={styles.mainContainer}>
@@ -90,13 +134,12 @@ const CompletedJourney = () => {
         <CurrentDate />
       </View>
 
-      <ScrollView>
-        <FlatList
-          data={completedJourneys}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
-        />
-      </ScrollView>
+      <FlatList
+        data={combinedData}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+      />
+
       <BottomHomeListButton />
     </View>
   );
@@ -139,23 +182,55 @@ const styles = StyleSheet.create({
     padding: '2%',
     backgroundColor: '#F8F9F9',
   },
-  completedJourneysText: {
+  cardTextHeaders: {
+    paddingTop: '1%',
     color: 'black',
     fontSize: 16,
-    // borderBottomWidth: 1,
-    // borderBottomColor: '#EFCBB4',
+    // backgroundColor: 'red',
   },
   cardTextDate: {
-    padding: 5,
+    padding: '3%',
+
     color: 'black',
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 16,
     textAlign: 'center',
   },
-  cardTextHeaders: {
+
+  buttonFAContainer: {
+    flex: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
     padding: 5,
+  },
+  buttonF: {
+    borderWidth: 2,
+    borderColor: '#EFCBB4',
+    paddingVertical: '6%',
+    // paddingHorizontal: '1%',
+    borderRadius: 50,
+  },
+  buttonA: {
+    borderWidth: 2,
+    borderColor: '#EFCBB4',
+    paddingVertical: '6%',
+    paddingHorizontal: '3%',
+    borderRadius: 50,
+  },
+  activeFAButton: {
+    backgroundColor: '#ff8d3c',
+  },
+  buttonFeedbackText: {
+    fontSize: 12,
+    paddingHorizontal: '8%',
+    textAlign: 'center',
     color: 'black',
-    fontSize: 18,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
+  },
+  buttonAttendanceText: {
+    fontSize: 12,
+    paddingHorizontal: '3%',
+    textAlign: 'center',
+    color: 'black',
+    // fontWeight: 'bold',
   },
 });

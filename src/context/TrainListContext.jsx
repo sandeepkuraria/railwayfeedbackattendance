@@ -14,6 +14,9 @@ const TrainListContextProvider = ({children}) => {
   const {token, name, pic} = useContext(AuthContext);
   const data = trainData[0];
   const coachB = trainData[0]?.coaches?.split(',')[0];
+  const [completedJourneys, setCompletedJourneys] = useState([]);
+  const [activeFAButton, setActiveFAButton] = useState('');
+  // const [inactiveFAButton, setInactiveFAButton] = useState('');
 
   // let step = parseInt(trainData[0]?.step);
 
@@ -81,6 +84,41 @@ const TrainListContextProvider = ({children}) => {
     }
   };
 
+  // useEffect(() => {
+  // Fetch completed journey data from your API here
+
+  const fetchCompletedJourneys = async () => {
+    var myHeaders = new Headers();
+
+    myHeaders.append('Authorization', `Bearer ${token}`); // Use the token from AuthContext
+
+    var requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow',
+    };
+
+    try {
+      const res = await fetch(
+        'https://railway.retinodes.com/api/v1/assignduty/completedduties',
+        requestOptions,
+      );
+
+      const response = await res.json();
+
+      if (res.ok) {
+        setCompletedJourneys(response.data);
+      } else {
+        console.error('Failed to fetch completed journeys:', response.message);
+      }
+    } catch (error) {
+      console.error('Error fetching completed journeys:', error);
+    }
+  };
+
+  // fetchCompletedJourneys();
+  // }, []);
+
   return (
     <TrainListContext.Provider
       value={{
@@ -94,6 +132,13 @@ const TrainListContextProvider = ({children}) => {
         token,
         name,
         pic,
+        completedJourneys,
+        setCompletedJourneys,
+        fetchCompletedJourneys,
+        activeFAButton,
+        setActiveFAButton,
+        // inactiveFAButton,
+        // setInactiveFAButton,
       }}>
       {children}
     </TrainListContext.Provider>

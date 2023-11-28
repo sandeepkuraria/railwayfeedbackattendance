@@ -66,58 +66,6 @@ const TrainList = () => {
     </View>
   );
 
-  // ******************** upcoming duties API start *******************************
-  // const upcomingDutiesApi = async () => {
-  //   var myHeaders = new Headers();
-  //   myHeaders.append('Authorization', `Bearer ${token}`);
-
-  //   var requestOptions = {
-  //     method: 'GET',
-  //     headers: myHeaders,
-  //     redirect: 'follow',
-  //   };
-
-  //   const res = await fetch(
-  //     'https://railway.retinodes.com/api/v1/assignduty/upcomingduties',
-  //     requestOptions,
-  //   );
-  //   const response = await res.json();
-
-  //   // setTrainData(response.data);
-  //   setTrainData(response.data || []);
-  //   setTrainDataFirstIndex(response.data[0] || []);
-  //   // setTrainDataUpcomingJourney(response.data.slice(1) || []);
-
-  //   if (response.status === true) {
-  //     console.log(
-  //       'TrainList console data ********************************** : - ',
-  //       trainData[0].date,
-  //       trainData[0].train_no,
-  //       trainData[0].train_name,
-  //       trainData[0].step,
-  //     );
-  //   } else {
-  //     Alert.alert(response.message);
-  //   }
-  // };
-
-  // console.log('COACH --', trainData[0].coaches.split(',')[0]);
-
-  // ******************** upcoming duties API end *******************************
-
-  //for upcoming trainlist data to be shown as list end
-
-  // const handleFeedback = item => {
-  //   console.log('Feedback pressed', item);
-
-  //   navigation.navigate('Feedback', {
-  //     name: name,
-  //     token: token,
-  //     pic: pic,
-  //     trainData: trainData,
-  //   });
-  // };
-
   const handleFeedback = item => {
     if (trainData.length === 0) {
       console.log('No data available. Feedback button disabled.');
