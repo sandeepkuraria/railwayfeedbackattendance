@@ -19,8 +19,13 @@ const FeedbackList = ({route}) => {
   // const { completedJourneys  } = route.params;
   const {token, getToken, name, pic} = useContext(AuthContext);
 
-  const {feedbackList, isLoading, fetchFeedbackList} =
+  const {feedbackList, setFeedbackList, isLoading, fetchFeedbackList} =
     useContext(FeedbackContext);
+
+  console.log(
+    'feedbackList in FeedbackList.jsx page_____---+++++++',
+    feedbackList,
+  );
   const {
     trainData,
     trainDataFirstIndex,
@@ -32,18 +37,32 @@ const FeedbackList = ({route}) => {
     activeFAButton,
     setActiveFAButton,
   } = useContext(TrainListContext);
+  // Extracting the dutyId from the route params
+  // const {dutyId} = route.params;
 
-  const combinedData = [...feedbackList, ...completedJourneys];
-
+  // Change the useEffect to use the dutyId from route.params
   useEffect(() => {
-    fetchFeedbackList();
+    // Extracting the dutyId from the route params
+    const {dutyId} = route.params;
+    fetchFeedbackList(dutyId);
   }, []);
+
+  // useEffect(() => {
+  //   fetchFeedbackList();
+  // }, []);
 
   useEffect(() => {
     fetchCompletedJourneys();
   }, []);
 
-  console.log('feedbackList in FeedbackList page:', feedbackList);
+  // const feedbackData = feedbackList.filter(
+  //   journey => journey.dutyId === dutyId,
+  // );
+
+  // // Filtering feedback data based on dutyId
+  // const feedbackData = feedbackList
+  //   .filter(journey => journey.dutyId === dutyId)
+  //   .map(journey => journey.id);
 
   if (isLoading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
@@ -51,6 +70,7 @@ const FeedbackList = ({route}) => {
 
   const FeedbackCard = ({item}) => (
     <View style={[styles.cardContainer]}>
+      <Text style={styles.cardText}>dutyId: {item.dutyId}</Text>
       <Text style={styles.cardText}>coach: {item.coach}</Text>
       <Text style={styles.cardText}>PNR: {item.pnr}</Text>
       <Text style={styles.cardText}>mobile: {item.mobile}</Text>
@@ -59,7 +79,7 @@ const FeedbackList = ({route}) => {
         bedroll_provided_on_time: {item.bedroll_provided_on_time}
       </Text>
       <Text style={styles.cardText}>
-        all_linen_items_provided_in_bedroll:{' '}
+        all_linen_items_provided_in_bedroll:
         {item.all_linen_items_provided_in_bedroll}
       </Text>
       <Text style={styles.cardText}>
@@ -91,7 +111,7 @@ const FeedbackList = ({route}) => {
       {/* <Text style={{color: 'black'}}>FeedbackList</Text> */}
       <FlatList
         // horizontal
-        data={combinedData}
+        data={feedbackList}
         keyExtractor={(item, index) => index.toString()}
         renderItem={FeedbackCard}
       />

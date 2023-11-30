@@ -16,6 +16,7 @@ import {TrainListContext} from '../context/TrainListContext';
 import {AuthContext} from '../context/AuthContext';
 import HeaderText from '../components/HeaderText';
 import CurrentDate from '../components/CurrentDate';
+import FeedbackList from './FeedbackList'; // Import FeedbackList component
 
 const CompletedJourney = () => {
   const {token, getToken, name, pic} = useContext(AuthContext);
@@ -33,17 +34,11 @@ const CompletedJourney = () => {
   } = useContext(TrainListContext);
 
   const navigation = useNavigation();
+
   useEffect(() => {
     fetchCompletedJourneys();
   }, []);
 
-  // Combine the items from trainDataFirstIndex and completedJourneys
-  const combinedData = [...trainDataFirstIndex, ...completedJourneys];
-
-  console.log(
-    'combinedData in comletedJourney...........>>>>>>>>>>',
-    combinedData,
-  );
   const renderItem = ({item}) => (
     <View style={styles.journeyItem}>
       <View>
@@ -60,7 +55,7 @@ const CompletedJourney = () => {
         <Text style={styles.cardTextDate}>{item.train_name}</Text>
 
         <View>
-          {[trainDataFirstIndex].map((train, index) => (
+          {[completedJourneys[1]].map((train, index) => (
             <View key={index}>
               <View style={styles.buttonFAContainer}>
                 <View>
@@ -106,17 +101,37 @@ const CompletedJourney = () => {
   const handleFAPress = button => {
     setActiveFAButton(button);
   };
+
+  // Inside handleFeedbackList function
   const handleFeedbackList = item => {
     console.log('FeedbackList pressed', item);
 
     navigation.navigate('FeedbackList', {
-      // name: name,
-      // token: token,
-      // pic: pic,
-      // trainData: trainData,
-      // coachB: coachB,
+      dutyId: item.id, // Pass the completed journey id dynamically
     });
+    console.log(
+      'completedJourneys.id in CompletedJourneys page ***************++++++',
+      completedJourneys.id,
+    );
   };
+
+  // const handleFeedbackList = item => {
+  //   console.log('FeedbackList pressed', item);
+
+  //   navigation.navigate('FeedbackList', {
+  //     dutyId: completedJourneys.id,
+  //     // name: name,
+  //     // token: token,
+  //     // pic: pic,
+  //     // trainData: trainData,
+  //     // coachB: coachB,
+  //   });
+  //   console.log(
+  //     'completedJourneys.id in CompletedJourneys page ***************++++++',
+  //     completedJourneys.id,
+  //   );
+  // };
+
   const markAttendanceList = item => {
     navigation.navigate('AttendanceList', {
       // name: name,
@@ -130,12 +145,13 @@ const CompletedJourney = () => {
   return (
     <View style={styles.mainContainer}>
       <HeaderText />
+
       <View style={styles.cardTextDateHeading}>
         <CurrentDate />
       </View>
 
       <FlatList
-        data={combinedData}
+        data={completedJourneys}
         renderItem={renderItem}
         keyExtractor={item => item.id}
       />
