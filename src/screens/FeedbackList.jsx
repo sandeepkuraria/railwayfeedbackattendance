@@ -11,21 +11,19 @@ import {TrainListContext} from '../context/TrainListContext';
 import {AuthContext} from '../context/AuthContext';
 import BottomHomeListButton from '../components/BottomHomeListButton';
 import Header from '../components/Header';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 import CurrentDate from '../components/CurrentDate';
 import HeaderText from '../components/HeaderText';
+import {ScrollView} from 'react-native-gesture-handler';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {faPhone} from '@fortawesome/free-solid-svg-icons';
 
 const FeedbackList = ({route}) => {
-  // const { completedJourneys  } = route.params;
   const {token, getToken, name, pic} = useContext(AuthContext);
 
   const {feedbackList, setFeedbackList, isLoading, fetchFeedbackList} =
     useContext(FeedbackContext);
 
-  console.log(
-    'feedbackList in FeedbackList.jsx page_____---+++++++',
-    feedbackList,
-  );
   const {
     trainData,
     trainDataFirstIndex,
@@ -37,8 +35,6 @@ const FeedbackList = ({route}) => {
     activeFAButton,
     setActiveFAButton,
   } = useContext(TrainListContext);
-  // Extracting the dutyId from the route params
-  // const {dutyId} = route.params;
 
   // Change the useEffect to use the dutyId from route.params
   useEffect(() => {
@@ -47,52 +43,120 @@ const FeedbackList = ({route}) => {
     fetchFeedbackList(dutyId);
   }, []);
 
-  // useEffect(() => {
-  //   fetchFeedbackList();
-  // }, []);
-
-  // useEffect(() => {
-  //   fetchCompletedJourneys();
-  // }, []);
-
-  // const feedbackData = feedbackList.filter(
-  //   journey => journey.dutyId === dutyId,
-  // );
-
-  // // Filtering feedback data based on dutyId
-  // const feedbackData = feedbackList
-  //   .filter(journey => journey.dutyId === dutyId)
-  //   .map(journey => journey.id);
-
   if (isLoading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignSelf: 'center',
+        }}>
+        <ActivityIndicator size="500" color="#0000ff" />
+      </View>
+    );
   }
 
   const FeedbackCard = ({item}) => (
     <View style={[styles.cardContainer]}>
-      <Text style={styles.cardText}>dutyId: {item.dutyId}</Text>
-      <Text style={styles.cardText}>coach: {item.coach}</Text>
-      <Text style={styles.cardText}>PNR: {item.pnr}</Text>
-      <Text style={styles.cardText}>mobile: {item.mobile}</Text>
-      {/* <Text style={styles.cardText}>feedback: {item.feedback}</Text> */}
-      <Text style={styles.cardText}>
-        bedroll_provided_on_time: {item.bedroll_provided_on_time}
-      </Text>
-      <Text style={styles.cardText}>
-        all_linen_items_provided_in_bedroll:
-        {item.all_linen_items_provided_in_bedroll}
-      </Text>
-      <Text style={styles.cardText}>
-        all_linen_items_provided_fresh: {item.all_linen_items_provided_fresh}
-      </Text>
-      <Text style={styles.cardText}>
-        behaviors_of_attender: {item.behaviors_of_attender}
-      </Text>
-      <Text style={styles.cardText}>
-        are_you_feeling_safe_in_journey: {item.are_you_feeling_safe_in_journey}
-      </Text>
-      <Text style={styles.cardText}>description: {item.description}</Text>
-      <Text style={styles.cardText}>rating: {item.rating}</Text>
+      {/* <Text style={styles.cardText}>dutyId: {item.dutyId}</Text> */}
+      <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+        <Text style={styles.cardTextPNR}> {item.pnr}</Text>
+        <Text style={styles.cardTextCoach}> {item.coach}</Text>
+      </View>
+      <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+        <Text style={styles.cardTextMobile}>
+          <View style={styles.mobileIconView}>
+            <FontAwesomeIcon icon={faPhone} size={12} />
+          </View>
+          {'  '}
+          {item.mobile}
+        </Text>
+      </View>
+
+      <View style={styles.fieldContainer}>
+        <View style={styles.fieldTextContainer}>
+          <Text style={styles.feedbackList}>Bedroll Provided on Time</Text>
+        </View>
+        <View style={styles.fieldInputContainer}>
+          <View style={styles.radioYesNo}>
+            <Text style={styles.textBlack}>
+              {item.bedroll_provided_on_time}
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View style={styles.fieldContainer}>
+        <View style={styles.fieldTextContainer}>
+          <Text style={styles.feedbackList}>
+            All linen items provided in bedroll:
+          </Text>
+        </View>
+        <View style={styles.fieldInputContainer}>
+          <View style={styles.radioYesNo}>
+            <Text style={styles.textBlack}>
+              {item.all_linen_items_provided_in_bedroll}
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View style={styles.fieldContainer}>
+        <View style={styles.fieldTextContainer}>
+          <Text style={styles.feedbackList}>
+            All linen items provided fresh{' '}
+          </Text>
+        </View>
+        <View style={styles.fieldInputContainer}>
+          <View style={styles.radioYesNo}>
+            <Text style={styles.textBlack}>
+              {item.all_linen_items_provided_fresh}
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View style={styles.fieldContainer}>
+        <View style={styles.fieldTextContainer}>
+          <Text style={styles.feedbackList}>
+            Are you feeling safe in journey{' '}
+          </Text>
+        </View>
+        <View style={styles.fieldInputContainer}>
+          <View style={styles.radioYesNo}>
+            <Text style={styles.textBlack}>
+              {item.are_you_feeling_safe_in_journey}
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View style={styles.fieldContainer}>
+        <View style={styles.fieldTextContainer}>
+          <Text style={styles.feedbackList}>Behaviors of attender </Text>
+        </View>
+        <View style={styles.fieldInputContainer}>
+          <View style={styles.radioYesNo}>
+            <Text style={styles.textBlack}>{item.behaviors_of_attender}</Text>
+          </View>
+        </View>
+      </View>
+      <View style={styles.fieldContainerDescription}>
+        <View style={styles.fieldTextContainer}>
+          <Text style={styles.feedbackList}>Description </Text>
+        </View>
+        <View style={styles.fieldInputContainer}>
+          <View style={styles.radioYesNoDescription}>
+            <Text style={styles.textBlack}>{item.description}</Text>
+          </View>
+        </View>
+      </View>
+      <View style={styles.fieldContainer}>
+        <View style={styles.fieldTextContainer}>
+          <Text style={styles.feedbackList}>Rating </Text>
+        </View>
+        <View style={styles.fieldInputContainer}>
+          <View style={styles.radioYesNo}>
+            <Text style={styles.textBlack}>{item.rating}</Text>
+          </View>
+        </View>
+      </View>
     </View>
   );
 
@@ -109,12 +173,16 @@ const FeedbackList = ({route}) => {
       </View>
       {/* <Header /> */}
       {/* <Text style={{color: 'black'}}>FeedbackList</Text> */}
-      <FlatList
-        // horizontal
-        data={feedbackList}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={FeedbackCard}
-      />
+
+      <ScrollView style={{marginBottom: 40}}>
+        <FlatList
+          // horizontal
+          data={feedbackList}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={FeedbackCard}
+        />
+      </ScrollView>
+
       <BottomHomeListButton />
     </View>
   );
@@ -132,9 +200,8 @@ const styles = StyleSheet.create({
     // padding: 16,
     // margin: 8,
     // width: 250, // Adjust the width as needed
-
     // backgroundColor: '#fff',
-    marginBottom: 10,
+    marginBottom: '1%',
     marginHorizontal: '0.5%',
     // padding: 10,
     borderRadius: 8,
@@ -153,7 +220,22 @@ const styles = StyleSheet.create({
   cardText: {
     color: 'black',
     fontSize: 16,
+    // fontWeight: 'bold',
+  },
+  cardTextPNR: {
+    color: 'darkred',
+    fontSize: 18,
     fontWeight: 'bold',
+  },
+  cardTextCoach: {
+    color: '#167fb9',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  cardTextMobile: {
+    color: 'black',
+    fontSize: 16,
+    fontWeight: '500',
   },
   cardTextDateHeading: {
     flex: 0,
@@ -168,22 +250,58 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
   },
-  // journeyItem: {
-  //   // backgroundColor: '#fff',
-  //   marginBottom: 10,
-  //   marginHorizontal: '0.5%',
-  //   // padding: 10,
-  //   borderRadius: 8,
-  //   borderWidth: 1,
-  //   borderColor: '#EFCBB4',
-  //   flex: 2,
-  //   // justifyContent: 'center',
-  //   elevation: 30,
-  //   shadowColor: '#EFCBB4',
-  //   shadowOffset: {width: 5, height: 100},
-  //   shadowOpacity: 0.1,
-  //   shadowRadius: 8,
-  //   padding: '2%',
-  //   backgroundColor: '#F8F9F9',
-  // },
+  fieldContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    // borderWidth: 1,
+    borderRadius: 6,
+    borderColor: '#EFCBB4',
+    marginBottom: '2%',
+  },
+  fieldContainerDescription: {
+    flexDirection: 'row',
+    // justifyContent: 'space-between',
+    alignItems: 'center',
+    // borderWidth: 1,
+    borderRadius: 6,
+    borderColor: '#EFCBB4',
+    marginBottom: '2%',
+  },
+  fieldTextContainer: {
+    marginLeft: 10,
+  },
+  feedbackList: {
+    color: 'black',
+    marginVertical: '4%',
+  },
+  fieldInputContainer: {
+    marginRight: 10,
+  },
+  radioYesNo: {
+    marginVertical: '3%',
+  },
+  radioYesNo: {
+    marginVertical: '3%',
+  },
+  radioYesNoDescription: {
+    marginBottom: '1%',
+    marginHorizontal: '0.5%',
+    paddingHorizontal: '33%',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#EFCBB4',
+    // flex: 2,
+    justifyContent: 'center',
+    elevation: 30,
+    shadowColor: '#EFCBB4',
+    shadowOffset: {width: 5, height: 100},
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    padding: '2%',
+    backgroundColor: '#F8F9F9',
+  },
+  textBlack: {
+    color: 'black',
+  },
 });

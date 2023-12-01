@@ -112,23 +112,6 @@ const CompletedJourney = () => {
     );
   };
 
-  // const handleFeedbackList = item => {
-  //   console.log('FeedbackList pressed', item);
-
-  //   navigation.navigate('FeedbackList', {
-  //     dutyId: completedJourneys.id,
-  //     // name: name,
-  //     // token: token,
-  //     // pic: pic,
-  //     // trainData: trainData,
-  //     // coachB: coachB,
-  //   });
-  //   console.log(
-  //     'completedJourneys.id in CompletedJourneys page ***************++++++',
-  //     completedJourneys.id,
-  //   );
-  // };
-
   const markAttendanceList = item => {
     navigation.navigate('AttendanceList', {
       // name: name,
@@ -147,11 +130,13 @@ const CompletedJourney = () => {
         <CurrentDate />
       </View>
 
-      <FlatList
-        data={completedJourneys}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-      />
+      <ScrollView style={{marginBottom: 35}}>
+        <FlatList
+          data={completedJourneys}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+        />
+      </ScrollView>
 
       <BottomHomeListButton />
     </View>
