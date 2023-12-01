@@ -30,65 +30,10 @@ const AuthContextProvider = ({children}) => {
     }
   };
 
-  useEffect(() => {
-    getToken();
-  }, []);
-
-  // Run this effect whenever the token changes
-
   // useEffect(() => {
-  //   // Call getToken when the component mounts
-  //   // console.log(token,'[[[[[]]]]]]')
+  //   getToken();
   // }, []);
-  // Function to sign up and store token in local storage
 
-  //******************************************Login Screen************************************* */
-  // const loginApi = async () => {
-  //   var myHeaders = new Headers();
-
-  //   var formdata = new FormData();
-  //   formdata.append('emp_id', emp_id);
-  //   formdata.append('password', password);
-
-  //   var requestOptions = {
-  //     method: 'POST',
-  //     headers: myHeaders,
-  //     body: formdata,
-  //     redirect: 'follow',
-  //   };
-
-  //   const res = await fetch(
-  //     'https://railway.retinodes.com/api/v1/authentication/login',
-  //     requestOptions,
-  //   );
-  //   const response = await res.json();
-  //   await AsyncStorage.setItem('token', response?.token);
-  //   // console.log('RESPONSE IN LOGIN----', response.data.profile_pic);
-  //   const pic = response.data.profile_pic;
-  //   setLoginResponse(response);
-  //   if (response.status === true) {
-  //     console.log(response.data.name);
-  //     setIsLoading(false);
-
-  //     setname(response.data.name);
-  //     setpic(response.data.profile_pic);
-
-  //     navigation.navigate('TrainList', {
-  //       name: response.data.name,
-  //       pic: pic,
-  //       token: response.token,
-  //     });
-  //     navigation.navigate('Header', {
-  //       name: response.data.name,
-  //       pic: pic,
-  //       token: response.token,
-  //     });
-  //   } else {
-  //     setIsLoading(false);
-
-  //     Alert.alert(response.message);
-  //   }
-  // };
   const loginApi = async () => {
     try {
       const myHeaders = new Headers();
@@ -109,22 +54,17 @@ const AuthContextProvider = ({children}) => {
         requestOptions,
       );
       const response = await res.json();
-
-      await AsyncStorage.setItem('token', response?.token);
-
-      const pic = response.data.profile_pic;
-      setLoginResponse(response);
-
       if (response.status === true) {
+        await AsyncStorage.setItem('token', response?.token);
+
+        const pic = response.data.profile_pic;
+        setLoginResponse(response);
+
         setIsLoading(false);
         setname(response.data.name);
         setpic(response.data.profile_pic);
 
-        navigation.navigate('TrainList', {
-          name: response.data.name,
-          pic: pic,
-          token: response.token,
-        });
+        navigation.navigate('TrainList');
 
         // navigation.navigate('Header', {
         //   name: response.data.name,

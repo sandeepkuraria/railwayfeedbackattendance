@@ -40,12 +40,12 @@ const TrainListContextProvider = ({children}) => {
 
   // Destructure the token from AuthContext
 
-  console.log(
-    'trainData in TrainlistContext_________________----------',
-    trainData,
-  );
+  // console.log(
+  //   'trainData in TrainlistContext_________________----------',
+  //   trainData,
+  // );
 
-  console.log('in TrainlistContext ******************', trainDataFirstIndex);
+  // console.log('in TrainlistContext ******************', trainDataFirstIndex);
 
   const upcomingDutiesApi = async () => {
     var myHeaders = new Headers();
@@ -62,13 +62,13 @@ const TrainListContextProvider = ({children}) => {
         'https://railway.retinodes.com/api/v1/assignduty/upcomingduties',
         requestOptions,
       );
-      console.log(
-        'TrainListContext console data ********************************** : - ',
-        trainData[0]?.date,
-        trainData[0]?.train_no,
-        trainData[0]?.train_name,
-        trainData[0]?.step,
-      );
+      // console.log(
+      //   'TrainListContext console data ********************************** : - ',
+      //   trainData[0]?.date,
+      //   trainData[0]?.train_no,
+      //   trainData[0]?.train_name,
+      //   trainData[0]?.step,
+      // );
       const response = await res.json();
 
       setTrainData(response.data || []);

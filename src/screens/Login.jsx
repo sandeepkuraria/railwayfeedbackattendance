@@ -10,9 +10,10 @@ import {
   KeyboardAvoidingView,
   ActivityIndicator,
 } from 'react-native';
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {AuthContext} from '../context/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = () => {
   const {
@@ -25,10 +26,19 @@ const Login = () => {
     isLoading,
     setIsLoading,
   } = useContext(AuthContext);
-  console.log(emp_id, 'AUTH IN LOGIN');
+  // console.log(emp_id, 'AUTH IN LOGIN');
 
   const navigation = useNavigation();
-  console.log('isloading in Login ++++++++++++++++++++++++++++', isLoading);
+  // console.log('isloading in Login ++++++++++++++++++++++++++++', isLoading);
+
+  useEffect(() => {
+    try {
+      // Clear the user session
+      AsyncStorage.clear();
+    } catch (error) {
+      console.error('Error clearing user session:', error);
+    }
+  }, []);
 
   const handleLogin = async () => {
     console.log('emp_id : ', emp_id);
@@ -41,57 +51,6 @@ const Login = () => {
       loginApi();
     }
   };
-
-  // ******************************* LoginAPI start ************************
-  // const loginApi = async () => {
-  //   var myHeaders = new Headers();
-
-  //   myHeaders.append(
-  //     'Cookie',
-  //     'ci_session=e2dd6dd7ec0b6ac1ff3c57f01fb27e7495b05e82',
-  //   );
-
-  //   var formdata = new FormData();
-  //   formdata.append('emp_id', emp_id);
-  //   formdata.append('password', password);
-
-  //   var requestOptions = {
-  //     method: 'POST',
-  //     headers: myHeaders,
-  //     body: formdata,
-  //     redirect: 'follow',
-  //   };
-
-  //   const res = await fetch(
-  //     'https://railway.retinodes.com/api/v1/authentication/login',
-  //     requestOptions,
-  //   );
-  //   const response = await res.json();
-  //   console.log('RESPONSE IN LOGIN----', response.data.profile_pic);
-  //   const pic = response.data.profile_pic;
-  //   if (response.status === true) {
-  //     console.log(response.data.name);
-  //     setIsLoading(false);
-
-  //     navigation.replace('TrainList', {
-  //       name: response.data.name,
-  //       pic: pic,
-  //       token: response.token,
-  //     });
-  //     navigation.replace('Header', {
-  //       name: response.data.name,
-  //       pic: pic,
-  //       token: response.token,
-  //     });
-  //   } else {
-  //     setIsLoading(false);
-
-  //     Alert.alert(response.message);
-  //   }
-  // };
-  // **************************** Login API end ****************************
-
-  console.log('LOGIN RESPONSE---', loginresponse);
 
   return (
     <SafeAreaView style={styles.mainContainer}>

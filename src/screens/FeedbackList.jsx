@@ -51,9 +51,9 @@ const FeedbackList = ({route}) => {
   //   fetchFeedbackList();
   // }, []);
 
-  useEffect(() => {
-    fetchCompletedJourneys();
-  }, []);
+  // useEffect(() => {
+  //   fetchCompletedJourneys();
+  // }, []);
 
   // const feedbackData = feedbackList.filter(
   //   journey => journey.dutyId === dutyId,

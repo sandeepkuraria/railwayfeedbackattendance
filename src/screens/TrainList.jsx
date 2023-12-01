@@ -21,18 +21,8 @@ const TrainList = () => {
   const {trainData, trainDataFirstIndex, upcomingDutiesApi, coachB} =
     useContext(TrainListContext);
 
-  // const {token, getToken} = useContext(AuthContext);
-  console.log(token, '--------tokenintrain---------');
-
-  // console.log('PIC IN TRAIN LIST', pic);
-  console.log('trainData in trainlist', trainData);
-  console.log('trainDataFirstIndex in TrainList', trainDataFirstIndex);
-  console.log('token in TrainList', token);
-
   const navigation = useNavigation();
   const [activeFAButton, setActiveFAButton] = useState('');
-  // const [trainData, setTrainData] = useState([]);
-  // const [trainDataFirstIndex, setTrainDataFirstIndex] = useState([]);
 
   let trainDataUpcomingJourney = [];
 
@@ -45,16 +35,22 @@ const TrainList = () => {
 
   useEffect(() => {
     getToken();
-    console.log(token, 'tokenTrain');
+    console.log('tokenTrain213456', token, 'tokenTrain');
     if (token === null) {
       navigation.navigate('Login');
     } else {
       upcomingDutiesApi();
-      console.log(
-        'this is useEffect in TrainList *************************************',
-      );
     }
   }, [token]);
+
+  useEffect(() => {
+    console.log('nooooooooyessssssssssssssssssssssssssssssssssssssssssssss');
+
+    if (token) {
+      console.log('yessssssssssssssssssssssssssssssssssssssssssssss');
+      upcomingDutiesApi();
+    }
+  }, []);
 
   const renderItem = ({item}) => (
     <View style={styles.card}>

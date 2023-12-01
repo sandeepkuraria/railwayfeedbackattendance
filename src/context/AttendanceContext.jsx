@@ -17,11 +17,11 @@ const AttendanceContextProvider = ({children}) => {
   let step = parseInt(trainData[0]?.step);
 
   step++;
-  console.log(
-    'This is step in attendanceContext :- ',
-    step,
-    'yoooooooooooooOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO',
-  );
+  // console.log(
+  //   'This is step in attendanceContext :- ',
+  //   step,
+  //   'yoooooooooooooOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO',
+  // );
   //   let step = parseInt(trainData[0]?.step);
   //   step++;
 

@@ -55,44 +55,38 @@ const CompletedJourney = () => {
         <Text style={styles.cardTextDate}>{item.train_name}</Text>
 
         <View>
-          {[completedJourneys[1]].map((train, index) => (
-            <View key={index}>
-              <View style={styles.buttonFAContainer}>
-                <View>
-                  <TouchableOpacity
-                    onPress={() => {
-                      handleFeedbackList(train);
-                      handleFAPress('FeedbackList');
-                    }}
-                    style={[
-                      styles.buttonF,
-                      activeFAButton ===
-                        //  'FeedbackList' &&
-                        styles.activeFAButton,
-                    ]}>
-                    <Text style={styles.buttonFeedbackText}>Feedback-List</Text>
-                  </TouchableOpacity>
-                </View>
-                <View>
-                  <TouchableOpacity
-                    onPress={() => {
-                      markAttendanceList(train);
-                      handleFAPress('AttendanceList');
-                    }}
-                    style={[
-                      styles.buttonA,
-                      activeFAButton ===
-                        // 'AttendanceList' &&
-                        styles.activeFAButton,
-                    ]}>
-                    <Text style={styles.buttonAttendanceText}>
-                      Attendance-List
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
+          <View style={styles.buttonFAContainer}>
+            <View>
+              <TouchableOpacity
+                onPress={() => {
+                  handleFeedbackList(item.id);
+                  handleFAPress('FeedbackList');
+                }}
+                style={[
+                  styles.buttonF,
+                  activeFAButton ===
+                    //  'FeedbackList' &&
+                    styles.activeFAButton,
+                ]}>
+                <Text style={styles.buttonFeedbackText}>Feedback-List</Text>
+              </TouchableOpacity>
             </View>
-          ))}
+            <View>
+              <TouchableOpacity
+                onPress={() => {
+                  markAttendanceList(item.id);
+                  handleFAPress('AttendanceList');
+                }}
+                style={[
+                  styles.buttonA,
+                  activeFAButton ===
+                    // 'AttendanceList' &&
+                    styles.activeFAButton,
+                ]}>
+                <Text style={styles.buttonAttendanceText}>Attendance-List</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
       </View>
     </View>
@@ -103,11 +97,14 @@ const CompletedJourney = () => {
   };
 
   // Inside handleFeedbackList function
-  const handleFeedbackList = item => {
-    console.log('FeedbackList pressed', item);
+  const handleFeedbackList = id => {
+    console.log(
+      'FeedbackList pressed ++++++++++++++++++++++++++++++++++++++++++++++',
+      id,
+    );
 
     navigation.navigate('FeedbackList', {
-      dutyId: item.id, // Pass the completed journey id dynamically
+      dutyId: id, // Pass the completed journey id dynamically
     });
     console.log(
       'completedJourneys.id in CompletedJourneys page ***************++++++',

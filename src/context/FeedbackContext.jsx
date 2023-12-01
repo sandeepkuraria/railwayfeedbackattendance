@@ -37,7 +37,7 @@ const FeedbackContextProvider = ({children}) => {
   //Get Feedback states variables
   const [feedbackList, setFeedbackList] = useState([]);
 
-  console.log('feedbackList in FeedbackContext ***********', feedbackList);
+  // console.log('feedbackList in FeedbackContext ***********', feedbackList);
 
   console.log(
     'Selected coach and coachB in feedback context ****************___________',
@@ -122,16 +122,7 @@ const FeedbackContextProvider = ({children}) => {
         headers: myHeaders,
         redirect: 'follow',
       };
-      // const dataFeed = completedJourneys[0];
-      // const dutyId = dataFeed.id;
-      // console.log(
-      //   ' completedJourneys[0].id in FeedbackContext page ****',
-      //   completedJourneys.id,
-      // );
-      // const response = await fetch(
-      //   `https://railway.retinodes.com/api/v1/assignduty/getFeedback?dutyId=${dutyId}`,
-      //   requestOptions,
-      // );
+
       const response = await fetch(
         `https://railway.retinodes.com/api/v1/assignduty/getFeedback?dutyId=${dutyId}`,
         requestOptions,
