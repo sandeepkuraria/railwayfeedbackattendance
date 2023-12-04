@@ -60,6 +60,7 @@ const FeedbackList = ({route}) => {
     <View style={[styles.cardContainer]}>
       {/* <Text style={styles.cardText}>dutyId: {item.dutyId}</Text> */}
       <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+        <Text style={styles.cardTextPNR}> {item.dutyId}</Text>
         <Text style={styles.cardTextPNR}> {item.pnr}</Text>
         <Text style={styles.cardTextCoach}> {item.coach}</Text>
       </View>
@@ -163,7 +164,7 @@ const FeedbackList = ({route}) => {
   return (
     <View style={styles.mainContainer}>
       <View>
-        <HeaderText name={name} pic={pic} />
+        <HeaderText />
       </View>
 
       {/* ************************Date and Time************* */}

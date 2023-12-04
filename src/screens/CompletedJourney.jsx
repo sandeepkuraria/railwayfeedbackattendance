@@ -74,7 +74,7 @@ const CompletedJourney = () => {
             <View>
               <TouchableOpacity
                 onPress={() => {
-                  markAttendanceList(item.id);
+                  handleAttendanceList(item.id);
                   handleFAPress('AttendanceList');
                 }}
                 style={[
@@ -106,20 +106,26 @@ const CompletedJourney = () => {
     navigation.navigate('FeedbackList', {
       dutyId: id, // Pass the completed journey id dynamically
     });
+
     console.log(
-      'completedJourneys.id in CompletedJourneys page ***************++++++',
+      'completedJourneys.id while AttendanceList pressed in CompletedJourneys page ***************++++++',
       completedJourneys.id,
     );
   };
 
-  const markAttendanceList = item => {
+  const handleAttendanceList = id => {
+    console.log(
+      'AttendanceList pressed ++++++++++++++++++++++++++++++++++++++++++++++',
+      id,
+    );
     navigation.navigate('AttendanceList', {
-      // name: name,
-      // token: token,
-      // pic: pic,
-      // trainData: trainData,
+      dutyId: id, // Pass the completed journey id dynamically
     });
-    console.log('AttendanceList pressed', item);
+    console.log(
+      'completedJourneys.id while AttendanceList pressed in CompletedJourneys page ***************++++++',
+      completedJourneys.id,
+    );
+    // console.log('AttendanceList pressed', item);
   };
 
   return (

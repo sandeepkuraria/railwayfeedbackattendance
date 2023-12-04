@@ -32,6 +32,14 @@ const TrainList = () => {
     'trainDataUpcomingJourney in TrainList *******************************',
     trainDataUpcomingJourney,
   );
+  useEffect(() => {
+    console.log('nooooooooyessssssssssssssssssssssssssssssssssssssssssssss');
+
+    if (token) {
+      console.log('yessssssssssssssssssssssssssssssssssssssssssssss');
+      upcomingDutiesApi();
+    }
+  }, []);
 
   useEffect(() => {
     getToken();
@@ -42,15 +50,6 @@ const TrainList = () => {
       upcomingDutiesApi();
     }
   }, [token]);
-
-  useEffect(() => {
-    console.log('nooooooooyessssssssssssssssssssssssssssssssssssssssssssss');
-
-    if (token) {
-      console.log('yessssssssssssssssssssssssssssssssssssssssssssss');
-      upcomingDutiesApi();
-    }
-  }, []);
 
   const renderItem = ({item}) => (
     <View style={styles.card}>
