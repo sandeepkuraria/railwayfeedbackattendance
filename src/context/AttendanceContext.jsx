@@ -15,7 +15,7 @@ const AttendanceContextProvider = ({children}) => {
   const {trainData} = useContext(TrainListContext);
   const {token, name, pic} = useContext(AuthContext);
   let step = parseInt(trainData[0]?.step);
-  const [attendanceList, setAttendanceList] = useState([]);
+  const [attendanceList, setAttendanceList] = useState({});
 
   step++;
   // console.log(
@@ -39,10 +39,10 @@ const AttendanceContextProvider = ({children}) => {
     try {
       var myHeaders = new Headers();
       myHeaders.append('Authorization', `Bearer ${token}`);
-      myHeaders.append(
-        'Cookie',
-        'ci_session=b3612beb7ae4c49d7e8341db34272b0730aba59e',
-      );
+      // myHeaders.append(
+      //   'Cookie',
+      //   'ci_session=b3612beb7ae4c49d7e8341db34272b0730aba59e',
+      // );
 
       var formdata = new FormData();
       formdata.append('dutyId', data?.id);
@@ -89,6 +89,41 @@ const AttendanceContextProvider = ({children}) => {
     }
   };
 
+  // const fetchAttendanceList = async dutyId => {
+  //   try {
+  //     setIsLoading(true);
+
+  //     const myHeaders = new Headers();
+  //     myHeaders.append('Authorization', `Bearer ${token}`);
+
+  //     const requestOptions = {
+  //       method: 'GET',
+  //       headers: myHeaders,
+  //       redirect: 'follow',
+  //     };
+
+  //     const response = await fetch(
+  //       `https://railway.retinodes.com/api/v1/assignduty/getAttendance?dutyId=${dutyId}`,
+  //       requestOptions,
+  //     );
+
+  //     // console.log('fetchAttendanceList API Response Status:', response.status); // Log response status
+  //     if (!response.ok) {
+  //       throw new Error('Failed to fetch attendance data');
+  //     }
+
+  //     const result = await response.json();
+  //     // console.log('Fetched attendance data:', result);
+
+  //     setAttendanceList(result.data); // Assuming attendance data is inside the "data" property
+
+  //     setIsLoading(false);
+  //   } catch (error) {
+  //     console.error('Error fetching attendance:', error);
+  //     setIsLoading(false);
+  //   }
+  // };
+
   const fetchAttendanceList = async dutyId => {
     try {
       setIsLoading(true);
@@ -107,15 +142,17 @@ const AttendanceContextProvider = ({children}) => {
         requestOptions,
       );
 
-      // console.log('fetchAttendanceList API Response Status:', response.status); // Log response status
       if (!response.ok) {
         throw new Error('Failed to fetch attendance data');
       }
 
       const result = await response.json();
-      // console.log('Fetched attendance data:', result);
 
-      setAttendanceList(result.data); // Assuming attendance data is inside the "data" property
+      if (result.status) {
+        setAttendanceList(result.data);
+      } else {
+        setAttendanceList({}); // Set an empty array or handle the case accordingly
+      }
 
       setIsLoading(false);
     } catch (error) {
@@ -123,10 +160,6 @@ const AttendanceContextProvider = ({children}) => {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchAttendanceList();
-  }, []);
 
   return (
     <AttendanceContext.Provider

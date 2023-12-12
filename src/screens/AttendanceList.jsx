@@ -2,22 +2,20 @@ import {
   StyleSheet,
   Text,
   View,
-  FlatList,
   ActivityIndicator,
+  FlatList,
+  ScrollView,
+  Image,
 } from 'react-native';
 import React, {useContext, useEffect} from 'react';
-import {FeedbackContext} from '../context/FeedbackContext';
 import {TrainListContext} from '../context/TrainListContext';
 import {AuthContext} from '../context/AuthContext';
 import BottomHomeListButton from '../components/BottomHomeListButton';
-import Header from '../components/Header';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
 import CurrentDate from '../components/CurrentDate';
 import HeaderText from '../components/HeaderText';
-import {ScrollView} from 'react-native-gesture-handler';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faPhone} from '@fortawesome/free-solid-svg-icons';
 import {AttendanceContext} from '../context/AttendanceContext';
+import {Avatar} from 'react-native-paper';
+import LeafletMap from '../components/LeafletMap';
 
 const AttendanceList = ({route}) => {
   const {token, getToken, name, pic} = useContext(AuthContext);
@@ -38,6 +36,11 @@ const AttendanceList = ({route}) => {
   } = useContext(TrainListContext);
 
   // Change the useEffect to use the dutyId from route.params
+  // useEffect(() => {
+  //   const {dutyId} = route.params;
+  //   fetchAttendanceList(dutyId);
+  // }, []);
+
   useEffect(() => {
     // Extracting the dutyId from the route params
     const {dutyId} = route.params;
@@ -46,29 +49,27 @@ const AttendanceList = ({route}) => {
 
   if (isLoading) {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignSelf: 'center'}}>
-        <ActivityIndicator size="large" color="#0000ff" />
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignSelf: 'center',
+        }}>
+        <ActivityIndicator size="500" color="#0000ff" />
       </View>
     );
   }
-  // console.log(
-  //   'attendanceList in attendanceList page +++++++++++++++++',
-  //   attendanceList,
-  // );
-  const AttendanceCard = ({item}) => (
-    <View style={[styles.cardContainer]}>
-      {/* Display attendance information as needed */}
-      <Text style={styles.cardText}>DutyId: {item.dutyId}</Text>
-      <Text style={styles.cardText}>Employee ID: {item.employeeId}</Text>
-      <Text style={styles.cardText}>
-        Source Date Time: {item.source_date_time}
-      </Text>
-      <Text style={styles.cardText}>
-        Destination Date Time: {item.destination_date_time}
-      </Text>
-      {/* Add more fields as needed */}
-    </View>
+
+  console.log(
+    'attendanceList.dutyId in attendanceList page +++++++++++++++++',
+    attendanceList.dutyId,
   );
+
+  const source_pic = attendanceList.source_photo;
+  const destination_pic = attendanceList.destination_photo;
+  const return_pic = attendanceList.return_photo;
+  const sourceLat = parseFloat(attendanceList.source_lat);
+  const sourceLong = parseFloat(attendanceList.source_long);
 
   return (
     <View style={styles.mainContainer}>
@@ -81,12 +82,56 @@ const AttendanceList = ({route}) => {
       </View>
 
       <ScrollView style={{marginBottom: 40}}>
-        <Text style={{color: 'black'}}>hello..........</Text>
-        <FlatList
-          data={attendanceList}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={AttendanceCard}
-        />
+        <View style={[styles.cardContainer]}>
+          <Text style={styles.cardText}>DutyId: {attendanceList.dutyId}</Text>
+          <Text style={styles.cardText}>
+            Employee ID: {attendanceList.employeeId}
+          </Text>
+          <Text style={styles.cardText}>
+            Source Date Time: {attendanceList.source_date_time}
+          </Text>
+          <Text style={styles.cardText}>
+            Destination Date Time: {attendanceList.destination_date_time}
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingHorizontal: '3%',
+            }}>
+            <View style={{padding: 10}}>
+              <Avatar.Image
+                size={40}
+                source={
+                  pic ? {uri: source_pic} : require('../assets/images/user.png')
+                }
+              />
+            </View>
+            <View style={{padding: 10}}>
+              <Avatar.Image
+                size={40}
+                source={
+                  pic
+                    ? {uri: destination_pic}
+                    : require('../assets/images/user.png')
+                }
+              />
+            </View>
+            <View style={{padding: 10}}>
+              <Avatar.Image
+                size={40}
+                source={
+                  pic ? {uri: return_pic} : require('../assets/images/user.png')
+                }
+              />
+            </View>
+          </View>
+          <View style={styles.mapContainer}>
+            {/* Replace the MapView section with LeafletMap */}
+            {/* <LeafletMap sourceLat={sourceLat} sourceLong={sourceLong} /> */}
+          </View>
+        </View>
       </ScrollView>
 
       <BottomHomeListButton />
@@ -209,5 +254,21 @@ const styles = StyleSheet.create({
   },
   textBlack: {
     color: 'black',
+  },
+  image: {
+    width: 200,
+    height: 200,
+    resizeMode: 'contain',
+    borderWidth: 1,
+    borderColor: 'black',
+  },
+  mapContainer: {
+    height: 200,
+    marginTop: 10,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
   },
 });

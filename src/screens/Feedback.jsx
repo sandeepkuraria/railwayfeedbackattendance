@@ -1235,7 +1235,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     textAlign: 'center',
-    // borderWidth: 1,
 
     width: '65%',
   },

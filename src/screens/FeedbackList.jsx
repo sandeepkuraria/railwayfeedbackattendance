@@ -4,6 +4,7 @@ import {
   View,
   FlatList,
   ActivityIndicator,
+  ScrollView,
 } from 'react-native';
 import React, {useContext, useEffect} from 'react';
 import {FeedbackContext} from '../context/FeedbackContext';
@@ -14,7 +15,6 @@ import Header from '../components/Header';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import CurrentDate from '../components/CurrentDate';
 import HeaderText from '../components/HeaderText';
-import {ScrollView} from 'react-native-gesture-handler';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faPhone} from '@fortawesome/free-solid-svg-icons';
 
@@ -36,7 +36,6 @@ const FeedbackList = ({route}) => {
     setActiveFAButton,
   } = useContext(TrainListContext);
 
-  // Change the useEffect to use the dutyId from route.params
   useEffect(() => {
     // Extracting the dutyId from the route params
     const {dutyId} = route.params;
@@ -69,7 +68,7 @@ const FeedbackList = ({route}) => {
           <View style={styles.mobileIconView}>
             <FontAwesomeIcon icon={faPhone} size={12} />
           </View>
-          {'  '}
+
           {item.mobile}
         </Text>
       </View>
@@ -176,8 +175,9 @@ const FeedbackList = ({route}) => {
       {/* <Text style={{color: 'black'}}>FeedbackList</Text> */}
 
       <ScrollView style={{marginBottom: 40}}>
+        {/* <Text style={{color: 'black'}}>{JSON.stringify(feedbackList)}</Text> */}
+
         <FlatList
-          // horizontal
           data={feedbackList}
           keyExtractor={(item, index) => index.toString()}
           renderItem={FeedbackCard}

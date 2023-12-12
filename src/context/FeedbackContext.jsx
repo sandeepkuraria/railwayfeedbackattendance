@@ -146,9 +146,9 @@ const FeedbackContextProvider = ({children}) => {
     }
   };
 
-  useEffect(() => {
-    fetchFeedbackList();
-  }, []);
+  // useEffect(() => {
+  //   fetchFeedbackList();
+  // }, []);
 
   return (
     <FeedbackContext.Provider
@@ -175,8 +175,7 @@ const FeedbackContextProvider = ({children}) => {
         setDescription,
         setPnrNo,
         setSelectedCoach,
-        // isLoading,
-        // setIsLoading,
+
         feedbackList,
         setFeedbackList,
         isLoading,
