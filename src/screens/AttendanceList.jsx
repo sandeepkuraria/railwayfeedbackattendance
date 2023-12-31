@@ -15,13 +15,21 @@ import CurrentDate from '../components/CurrentDate';
 import HeaderText from '../components/HeaderText';
 import {AttendanceContext} from '../context/AttendanceContext';
 import {Avatar} from 'react-native-paper';
-import LeafletMap from '../components/LeafletMap';
+// import LeafletMap from '../components/LeafletMap';
+// import {LeafletView} from 'react-native-leaflet-maps';
 
 const AttendanceList = ({route}) => {
   const {token, getToken, name, pic} = useContext(AuthContext);
 
-  const {attendanceList, setAttendanceList, isLoading, fetchAttendanceList} =
-    useContext(AttendanceContext);
+  const {
+    attendanceList,
+    setAttendanceList,
+    isLoading,
+    fetchAttendanceList,
+    source_pic,
+    destination_pic,
+    return_pic,
+  } = useContext(AttendanceContext);
 
   const {
     trainData,
@@ -35,17 +43,17 @@ const AttendanceList = ({route}) => {
     setActiveFAButton,
   } = useContext(TrainListContext);
 
-  // Change the useEffect to use the dutyId from route.params
-  // useEffect(() => {
-  //   const {dutyId} = route.params;
-  //   fetchAttendanceList(dutyId);
-  // }, []);
-
   useEffect(() => {
     // Extracting the dutyId from the route params
     const {dutyId} = route.params;
     fetchAttendanceList(dutyId);
   }, []);
+
+  // Change the useEffect to use the dutyId from route.params
+  // useEffect(() => {
+  //   const {dutyId} = route.params;
+  //   fetchAttendanceList(dutyId);
+  // }, []);
 
   if (isLoading) {
     return (
@@ -61,15 +69,36 @@ const AttendanceList = ({route}) => {
   }
 
   console.log(
-    'attendanceList.dutyId in attendanceList page +++++++++++++++++',
+    'attendanceList.dutyId in attendanceList page +++++++++++++++++++++++++++++',
     attendanceList.dutyId,
   );
+  console.log(
+    'attendanceList.return_photo in attendanceList page +++++++++++++++++++++++++++++',
+    attendanceList.return_photo,
+  );
+  console.log(
+    'attendanceList.source_lat in attendanceList page +++++++++++++++++++++++++++++',
+    attendanceList.source_lat,
+  );
 
-  const source_pic = attendanceList.source_photo;
-  const destination_pic = attendanceList.destination_photo;
-  const return_pic = attendanceList.return_photo;
+  // const source_pic = attendanceList.source_photo;
+  // const destination_pic = attendanceList.destination_photo;
+  // const return_pic = attendanceList.return_photo;
   const sourceLat = parseFloat(attendanceList.source_lat);
   const sourceLong = parseFloat(attendanceList.source_long);
+
+  // console.log('sourceLat in attendanceList+++++++++@@@@@@@@', sourceLat);
+  // const LeafletMap = ({sourceLat, sourceLong}) => {
+  //   return (
+  //     <LeafletView
+  //       style={styles.map}
+  //       center={[sourceLat, sourceLong]}
+  //       zoom={13}
+  //       attributionControl={true}>
+  //       {/* You can add additional layers or markers here */}
+  //     </LeafletView>
+  //   );
+  // };
 
   return (
     <View style={styles.mainContainer}>
@@ -99,21 +128,14 @@ const AttendanceList = ({route}) => {
               justifyContent: 'center',
               alignItems: 'center',
               paddingHorizontal: '3%',
+              flexWrap: 'wrap',
             }}>
             <View style={{padding: 10}}>
               <Avatar.Image
                 size={40}
                 source={
-                  pic ? {uri: source_pic} : require('../assets/images/user.png')
-                }
-              />
-            </View>
-            <View style={{padding: 10}}>
-              <Avatar.Image
-                size={40}
-                source={
-                  pic
-                    ? {uri: destination_pic}
+                  source_pic
+                    ? {uri: `data:image/png;base64,${source_pic}`}
                     : require('../assets/images/user.png')
                 }
               />
@@ -122,7 +144,19 @@ const AttendanceList = ({route}) => {
               <Avatar.Image
                 size={40}
                 source={
-                  pic ? {uri: return_pic} : require('../assets/images/user.png')
+                  destination_pic
+                    ? {uri: `data:image/png;base64,${destination_pic}`}
+                    : require('../assets/images/user.png')
+                }
+              />
+            </View>
+            <View style={{padding: 10}}>
+              <Avatar.Image
+                size={40}
+                source={
+                  return_pic
+                    ? {uri: `data:image/png;base64,${return_pic}`}
+                    : require('../assets/images/user.png')
                 }
               />
             </View>

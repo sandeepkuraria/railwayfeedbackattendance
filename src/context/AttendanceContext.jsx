@@ -32,8 +32,10 @@ const AttendanceContextProvider = ({children}) => {
   //   );
 
   const data = trainData[0];
-
-  console.log('trainData[1] in AttendanceContext', trainData[1]);
+  const source_pic = attendanceList.source_photo;
+  const destination_pic = attendanceList.destination_photo;
+  const return_pic = attendanceList.return_photo;
+  // console.log('trainData[1] in AttendanceContext', trainData[1]);
 
   const saveAttendanceApi = async () => {
     try {
@@ -65,7 +67,7 @@ const AttendanceContextProvider = ({children}) => {
 
       const response = await res.json();
 
-      console.log('response', response);
+      // console.log('response', response);
 
       if (response.status === true) {
         Alert.alert(response.message);
@@ -150,9 +152,10 @@ const AttendanceContextProvider = ({children}) => {
 
       if (result.status) {
         setAttendanceList(result.data);
-      } else {
-        setAttendanceList({}); // Set an empty array or handle the case accordingly
       }
+      // else {
+      //   setAttendanceList({}); // Set an empty array or handle the case accordingly
+      // }
 
       setIsLoading(false);
     } catch (error) {
@@ -178,6 +181,9 @@ const AttendanceContextProvider = ({children}) => {
         attendanceList,
         setAttendanceList,
         fetchAttendanceList,
+        source_pic,
+        destination_pic,
+        return_pic,
       }}>
       {children}
     </AttendanceContext.Provider>
